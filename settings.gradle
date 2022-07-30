@@ -1,0 +1,16 @@
+rootProject.name = 'commons-root'
+//the releasable plugins
+include 'groovy-commons'
+
+// tests will be included in main runs but not deploy tasks and doc tasks
+// include "examples/testify"
+// include 'examples/kotlin-quick-start'
+
+// findProject(':examples/testify').name = 'testify'
+
+buildCache {
+  local {
+    directory = new File('.', '.build-cache')
+    removeUnusedEntriesAfterDays = 10
+  }
+}
