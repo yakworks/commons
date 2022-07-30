@@ -1,0 +1,12 @@
+apply from: "${rootProject.projectDir}/gradle/groovy-lib.gradle"
+
+dependencies {
+
+  //javax.annotations
+  compileOnly "com.github.spotbugs:spotbugs-annotations:${vSpotBugs}"
+
+  // json pasrser traits and other areas
+  compileOnly "javax.servlet:javax.servlet-api:4.0.1"
+
+}
+

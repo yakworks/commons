@@ -1,20 +1,27 @@
 //It all starts here
-buildscript {
-  repositories {
-    mavenLocal()
-    maven { url "https://plugins.gradle.org/m2/" }
-  }
-  dependencies {
-    classpath "org.yakworks:gradle-plugins:$vShipyak"
-    classpath "io.github.gradle-nexus:publish-plugin:$vMavenNexus"
-  }
+// buildscript {
+//   repositories {
+//     mavenLocal()
+//     maven { url "https://plugins.gradle.org/m2/" }
+//   }
+//   dependencies {
+//     // classpath "org.yakworks:gradle-plugins:$vShipyak"
+//     classpath "io.github.gradle-nexus:publish-plugin:$vMavenNexus"
+//   }
+// }
+
+plugins {
+  id "org.jetbrains.kotlin.jvm" version "1.6.20" apply false
+  id "yakworks.shipyak" version "$vShipyak"
+  id "yakworks.groovy-lib" version "$vShipyak" apply false
+  id "io.github.gradle-nexus.publish-plugin" version "$vMavenNexus"
 }
 
 group = "org.yakworks"
 
 //our opinionated defaults for gradle groovy & grails projects
-apply plugin: 'yakworks.shipyak'
-apply plugin: "io.github.gradle-nexus.publish-plugin"
+// apply plugin: 'yakworks.shipyak'
+// apply plugin: "io.github.gradle-nexus.publish-plugin"
 
 if(!isSnapshot) {
   nexusPublishing {
@@ -59,13 +66,11 @@ subprojects { subprj ->
   //   apply from: "${rootProject.projectDir}/gradle/example.gradle"
   // }
 
-  apply from: "${rootProject.projectDir}/gradle/test-unit.gradle"
-
   configurations {
     //includes the compileOnly in tests too so we don't have to list twice
     testImplementation.extendsFrom compileOnly
     all {
-      resolutionStrategy.cacheChangingModulesFor 1, 'seconds' //when changing = true this sets the cache time
+      resolutionStrategy.cacheChangingModulesFor 60, 'seconds' //when changing = true this sets the cache time
     }
   }
 }

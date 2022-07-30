@@ -1,12 +1,21 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'commons-root'
 //the releasable plugins
 include 'groovy-commons'
+include 'i18n'
 
 // tests will be included in main runs but not deploy tasks and doc tasks
-// include "examples/testify"
-// include 'examples/kotlin-quick-start'
+include "examples/kotlin-check"
+include "examples/kotlin-check-groovy"
 
-// findProject(':examples/testify').name = 'testify'
+findProject(':examples/kotlin-check').name = 'kotlin-check'
+findProject(':examples/kotlin-check-groovy').name = 'kotlin-check-groovy'
 
 buildCache {
   local {
