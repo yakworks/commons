@@ -1,6 +1,6 @@
-package yakworks.message;
+package yakworks.message
 
-import java.util.List;
+import yakworks.message.MsgKey.Companion.ofCode
 
 /**
  * Similiar to org.springframework.context.MessageSource but no dependencies
@@ -9,72 +9,70 @@ import java.util.List;
  * @author Joshua Burnett (@basejump)
  * @since 0.3.0
  */
-@SuppressWarnings("unchecked")
-public interface MsgService {
-
+interface MsgService {
     /**
      * This is the Main/primary getMessage method that needs to be implements and that the rest flow through.
      */
-    String getMessage(String code, MsgContext msgContext);
+    fun getMessage(code: String?, msgContext: MsgContext?): String?
 
     /**
      * shorter alias to getMessage
      */
-    default String get(String code, MsgContext msgContext){
-        return getMessage(code, msgContext);
+    operator fun get(code: String?, msgContext: MsgContext?): String? {
+        return getMessage(code, msgContext)
     }
 
     /**
      * gets the message using a MsgKey, will make a context using the args and fallback in the msgKey.
      * Will use default Locale in the LocaleHolder
      */
-    default String get(String code){
-        return get(MsgKey.ofCode(code));
+    operator fun get(code: String?): String? {
+        return get(ofCode(code))
     }
 
     /**
      * gets the message using a MsgKey, will make a context using the args and fallback in the msgKey.
      * Will use default Locale in the LocaleHolder
      */
-    default String get(MsgKey msgKey){
-        return getMessage(msgKey.getCode(), MsgContext.of(msgKey));
+    operator fun get(msgKey: MsgKey?): String? {
+        return getMessage(msgKey!!.code, MsgContext.of(msgKey))
     }
 
     /**
      * gets the message using MsgContext, which contains args and locale as well
      */
-    default String get(MsgContext context){
-        return getMessage(context.getCode(), context);
+    operator fun get(context: MsgContext): String? {
+        return getMessage(context.code, context)
     }
 
     // support the spring way and allows anything to be passed to args and the MsgArgHolder will try and sort it out
-    default String get(String code, Object args, String fallbackMessage){
-        return getMessage(code, MsgContext.of(args).fallbackMessage(fallbackMessage));
+    operator fun get(code: String?, args: Any?, fallbackMessage: String?): String? {
+        return getMessage(code, MsgContext.of(args).fallbackMessage(fallbackMessage))
     }
 
-    default String get(String code, Object args){
-        return getMessage(code, MsgContext.of(args));
+    operator fun get(code: String?, args: Any?): String? {
+        return getMessage(code, MsgContext.of(args))
     }
 
     /**
      * Get first found message for multiKey
      */
-    default String get(MsgMultiKey msgMultiKey){
-        List<String> codes = msgMultiKey.getCodes();
+    operator fun get(msgMultiKey: MsgMultiKey): String? {
+        val codes = msgMultiKey.codes
         if (codes != null) {
-            String lastCode = "";
-            for (String code : codes) {
-                lastCode = code;
-                String message = get(code, MsgContext.of(msgMultiKey).useCodeAsDefaultMessage(false));
+            var lastCode: String? = ""
+            for (code in codes) {
+                lastCode = code
+                val message = get(code, MsgContext.of(msgMultiKey).useCodeAsDefaultMessage(false))
                 if (message != null) {
-                    return message;
+                    return message
                 }
             }
             // if we got here then nothing found, if spring service has useCodeAsDefaultMessage
             // then run again and if true will return the code, otherwise null.
-            return get(lastCode, MsgContext.of(msgMultiKey).useCodeAsDefaultMessage(true));
+            return get(lastCode, MsgContext.of(msgMultiKey).useCodeAsDefaultMessage(true))
         }
-        return null;
+        return null
     }
 
     /**
@@ -84,6 +82,5 @@ public interface MsgService {
      * @param context the msgContext
      * @return the translated message
      */
-    String interpolate(String template, MsgContext context);
-
+    fun interpolate(template: String?, context: MsgContext?): String?
 }

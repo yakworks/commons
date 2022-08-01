@@ -1,4 +1,7 @@
-apply from: "${rootProject.projectDir}/gradle/groovy-lib.gradle"
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+}
+// apply from: "${rootProject.projectDir}/gradle/groovy-lib.gradle"
 
 dependencies {
 
@@ -8,5 +11,46 @@ dependencies {
   // json pasrser traits and other areas
   compileOnly "javax.servlet:javax.servlet-api:4.0.1"
 
+  // Align versions of all Kotlin components
+  implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+
+  // Use the Kotlin JDK 8 standard library.
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-common")
+
+  // Use the Kotlin JDK 8 standard library.
+  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+  // Use the Kotlin test library.
+  testImplementation("org.jetbrains.kotlin:kotlin-test")
+
+  // Use the Kotlin JUnit integration.
+  testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+  kotlinOptions {
+    jvmTarget = "1.8"
+    freeCompilerArgs += [ "-Xjvm-default=all" ]
+  }
+}
+
+// tasks.withType(KotlinCompile) {
+//   kotlinOptions {
+//     freeCompilerArgs += [
+//       "-Xjvm-default=all",
+//     ]
+//   }
+// }
+
+// kotlin {
+//     compilations.forEach {
+//       it.kotlinOptions.jvmTarget = "1.8"
+//       it.kotlinOptions.freeCompilerArgs += [ "-Xjvm-default=all" ]
+//     }
+// }
+
+// compileKotlin {
+//   freeCompilerArgs = ['-Xjvm-default=enable']
+//   jvmTarget = "1.8"
+// }
