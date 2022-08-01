@@ -22,10 +22,9 @@ import yakworks.commons.json.converters.URIConverter
 import yakworks.commons.json.converters.ZonedDateTimeJsonConverter
 
 /**
- * Json Parser
+ * Wrapper for groovy Json slurper and generator
  *
  * @author Joshua Burnett (@basejump)
- * @since 7.0.8
  */
 @SuppressWarnings('FieldName')
 @Builder(builderStrategy= SimpleStrategy, prefix="")

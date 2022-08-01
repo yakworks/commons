@@ -7,7 +7,7 @@ package yakworks.api
 import groovy.transform.CompileStatic
 
 import yakworks.commons.lang.ClassUtils
-import yakworks.i18n.MsgService
+import yakworks.message.MsgService
 
 @CompileStatic
 class ResultUtils {

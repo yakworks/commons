@@ -8,7 +8,7 @@ import groovy.transform.CompileStatic
 
 import jakarta.annotation.Nullable
 import yakworks.api.ApiStatus
-import yakworks.i18n.MsgKey
+import yakworks.message.MsgKey
 import yakworks.problem.IProblem
 import yakworks.problem.Problem
 

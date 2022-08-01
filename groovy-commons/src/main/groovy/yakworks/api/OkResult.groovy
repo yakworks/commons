@@ -6,7 +6,7 @@ package yakworks.api
 
 import groovy.transform.CompileStatic
 
-import yakworks.i18n.MsgKey
+import yakworks.message.MsgKey
 
 /**
  * Simple OkResult with a Map as the data object

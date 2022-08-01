@@ -1,6 +1,6 @@
 package yakworks.problem;
 
-import yakworks.i18n.MsgKey;
+import yakworks.message.MsgKey;
 
 /**
  * @author Joshua Burnett (@basejump)

@@ -2,7 +2,7 @@ package yakworks.problem;
 
 import org.junit.jupiter.api.Test;
 import yakworks.api.ApiStatus;
-import yakworks.i18n.MsgKey;
+import yakworks.message.MsgKey;
 import yakworks.problem.exception.Exceptional;
 import yakworks.problem.exception.ProblemRuntime;
 

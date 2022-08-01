@@ -10,7 +10,7 @@ import groovy.transform.CompileStatic
 import yakworks.api.ApiStatus
 import yakworks.api.HttpStatus
 import yakworks.api.ResultTrait
-import yakworks.i18n.MsgKey
+import yakworks.message.MsgKey
 
 /**
  * Trait implementation for the Problem that has setters and builders

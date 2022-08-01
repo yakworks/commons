@@ -1,6 +1,6 @@
 package yakworks.problem;
 
-import yakworks.i18n.MsgKey;
+import yakworks.message.MsgKey;
 
 public final class EmptyProblem implements IProblem.Fluent<EmptyProblem> {
 

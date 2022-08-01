@@ -8,7 +8,7 @@ package yakworks.problem
 import groovy.transform.CompileStatic
 
 import yakworks.api.HttpStatus
-import yakworks.i18n.MsgKey
+import yakworks.message.MsgKey
 
 /**
  * This is for the statics in the Problem interface.

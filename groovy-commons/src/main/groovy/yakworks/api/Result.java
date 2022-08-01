@@ -4,8 +4,8 @@
 */
 package yakworks.api;
 
-import yakworks.i18n.MsgKey;
-import yakworks.i18n.MsgKeyDecorator;
+import yakworks.message.MsgKey;
+import yakworks.message.MsgKeyDecorator;
 
 /**
  * This is the base result trait for problems and results

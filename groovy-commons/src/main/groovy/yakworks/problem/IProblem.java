@@ -1,7 +1,7 @@
 package yakworks.problem;
 
 import yakworks.api.Result;
-import yakworks.i18n.MsgKey;
+import yakworks.message.MsgKey;
 
 import java.net.URI;
 import java.util.Collections;

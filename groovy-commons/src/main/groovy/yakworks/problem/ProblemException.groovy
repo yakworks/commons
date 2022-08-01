@@ -7,8 +7,8 @@ package yakworks.problem
 import groovy.transform.CompileStatic
 
 import jakarta.annotation.Nullable
-import yakworks.i18n.MsgKey
-import yakworks.i18n.MsgKeyDecorator
+import yakworks.message.MsgKey
+import yakworks.message.MsgKeyDecorator
 
 /**
  * Handy class for wrapping runtime {@code Exceptions} with a root cause.

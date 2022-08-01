@@ -9,7 +9,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import groovy.transform.TupleConstructor
 
-import yakworks.i18n.MsgKey
+import yakworks.message.MsgKey
 
 @ToString @EqualsAndHashCode
 @TupleConstructor

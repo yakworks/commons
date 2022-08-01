@@ -7,7 +7,7 @@ package yakworks.problem
 
 import spock.lang.Specification
 import spock.lang.Unroll
-import yakworks.i18n.MsgKey
+import yakworks.message.MsgKey
 
 import static yakworks.api.HttpStatus.NOT_FOUND
 
