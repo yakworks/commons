@@ -4,43 +4,28 @@ apply from: "${rootProject.projectDir}/gradle/compile.gradle"
 apply from: "${rootProject.projectDir}/gradle/test-unit.gradle"
 
 dependencies {
-  api project(":api-messages")
-
   api "org.codehaus.groovy:groovy:$groovyVersion"
-  api "org.codehaus.groovy:groovy-datetime:$groovyVersion"
-  api "org.codehaus.groovy:groovy-templates:$groovyVersion"
-  api "org.codehaus.groovy:groovy-json:$groovyVersion"
   api "org.codehaus.groovy:groovy-nio:$groovyVersion"
+  api "org.codehaus.groovy:groovy-json:$groovyVersion"
+  api "org.codehaus.groovy:groovy-datetime:$groovyVersion"
   api "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
-  compileOnly "org.slf4j:slf4j-api:${vSlf4j}"
-
   api 'jakarta.annotation:jakarta.annotation-api:2.1.0'
+  api "net.lingala.zip4j:zip4j:$vZip4j"
 
-  api "commons-io:commons-io:$vCommonsIO"
-
+  //requires jackson libs to be added in. TODO should these be api and create the dependency?
   implementation "com.fasterxml.jackson.core:jackson-core:$vJackson"
   implementation "com.fasterxml.jackson.core:jackson-databind:$vJackson"
   implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:$vJackson"
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$vJackson"
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$vJackson"
 
-  //libs
-  // api "org.yakworks:i18n:$vYakworksICU4J"
+  compileOnly "org.slf4j:slf4j-api:${vSlf4j}"
 
-  api "net.lingala.zip4j:zip4j:$vZip4j"
-
-  // javax val
-  compileOnly "javax.validation:validation-api:$vJavaxValidation"
   // json pasrser traits and other areas
   compileOnly "javax.servlet:javax.servlet-api:4.0.1"
-  //javax.annotations
-  compileOnly "com.github.spotbugs:spotbugs-annotations:${vSpotBugs}"
 
-  // jasper uses itext 2.1.7 which uses bouncy 138, so until we sort that out we keep it stuck at this version
-  // used only in commons password stuff
-  compileOnly "bouncycastle:bcprov-jdk14:138"
-
+  testImplementation project(":groovy-commons")
 }
 
 test {

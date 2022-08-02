@@ -4,7 +4,7 @@
 */
 package yakworks.commons.io
 
-import java.nio.charset.Charset
+
 import java.nio.file.Path
 import java.util.zip.Deflater
 import java.util.zip.ZipEntry
@@ -14,7 +14,6 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 import net.lingala.zip4j.ZipFile
-import net.lingala.zip4j.io.inputstream.ZipInputStream
 
 /*
  * Util methods for file processing such as deleting temp files or zipping

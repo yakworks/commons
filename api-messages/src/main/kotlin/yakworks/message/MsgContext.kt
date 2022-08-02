@@ -37,14 +37,14 @@ class MsgContext : DefaultMsgKey() {
      * Used when the args are also message keys (such as a MessageSourceResolvable) and they need
      * to inturn be looked up message.properties before being passed as args for the primary message
      */
-    fun transform(transformation: (Any?) -> String): MsgContext {
+    fun transform(transformation: (Any?) -> Any): MsgContext {
         return if (args!!.isMap) transformMap(transformation) else transformList(transformation)
     }
 
     /**
      * called from transform when the args are mapped based
      */
-    fun transformMap(transformation: (Any?) -> String): MsgContext {
+    fun transformMap(transformation: (Any?) -> Any): MsgContext {
         val curArgMap = args?.get() as Map<String, Any?>?
         val newArgs = emptyMap<String, Any?>().toMutableMap()
         if (curArgMap != null) {
@@ -59,7 +59,7 @@ class MsgContext : DefaultMsgKey() {
     /**
      * called from transform when the args are array list based.
      */
-    fun transformList(transformation: (Any?) -> String): MsgContext {
+    fun transformList(transformation: (Any?) -> Any): MsgContext {
         val curArgList = args!!.get() as List<*>?
         val newArgs: MutableList<Any> = ArrayList(curArgList!!.size)
         for (item in curArgList) newArgs.add(transformation(item))
