@@ -100,13 +100,7 @@ workflows:
     jobs:
       - build:
           context: bot-context #context with shared ENV vars
-      - commons:
-          context: bot-context #context with shared ENV vars
-          requires: [ build ]
-      # - examples:
-      #     context: bot-context #context with shared ENV vars
-      #     requires: [ build ]
-      # - ship-it:
-      #     context: bot-context
-      #     requires: [build, commons, examples]
-      #     filters: { branches: { only: [ master, /release\/.*/, dev ] } }
+      - ship-it:
+          context: bot-context
+          requires: [build]
+          filters: { branches: { only: [ master, /release\/.*/, dev ] } }
