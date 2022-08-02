@@ -1,8 +1,10 @@
 <table><tr><td>
 
 [![CircleCI](https://img.shields.io/circleci/project/github/yakworks/commons/master.svg?longCache=true&style=for-the-badge&logo=circleci)](https://circleci.com/gh/yakworks/commons) \
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.yakworks/groovy-commons/badge.svg?style=for-the-badge)](https://maven-badges.herokuapp.com/maven-central/org.yakworks/groovy-commons) \
 [![9ci](https://img.shields.io/badge/BUILT%20BY-9ci%20Inc-blue.svg?longCache=true&style=for-the-badge)](http://9ci.com) \
-[![9ci](https://forthebadge.com/images/badges/gluten-free.svg)](http://9ci.com)
+[![9ci](https://img.shields.io/badge/GLUTEN-FREE-pink.svg?longCache=true&style=for-the-badge&logo=Atari)](http://9ci.com) \
+[![Open Source](https://badges.frapsoft.com/os/v3/open-source.svg?v=103)](https://opensource.org/)
 
 </td>
 <td>
