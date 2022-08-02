@@ -7,7 +7,8 @@ author: Yak.Works
 project:
   fullName: yakworks/commons
   # list of subproject dirs used to spin through, build the checksum and consolidate the test reports for circle
-  subprojects: groovy-commons api-messages
+  # also used for the make circle.day-version-cache-key-file
+  subprojects: groovy-commons groovy-json api-messages
 
 bot:
   email: 9cibot@9ci.com
