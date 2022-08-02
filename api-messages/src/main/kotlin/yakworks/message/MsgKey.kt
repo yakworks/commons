@@ -16,6 +16,7 @@ import java.lang.UnsupportedOperationException
  * @author Joshua Burnett (@basejump)
  * @since 0.3.0
  */
+@Suppress("UNUSED_PARAMETER")
 interface MsgKey {
 
     var code: String?
@@ -28,12 +29,12 @@ interface MsgKey {
      */
     var args: MsgArgs?
         get() = null
-        set(v) { throw UnsupportedOperationException("setter not implemented $v") }
+        set(value) { throw UnsupportedOperationException("setter not implemented") }
     /**
      * if object is passed in then will create this object setter will create  MsgArgs.of()
      */
-    fun setArgs(v: Any?) {
-        args = MsgArgs.of(v)
+    fun setArgs(value: Any?) {
+        args = if (value is MsgArgs) value else MsgArgs.of(value)
     }
 
     /**
@@ -43,7 +44,7 @@ interface MsgKey {
      */
     var fallbackMessage: String?
         get() = null
-        set(v) { throw UnsupportedOperationException("setter not implemented") }
+        set(value) { throw UnsupportedOperationException("setter not implemented") }
 
     companion object {
         // default void setFallbackMessage(String defMsg){ }

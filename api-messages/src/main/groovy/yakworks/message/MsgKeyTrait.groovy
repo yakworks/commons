@@ -6,6 +6,9 @@ package yakworks.message
 
 import groovy.transform.CompileStatic
 
+import yakworks.message.MsgArgs
+import yakworks.message.MsgKey
+
 /**
  * Trait implementation for MsgKey to allow easy ability to make anything in groovy a MsgKey
  */

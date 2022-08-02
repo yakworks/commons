@@ -30,17 +30,18 @@ class MsgArgs {
      * sets the args, if array converts to List.
      * @param args array list or map
      */
+    @Suppress("UNCHECKED_CAST")
     fun setArgs(args: Any?) {
-        var args = args
-        if (isEmpty(args)) {
-            args = LinkedHashMap<Any, Any>()
-        } else if (isArray(args)) {
-            val argsray = args as Array<Any>?
+        var _args = args
+        if (isEmpty(_args)) {
+            _args = LinkedHashMap<Any, Any>()
+        } else if (isArray(_args)) {
+            val argsray = _args as Array<Any>?
             //if first item is map the use that otherwise make array list
-            args = if (isFirstItemMap(*argsray!!)) argsray[0] as Map<*, *> else Arrays.asList(*argsray)
+            _args = if (isFirstItemMap(*argsray!!)) argsray[0] as Map<*, *> else Arrays.asList(*argsray)
         }
-        if (args is Map<*, *> || args is List<*>) {
-            _value = args
+        if (_args is Map<*, *> || _args is List<*>) {
+            _value = _args
         } else {
             throw IllegalArgumentException("Message arguments must be a Map, List or Object array")
         }

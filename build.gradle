@@ -56,8 +56,6 @@ subprojects { subprj ->
     isExample = getProp('isExample', false)
   }
 
-  apply from: "${rootProject.projectDir}/gradle/compile.gradle"
-
   // if its a lib then setup gpg signing, see signing.gnupg.keyName
   if (isPublishable){
     apply from: "${rootProject.projectDir}/gradle/publish.gradle"

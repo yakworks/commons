@@ -6,7 +6,6 @@ package yakworks.api
 
 import groovy.transform.CompileStatic
 
-import yakworks.commons.lang.ClassUtils
 import yakworks.message.MsgService
 
 @CompileStatic
@@ -15,7 +14,7 @@ class ResultUtils {
     static String resultToStringCommon(final Result p) {
         String title = p.title ? "title=$p.title" : null
         String code = p.code ? "code=$p.code" : null
-        String value = ClassUtils.isBasicType(p.payload) ? "payload=$p.payload" : null
+        String value = isBasicType(p.payload?.class) ? "payload=$p.payload" : null
         String status = p.status.code
         return [title, code, value, status ].findAll{it != null}.join(', ')
     }
@@ -60,4 +59,17 @@ class ResultUtils {
 
         return message
     }
+
+    protected static final List BASIC_TYPES = [
+        String, Boolean, Byte, Short, Integer, Long, Float, Double, Character
+    ] as List<Class>
+
+    /**
+     * checks if Class is basic type (String, long/Long, boolean/Boolean, etc...)
+     */
+    static boolean isBasicType(Class c) {
+        if(c == null) return false
+        return BASIC_TYPES.contains(c) || c.isPrimitive()
+    }
+
 }

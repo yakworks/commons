@@ -76,6 +76,9 @@ ifdef IS_SNAPSHOT
 	./gradlew publishJavaLibraryPublicationToMavenRepository
 endif
 
+snapshot:
+	./gradlew snapshot
+
 ## shows dependencies
 gradle.dependencies:
 	 ./gradlew commons:dependencies --configuration compileClasspath

@@ -7,8 +7,8 @@ pluginManagement {
 
 rootProject.name = 'commons-root'
 //the releasable plugins
+include 'api-messages'
 include 'groovy-commons'
-include 'message'
 
 // tests will be included in main runs but not deploy tasks and doc tasks
 include "examples/kotlin-check"

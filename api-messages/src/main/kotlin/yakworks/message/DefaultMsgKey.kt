@@ -1,6 +1,5 @@
 package yakworks.message
 
-import java.lang.UnsupportedOperationException
 
 /**
  * Default implementation of the MsgKey, normally should be build with
@@ -9,7 +8,7 @@ import java.lang.UnsupportedOperationException
  * @author Joshua Burnett (@basejump)
  * @since 0.3.0
  */
-class DefaultMsgKey : MsgKey {
+open class DefaultMsgKey : MsgKey {
     constructor() {}
     constructor(code: String?) {
         this.code = code
@@ -17,8 +16,8 @@ class DefaultMsgKey : MsgKey {
 
     override var code: String? = null
 
-    fun code(value: String?): DefaultMsgKey {
-        code = value
+    fun code(v: String?): DefaultMsgKey {
+        code = v
         return this
     }
 
@@ -28,9 +27,6 @@ class DefaultMsgKey : MsgKey {
             return field
         }
 
-    override fun setArgs(v: Any?) {
-        args = MsgArgs.of(v)
-    }
     /**
      * builder to pass args in.
      */
@@ -44,7 +40,7 @@ class DefaultMsgKey : MsgKey {
             return if (field != null) field!! else args?.fallbackMessage
         }
 
-    fun fallbackMessage(value: String?): DefaultMsgKey {
+    open fun fallbackMessage(value: String?): DefaultMsgKey {
         fallbackMessage = value
         return this
     }
