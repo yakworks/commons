@@ -9,6 +9,7 @@ dependencies {
 
   // requires groovy to be added if using the groovy traits and classes
   implementation "org.codehaus.groovy:groovy:$groovyVersion"
+  implementation "org.codehaus.groovy:groovy-json:$groovyVersion"
 
   api 'jakarta.annotation:jakarta.annotation-api:2.1.0'
 
@@ -16,6 +17,8 @@ dependencies {
   api(platform("org.jetbrains.kotlin:kotlin-bom"))
   api("org.jetbrains.kotlin:kotlin-stdlib-common")
   api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+  testImplementation project(":groovy-json")
 
   // Use the Kotlin JUnit integration.
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")

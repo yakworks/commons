@@ -43,7 +43,7 @@ trait ProblemTrait<E extends ProblemTrait> extends ResultTrait<E> implements IPr
     // URI instance
     List<Violation> violations = [] as List<Violation> //Collections.emptyList();
 
-    E addErrors(List<MsgKey> keyedErrors){
+    E addViolations(List<MsgKey> keyedErrors){
         def ers = getViolations()
         keyedErrors.each {
             ers << ViolationFieldError.of(it)

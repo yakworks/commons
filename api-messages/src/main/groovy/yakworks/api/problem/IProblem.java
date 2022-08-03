@@ -1,11 +1,13 @@
 package yakworks.api.problem;
 
 import yakworks.api.Result;
+import yakworks.api.ResultUtils;
 import yakworks.message.MsgKey;
 
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Simple interface for problem getters
@@ -51,6 +53,20 @@ public interface IProblem extends Result {
     }
     default void setViolations(List<Violation> v){}
     // default E violations(List<Violation> v) { setViolations(v); return (E)this; }
+
+    /**
+     * converts to Map, helpfull for to json and can be overriden on concrete impls
+     */
+    @Override
+    default Map<String, Object> asMap(){
+        Map<String, Object> hmap = ResultUtils.toMap(this);
+        hmap.put("type", getType());
+        hmap.put("detail", getDetail());
+        if(getViolations().size() > 0) {
+            hmap.put("errors", getViolations());
+        }
+        return hmap;
+    }
 
     /**
      * An absolute URI that identifies the specific occurrence of the problem.

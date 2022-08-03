@@ -25,6 +25,19 @@ class ResultUtils {
         return "${cname}(${concat})"
     }
 
+    /**
+     * converts to Map, helpfull for to json and can be overriden on concrete impls
+     */
+    static Map<String, Object> toMap( Result res ){
+        Map<String, Object> hmap = new LinkedHashMap<>();
+        hmap.put("ok", res.getOk());
+        hmap.put("status", res.getStatus().getCode());
+        hmap.put("code", res.getCode());
+        hmap.put("payload", res.getPayload());
+        hmap.put("title", res.getTitle());
+        return hmap;
+    }
+
 
     /**
      * add message arguments for things in entity

@@ -89,4 +89,16 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
         getOkResults()
     }
 
+    /**
+     * converts to Map, helpfull for to json and can be overriden on concrete impls
+     */
+    @Override
+    Map<String, Object> asMap(){
+        Map<String, Object> hmap = ResultUtils.toMap(this);
+        if(!this.ok){
+            hmap.put("problems", getProblems());
+        }
+        return hmap;
+    }
+
 }

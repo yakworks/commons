@@ -7,6 +7,9 @@ package yakworks.api;
 import yakworks.message.MsgKey;
 import yakworks.message.MsgKeyDecorator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This is the base result trait for problems and results
  * follows https://datatracker.ietf.org/doc/html/rfc7807 for status and title fields
@@ -21,7 +24,7 @@ import yakworks.message.MsgKeyDecorator;
  * @author Joshua Burnett (@basejump)
  * @since 7.0.8
  */
-public interface Result extends MsgKeyDecorator {
+public interface Result extends MsgKeyDecorator, AsMap {
 
     default String getDefaultCode() {
         return null;
@@ -54,19 +57,6 @@ public interface Result extends MsgKeyDecorator {
     default void setPayload(Object v){}
 
     /**
-     * alias to payload
-     */
-    default Object getValue(){ return getPayload(); }
-
-    /**
-     * Optional the return value or entity. Kind of like the value that Optional wraps.
-     * internal in that its transient so it wont get serialized, can be used as the source to generate the data.
-     */
-    // default T getValue() { return null; }
-    // default void setValue(T v){}
-    // default E value(T v){ setValue(v); return (E)this; }
-
-    /**
      * success or fail? if ok is true then it still may mean that there are warnings and needs to be looked into
      */
     default Boolean getOk() {
@@ -77,6 +67,15 @@ public interface Result extends MsgKeyDecorator {
      * get the value of the payload, keeps api similiar to Optional.
      */
     default Object get(){ return getPayload(); }
+
+    /**
+     * converts to Map, helpfull for to json and can be overriden on concrete impls
+     */
+    @Override
+    default Map<String, Object> asMap(){
+        Map<String, Object> hmap = ResultUtils.toMap(this);
+        return hmap;
+    }
 
     //STATIC HELPERS
 
