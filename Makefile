@@ -34,7 +34,7 @@ publish:
 			$(logr) "publishing to repo.9ci"
 			$(gradlew) publishJavaLibraryPublicationToMavenRepository
 			$(logr) "publishing to Sonatype Maven Central"
-			#$(gradlew) publishToSonatype closeAndReleaseSonatypeStagingRepository
+			$(gradlew) publishToSonatype closeAndReleaseSonatypeStagingRepository
 		fi
 		$(logr.done) "published"
 	fi
