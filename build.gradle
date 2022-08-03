@@ -1,15 +1,3 @@
-//It all starts here
-// buildscript {
-//   repositories {
-//     mavenLocal()
-//     maven { url "https://plugins.gradle.org/m2/" }
-//   }
-//   dependencies {
-//     // classpath "org.yakworks:gradle-plugins:$vShipyak"
-//     classpath "io.github.gradle-nexus:publish-plugin:$vMavenNexus"
-//   }
-// }
-
 plugins {
   id "org.jetbrains.kotlin.jvm" version "1.7.0" apply false
   id "yakworks.shipyak" version "$vShipyak"
@@ -18,10 +6,6 @@ plugins {
 }
 
 group = "org.yakworks"
-
-//our opinionated defaults for gradle groovy & grails projects
-// apply plugin: 'yakworks.shipyak'
-// apply plugin: "io.github.gradle-nexus.publish-plugin"
 
 if(!isSnapshot) {
   nexusPublishing {
@@ -52,7 +36,7 @@ subprojects { subprj ->
 
   ext { // see gradle.properties in sub-projects
     //default true for isGormLibrary and isPublishable, set to false in gradle.props
-    isPublishable = getProp('isPublishable', true)
+    isPublishable = getProp('isPublishable', false)
     isExample = getProp('isExample', false)
   }
 

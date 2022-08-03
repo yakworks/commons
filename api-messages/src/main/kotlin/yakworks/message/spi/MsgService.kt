@@ -1,6 +1,9 @@
-package yakworks.message
+package yakworks.message.spi
 
+import yakworks.message.MsgContext
+import yakworks.message.MsgKey
 import yakworks.message.MsgKey.Companion.ofCode
+import yakworks.message.MsgMultiKey
 
 /**
  * Similiar to org.springframework.context.MessageSource but no dependencies
