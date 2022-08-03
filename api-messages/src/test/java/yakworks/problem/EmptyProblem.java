@@ -1,5 +1,6 @@
 package yakworks.problem;
 
+import yakworks.api.problem.IProblem;
 import yakworks.message.MsgKey;
 
 public final class EmptyProblem implements IProblem.Fluent<EmptyProblem> {

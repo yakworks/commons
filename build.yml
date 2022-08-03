@@ -3,6 +3,7 @@
 title: Commons libs for kotlin and groovy
 description: API messages and helpers
 author: Yak.Works
+group: org.yakworks
 
 project:
   fullName: yakworks/commons

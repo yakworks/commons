@@ -2,13 +2,11 @@
 * Copyright 2021 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
 * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 */
-package yakworks.problem.data
+package yakworks.api.problem.data
 
 import groovy.transform.CompileStatic
 
 import yakworks.api.ResultUtils
-import yakworks.problem.ProblemException
-import yakworks.problem.ProblemTrait
 
 /**
  * Trait implementation for the Problem that has setters and builders
@@ -17,7 +15,7 @@ import yakworks.problem.ProblemTrait
  * @since 7.0.8
  */
 @CompileStatic
-trait DataProblemTrait<E extends DataProblemTrait> extends ProblemTrait<E> {
+trait DataProblemTrait<E extends DataProblemTrait> extends yakworks.api.problem.ProblemTrait<E> {
 
     /**
      * convienience alias for payload so its clearer in the code
@@ -44,7 +42,7 @@ trait DataProblemTrait<E extends DataProblemTrait> extends ProblemTrait<E> {
     }
 
     @Override
-    ProblemException toException(){
+    yakworks.api.problem.ProblemException toException(){
         return getCause() ? new DataProblemException(getCause()).problem(this) : new DataProblemException().problem(this)
     }
 

@@ -2,18 +2,16 @@
 * Copyright 2021 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
 * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 */
-package yakworks.problem.exception
+package yakworks.api.problem.exception
 
 import groovy.transform.CompileStatic
 
 import jakarta.annotation.Nullable
 import yakworks.api.ApiStatus
 import yakworks.message.MsgKey
-import yakworks.problem.IProblem
-import yakworks.problem.Problem
 
 @CompileStatic
-final class ProblemBuilder<T extends IProblem> {
+final class ProblemBuilder<T extends yakworks.api.problem.IProblem> {
 
     private URI type
     private String title
@@ -26,7 +24,7 @@ final class ProblemBuilder<T extends IProblem> {
     private Class<T> problemClass
 
     ProblemBuilder() {
-        this.problemClass = Problem as Class<T>
+        this.problemClass = yakworks.api.problem.Problem as Class<T>
     }
 
     ProblemBuilder(Class<T> problemType) {

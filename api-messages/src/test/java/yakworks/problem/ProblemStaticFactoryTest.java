@@ -2,7 +2,9 @@ package yakworks.problem;
 
 import org.junit.jupiter.api.Test;
 import yakworks.api.HttpStatus;
-import yakworks.problem.exception.ProblemBuilder;
+import yakworks.api.problem.CreateProblem;
+import yakworks.api.problem.IProblem;
+import yakworks.api.problem.exception.ProblemBuilder;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

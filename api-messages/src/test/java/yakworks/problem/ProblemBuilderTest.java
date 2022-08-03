@@ -2,8 +2,10 @@ package yakworks.problem;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import yakworks.problem.exception.ProblemBuilder;
-import yakworks.problem.exception.ProblemRuntime;
+import yakworks.api.problem.CreateProblem;
+import yakworks.api.problem.IProblem;
+import yakworks.api.problem.exception.ProblemBuilder;
+import yakworks.api.problem.exception.ProblemRuntime;
 
 import java.net.URI;
 

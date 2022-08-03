@@ -1,6 +1,6 @@
-package yakworks.problem.exception;
+package yakworks.api.problem.exception;
 
-import yakworks.problem.IProblem;
+import yakworks.api.problem.IProblem;
 
 /**
  * An extension of the {@link IProblem} interface for problems that extend {@link Exception}. Since {@link Exception}

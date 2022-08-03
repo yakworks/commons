@@ -2,13 +2,12 @@
 * Copyright 2019 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
 * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 */
-package yakworks.problem.data
+package yakworks.api.problem.data
 
 import groovy.transform.CompileStatic
 
 import yakworks.api.ApiStatus
 import yakworks.api.HttpStatus
-import yakworks.problem.ProblemException
 
 /**
  * fillInStackTrace is overriden to show nothing
@@ -48,7 +47,7 @@ class NotFoundProblem implements DataProblemTrait<NotFoundProblem>  {
 
 
     @Override
-    ProblemException toException(){
+    yakworks.api.problem.ProblemException toException(){
         return new NotFoundProblem.Exception().problem(this)
     }
 

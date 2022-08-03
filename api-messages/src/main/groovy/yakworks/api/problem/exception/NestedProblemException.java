@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package yakworks.problem.exception;
+package yakworks.api.problem.exception;
 
-import yakworks.problem.ProblemUtils;
+import yakworks.api.problem.ProblemUtils;
 
 import jakarta.annotation.Nullable;
 

@@ -2,9 +2,10 @@ package yakworks.problem;
 
 import org.junit.jupiter.api.Test;
 import yakworks.api.ApiStatus;
+import yakworks.api.problem.IProblem;
 import yakworks.message.MsgKey;
-import yakworks.problem.exception.Exceptional;
-import yakworks.problem.exception.ProblemRuntime;
+import yakworks.api.problem.exception.Exceptional;
+import yakworks.api.problem.exception.ProblemRuntime;
 
 import java.net.URI;
 

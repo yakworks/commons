@@ -1,6 +1,6 @@
 package yakworks.api;
 
-import yakworks.problem.exception.ProblemRuntime;
+import yakworks.api.problem.exception.ProblemRuntime;
 
 @SuppressWarnings("unused") // since we're testing access levels we're fine if this compiles
 public final class MyProblem extends ProblemRuntime {

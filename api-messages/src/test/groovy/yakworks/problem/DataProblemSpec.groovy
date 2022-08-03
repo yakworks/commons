@@ -5,9 +5,10 @@
 package yakworks.problem
 
 import spock.lang.Specification
-import yakworks.problem.data.DataProblem
-import yakworks.problem.data.DataProblemException
-import yakworks.problem.data.DataProblemCodes
+import yakworks.api.problem.ProblemException
+import yakworks.api.problem.data.DataProblem
+import yakworks.api.problem.data.DataProblemException
+import yakworks.api.problem.data.DataProblemCodes
 
 class DataProblemSpec extends Specification {
 

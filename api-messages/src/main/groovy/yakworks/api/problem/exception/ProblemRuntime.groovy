@@ -2,16 +2,15 @@
 * Copyright 2021 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
 * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 */
-package yakworks.problem.exception
+package yakworks.api.problem.exception
 
 import groovy.transform.CompileStatic
 
 import jakarta.annotation.Nullable
-import yakworks.problem.ProblemTrait
-import yakworks.problem.ProblemUtils
+import yakworks.api.problem.ProblemTrait
 
 import static java.util.Arrays.asList
-import static yakworks.problem.spi.StackTraceProcessor.COMPOUND
+import static yakworks.api.problem.spi.StackTraceProcessor.COMPOUND
 
 /**
  * Throwable Exception Problem
@@ -31,7 +30,7 @@ class ProblemRuntime extends NestedProblemException implements ProblemTrait<Prob
 
     @Override //throwable
     String getMessage() {
-        return ProblemUtils.buildMessage(this)
+        return yakworks.api.problem.ProblemUtils.buildMessage(this)
     }
 
     @Override

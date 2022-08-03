@@ -1,5 +1,4 @@
-//logging for tests
-
+// --- dependency and logging for tests ---
 
 dependencies {
   testImplementation "org.slf4j:slf4j-simple:${vSlf4j}"

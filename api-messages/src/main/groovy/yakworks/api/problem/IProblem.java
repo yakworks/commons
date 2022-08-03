@@ -1,4 +1,4 @@
-package yakworks.problem;
+package yakworks.api.problem;
 
 import yakworks.api.Result;
 import yakworks.message.MsgKey;
