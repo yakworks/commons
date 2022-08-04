@@ -12,7 +12,7 @@ import yakworks.api.ResultUtils
 @CompileStatic
 class ProblemUtils {
 
-    static String problemToString(final IProblem p) {
+    static String problemToString(final Problem p) {
         String concat = ResultUtils.resultToStringCommon(p)
         String type = p.type ? "type=$p.type" : null
         concat = [concat, type, p.detail].findAll{it != null}.join(', ')
@@ -21,7 +21,7 @@ class ProblemUtils {
     }
 
     static String buildMessage(final Object problem) {
-        IProblem p = (IProblem)problem
+        Problem p = (Problem)problem
         String code = p.code ? "code=$p.code" : ''
         return [p.title, p.detail, code].findAll{it}.join(': ')
     }

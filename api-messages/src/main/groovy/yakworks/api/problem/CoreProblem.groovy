@@ -13,7 +13,7 @@ import groovy.transform.CompileStatic
  * @since 7.0.8
  */
 @CompileStatic
-class Problem implements ProblemTrait<Problem> {
+class CoreProblem implements ProblemTrait<CoreProblem> {
 
     // allows to do 'someProblem as Exception'
     // @Override

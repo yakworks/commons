@@ -2,7 +2,7 @@ package yakworks.problem;
 
 import org.junit.jupiter.api.Test;
 import yakworks.api.ApiStatus;
-import yakworks.api.problem.IProblem;
+import yakworks.api.problem.Problem;
 import yakworks.message.MsgKey;
 import yakworks.api.problem.exception.Exceptional;
 import yakworks.api.problem.exception.ProblemRuntime;
@@ -21,7 +21,7 @@ class EnforceCoverageTest {
         });
     }
 
-    static final class FakeProblem extends Exception implements IProblem.Fluent<FakeProblem>, Exceptional {
+    static final class FakeProblem extends Exception implements Problem.Fluent<FakeProblem>, Exceptional {
 
         @Override
         public MsgKey getMsg() {

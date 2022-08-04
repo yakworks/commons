@@ -8,10 +8,12 @@ import groovy.transform.CompileStatic
 
 import jakarta.annotation.Nullable
 import yakworks.api.ApiStatus
+import yakworks.api.problem.CoreProblem
+import yakworks.api.problem.Problem
 import yakworks.message.MsgKey
 
 @CompileStatic
-final class ProblemBuilder<T extends yakworks.api.problem.IProblem> {
+final class ProblemBuilder<T extends Problem> {
 
     private URI type
     private String title
@@ -24,7 +26,7 @@ final class ProblemBuilder<T extends yakworks.api.problem.IProblem> {
     private Class<T> problemClass
 
     ProblemBuilder() {
-        this.problemClass = yakworks.api.problem.Problem as Class<T>
+        this.problemClass = CoreProblem as Class<T>
     }
 
     ProblemBuilder(Class<T> problemType) {

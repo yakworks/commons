@@ -19,7 +19,7 @@ import yakworks.message.MsgKey
  * @since 7.0.8
  */
 @CompileStatic
-trait ProblemTrait<E extends ProblemTrait> extends ResultTrait<E> implements IProblem.Fluent<E> {
+trait ProblemTrait<E extends Problem.Fluent> extends ResultTrait<E> implements Problem.Fluent<E> {
     // result overrides, always false
     Boolean getOk(){ false } //always false
     //status default to 400
@@ -86,7 +86,7 @@ trait ProblemTrait<E extends ProblemTrait> extends ResultTrait<E> implements IPr
     }
 
     static E ofMsg(MsgKey mkey){
-        return create().msg(mkey)
+        return (E) create().msg(mkey)
     }
 
     static E withStatus(ApiStatus status) {
@@ -103,7 +103,7 @@ trait ProblemTrait<E extends ProblemTrait> extends ResultTrait<E> implements IPr
 
     static E ofCause(final Throwable problemCause) {
         def dap = this.newInstance([problemCause: problemCause])
-        dap.detail(ProblemUtils.getRootCause(problemCause).message)
+        (E) dap.detail(ProblemUtils.getRootCause(problemCause).message)
     }
 
 }

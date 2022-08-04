@@ -4,6 +4,7 @@
 */
 package yakworks.api
 
+import yakworks.api.problem.Problem
 import yakworks.message.MsgKey
 import yakworks.message.MsgKeyDecorator
 
@@ -21,8 +22,15 @@ import yakworks.message.MsgKeyDecorator
  * @author Joshua Burnett (@basejump)
  * @since 7.0.8
  */
-@Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
+//@Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
+@Suppress("UNUSED_PARAMETER")
 interface Result : MsgKeyDecorator, AsMap {
+    /**
+     * success or fail? if ok is true then it still may mean that there are warnings and needs to be looked into
+     */
+    val ok: Boolean?
+        get() = true
+
     val defaultCode: String?
         get() = null
 
@@ -52,12 +60,6 @@ interface Result : MsgKeyDecorator, AsMap {
         set(value) {}
 
     /**
-     * success or fail? if ok is true then it still may mean that there are warnings and needs to be looked into
-     */
-    val ok: Boolean?
-        get() = true
-
-    /**
      * get the value of the payload, keeps api similiar to Optional.
      */
     fun get(): Any? {
@@ -73,49 +75,40 @@ interface Result : MsgKeyDecorator, AsMap {
         //return mapOf("Vanilla" to 24, "Chocolate" to 14, "Rocky Road" to 7)
     }
 
+    @Suppress("UNCHECKED_CAST")
     interface Fluent<E> : Result {
-        fun title(v: String?): E {
+        fun <E: Fluent<E>> title(v: String?): E {
             title = v
             return this as E
         }
 
-        fun status(v: ApiStatus): E {
+        fun <E: Fluent<E>> status(v: ApiStatus): E {
             status = v
             return this as E
         }
 
-        fun status(v: Int?): E {
+        fun <E: Fluent<E>> status(v: Int?): E {
             status = HttpStatus.valueOf(v!!)
             return this as E
         }
 
-        fun payload(v: Any?): E {
+        fun <E: Fluent<E>> payload(v: Any?): E {
             payload = v
             return this as E
         }
 
-        //aliases to payload
-        fun value(v: Any?): E {
-            return payload(v)
-        }
-
-        fun msg(v: MsgKey): E {
+        fun <E : Fluent<E>> msg(v: MsgKey): E {
             msg = v
             return this as E
         }
 
-        fun msg(v: String?): E {
-            return if (msg == null) {
-                msg(MsgKey.ofCode(v))
-            } else {
-                msg!!.code = v
-                this as E
-            }
+        fun <E : Fluent<E>> msg(v: String?): E {
+            if (msg == null) msg = MsgKey.ofCode(v) else msg!!.code = v
+            return this as E
         }
 
-        fun msg(v: String, args: Any?): E {
-            val mk = MsgKey.of(v, args)
-            return msg(mk)
+        fun <E: Fluent<E>> msg(v: String, args: Any?): E {
+            return msg(MsgKey.of(v, args)) as E
         }
     }
 

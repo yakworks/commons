@@ -16,13 +16,13 @@ interface MsgKeyDecorator : MsgKey {
         set(v) { }
 
     override var code: String?
-        get() = msg!!.code
+        get() = msg?.code
         set(v) {
-            msg!!.code = v
+            msg?.code = v
         }
     override var args: MsgArgs?
-        get() = msg!!.args
+        get() = msg?.args
         set(v) {
-            msg!!.args = v
+            msg?.args = v
         }
 }

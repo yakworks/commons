@@ -2,13 +2,11 @@
 * Copyright 2021 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
 * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 */
-//@file:JvmName("ResultSupport")
 package yakworks.api
 
 import yakworks.message.MsgServiceRegistry
 import yakworks.message.spi.MsgService
 import kotlin.reflect.KClass
-
 
 internal object ResultSupport {
 
@@ -64,7 +62,7 @@ internal object ResultSupport {
         var message: String? = null
         if(result.msg != null) message = msgService.get(result.msg)
 
-        if(!message.isNullOrEmpty() && !result.title.isNullOrEmpty()){
+        if(message.isNullOrEmpty() && !result.title.isNullOrEmpty()){
             message = result.title
         }
         return message

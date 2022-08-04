@@ -7,8 +7,6 @@ package yakworks.api.problem
 
 import spock.lang.Specification
 import spock.lang.Unroll
-import yakworks.api.problem.Problem
-import yakworks.api.problem.ProblemException
 import yakworks.message.MsgKey
 
 import static yakworks.api.HttpStatus.NOT_FOUND
@@ -17,14 +15,14 @@ class ProblemSpec extends Specification {
 
     void shouldRenderTestProblem() {
         expect:
-        Problem problem = Problem.create()
-        problem.toString() == "Problem(400)"
+        CoreProblem problem = CoreProblem.create()
+        problem.toString().contains("Problem(400)")
         !problem.ok
     }
 
     void "problem of"() {
         when:
-        def p = Problem.of('error.data.empty', [name: 'foo'])
+        def p = CoreProblem.of('error.data.empty', [name: 'foo'])
 
         then:
         !p.ok
@@ -35,7 +33,7 @@ class ProblemSpec extends Specification {
 
     void "problem throw"() {
         when:
-        def p = Problem.of('error.data.empty', [name: 'foo'])
+        def p = CoreProblem.of('error.data.empty', [name: 'foo'])
         throw p.toException()
 
         then:
@@ -53,7 +51,7 @@ class ProblemSpec extends Specification {
     void "problem throw with cause"() {
         when:
         def rte = new RuntimeException("bad stuff")
-        def p = Problem.of('error.data.empty', [name: 'foo']).cause(rte)
+        def p = CoreProblem.of('error.data.empty', [name: 'foo']).cause(rte)
         throw p as Exception
 
         then:
@@ -64,22 +62,22 @@ class ProblemSpec extends Specification {
     }
 
     @Unroll
-    void "init with code statics #code"(Problem problem, String code) {
+    void "init with code statics #code"(CoreProblem problem, String code) {
         expect:
-        problem instanceof Problem
+        problem instanceof CoreProblem
         problem.code == code
 
         where:
-        problem                               | code
-        Problem.of('code.args', [name: 'foo'])      | 'code.args'
-        Problem.ofCode('ofCode')  | 'ofCode'
-        Problem.ofMsg(MsgKey.ofCode('withMsg')) | 'withMsg'
+        problem                                     | code
+        CoreProblem.of('code.args', [name: 'foo'])  | 'code.args'
+        CoreProblem.ofCode('ofCode')                | 'ofCode'
+        CoreProblem.ofMsg(MsgKey.ofCode('withMsg')) | 'withMsg'
 
     }
 
     void "should Render Custom Detail And Instance"() {
         when:
-        final Problem p = Problem.withStatus(NOT_FOUND)
+        final CoreProblem p = CoreProblem.withStatus(NOT_FOUND)
             .type(URI.create("https://example.org/problem"))
             .detail("Order 123")
 
@@ -93,7 +91,7 @@ class ProblemSpec extends Specification {
 
     void shouldRenderCustomPropertiesWhenPrintingStackTrace() {
         when:
-        final Problem problem = Problem.withStatus(NOT_FOUND)
+        final CoreProblem problem = CoreProblem.withStatus(NOT_FOUND)
             .type(URI.create("https://example.org/problem"));
 
 
@@ -102,7 +100,7 @@ class ProblemSpec extends Specification {
 
         then:
         writer.toString()
-        writer.toString().startsWith("Problem(404")
+        writer.toString().contains("Problem(404")
     }
 
 }

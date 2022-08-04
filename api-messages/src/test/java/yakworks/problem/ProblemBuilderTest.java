@@ -3,7 +3,7 @@ package yakworks.problem;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import yakworks.api.problem.CreateProblem;
-import yakworks.api.problem.IProblem;
+import yakworks.api.problem.Problem;
 import yakworks.api.problem.exception.ProblemBuilder;
 import yakworks.api.problem.exception.ProblemRuntime;
 
@@ -21,36 +21,36 @@ class ProblemBuilderTest {
 
     @Test
     void shouldCreateEmptyProblem() {
-        final IProblem problem = CreateProblem.create();
+        final Problem problem = CreateProblem.create();
 
-        assertThat(problem, hasFeature("title", IProblem::getTitle, is(nullValue())));
-        assertThat(problem, hasFeature("detail", IProblem::getDetail, is(nullValue())));
+        assertThat(problem, hasFeature("title", Problem::getTitle, is(nullValue())));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is(nullValue())));
     }
 
     @Test
     void shouldCreateProblem() {
-        final IProblem problem = ProblemBuilder.of(ProblemRuntime.class)
+        final Problem problem = ProblemBuilder.of(ProblemRuntime.class)
                 .type(type)
                 .title("Out of Stock")
                 .status(BAD_REQUEST)
                 .build();
 
-        assertThat(problem, hasFeature("type", IProblem::getType, is(type)));
-        assertThat(problem, hasFeature("title", IProblem::getTitle, is("Out of Stock")));
-        assertThat(problem, hasFeature("status", IProblem::getStatus, is(BAD_REQUEST)));
-        assertThat(problem, hasFeature("detail", IProblem::getDetail, is(nullValue())));
+        assertThat(problem, hasFeature("type", Problem::getType, is(type)));
+        assertThat(problem, hasFeature("title", Problem::getTitle, is("Out of Stock")));
+        assertThat(problem, hasFeature("status", Problem::getStatus, is(BAD_REQUEST)));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is(nullValue())));
     }
 
     @Test
     void shouldCreateProblemWithDetail() {
-        final IProblem problem = new ProblemBuilder()
+        final Problem problem = new ProblemBuilder()
                 .type(type)
                 .title("Out of Stock")
                 .status(BAD_REQUEST)
                 .detail("Item B00027Y5QG is no longer available")
                 .build();
 
-        assertThat(problem, hasFeature("detail", IProblem::getDetail, is("Item B00027Y5QG is no longer available")));
+        assertThat(problem, hasFeature("detail", Problem::getDetail, is("Item B00027Y5QG is no longer available")));
     }
 
     @Test @Disabled
@@ -69,9 +69,9 @@ class ProblemBuilderTest {
         // assertThat(problem, hasFeature("cause", ProblemRuntime::getCause, notNullValue()));
 
         final ProblemRuntime cause = (ProblemRuntime)problem.getCause();
-        assertThat(cause, hasFeature("type", IProblem::getType, hasToString("https://example.org/expired-credit-card")));
-        assertThat(cause, hasFeature("title", IProblem::getTitle, is("Expired Credit Card")));
-        assertThat(cause, hasFeature("status", IProblem::getStatus, is(BAD_REQUEST)));
+        assertThat(cause, hasFeature("type", Problem::getType, hasToString("https://example.org/expired-credit-card")));
+        assertThat(cause, hasFeature("title", Problem::getTitle, is("Expired Credit Card")));
+        assertThat(cause, hasFeature("status", Problem::getStatus, is(BAD_REQUEST)));
     }
 
 

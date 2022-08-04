@@ -48,10 +48,14 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
      */
     @Override
     MsgKey getMsg(){
-        if(!msg && results.size() != 0) {
-            return results[0].msg
+        if(getMsgKey() == null){
+            if(getDefaultCode()){
+                msgKey = MsgKey.ofCode(getDefaultCode())
+            } else if(results.size() != 0){
+                msgKey =  results[0].msg
+            }
         }
-        return msg
+        return msgKey
     }
 
     @Override //changes default list delegate so we can add ok

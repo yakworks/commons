@@ -18,18 +18,18 @@ import yakworks.message.MsgKey
 @CompileStatic
 class CreateProblem {
 
-    static Class<? extends ProblemTrait> problemClass = Problem
+    static Class<? extends ProblemTrait> problemClass = CoreProblem
 
     static ProblemTrait create() {
         return problemClass.newInstance()
     }
 
     static ProblemTrait code(String code, Object args) {
-        return create().msg(MsgKey.of(code, args))
+        return (ProblemTrait) create().msg(MsgKey.of(code, args))
     }
 
     static ProblemTrait code(String code) {
-        return create().msg(MsgKey.ofCode(code))
+        return (ProblemTrait) create().msg(MsgKey.ofCode(code))
     }
 
     static ProblemTrait status(HttpStatus status) {
@@ -37,7 +37,7 @@ class CreateProblem {
     }
 
     static ProblemTrait msg(MsgKey mkey) {
-        return create().msg(mkey)
+        return (ProblemTrait) create().msg(mkey)
     }
 
     static ProblemTrait detail(String detail) {
