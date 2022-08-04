@@ -6,6 +6,8 @@ package yakworks.api
 
 import groovy.transform.CompileStatic
 
+import yakworks.message.MsgKey
+
 /**
  * A Parent Result that has a list of Result(s).
  * The data in this case is a List of result/problem instances
@@ -39,6 +41,17 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
     ApiResults ok(boolean v){
         ok = v
         return this
+    }
+
+    /**
+     * Overrides to get msg from first item in result if main one is null
+     */
+    @Override
+    MsgKey getMsg(){
+        if(!msg && results.size() != 0) {
+            return results[0].msg
+        }
+        return msg
     }
 
     @Override //changes default list delegate so we can add ok
@@ -94,7 +107,7 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
      */
     @Override
     Map<String, Object> asMap(){
-        Map<String, Object> hmap = ResultUtils.toMap(this);
+        Map<String, Object> hmap = ResultSupport.toMap(this);
         if(!this.ok){
             hmap.put("problems", getProblems());
         }

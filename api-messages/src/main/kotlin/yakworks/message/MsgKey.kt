@@ -52,7 +52,7 @@ interface MsgKey {
          * Make key form code
          */
         @JvmStatic
-        fun ofCode(code: String?): DefaultMsgKey? {
+        fun ofCode(code: String?): DefaultMsgKey {
             return DefaultMsgKey(code)
         }
 
@@ -60,7 +60,7 @@ interface MsgKey {
          * key from code and map args
          */
         @JvmStatic
-        fun of(code: String?, args: Any?): DefaultMsgKey? {
+        fun of(code: String, args: Any?): DefaultMsgKey {
             return DefaultMsgKey(code).args(args)
         }
     }

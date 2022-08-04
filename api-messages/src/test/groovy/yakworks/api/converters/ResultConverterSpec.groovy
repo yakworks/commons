@@ -18,6 +18,7 @@ class ResultConverterSpec extends Specification {
         String res = JsonEngine.toJson(okRes)
 
         then:
+        // res == '{"ok":true,"status":200,"payload":{"foo":"bar"}}'
         res == '{"ok":true,"status":200,"payload":{"foo":"bar"}}'
     }
 
