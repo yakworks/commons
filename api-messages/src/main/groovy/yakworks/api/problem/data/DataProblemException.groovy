@@ -6,14 +6,17 @@ package yakworks.api.problem.data
 
 import groovy.transform.CompileStatic
 
+import yakworks.api.problem.ThrowableProblem
+
 /**
  * generic problem
  */
+@SuppressWarnings('ConfusingClassNamedException')
 @CompileStatic
-class DataProblemException extends yakworks.api.problem.ProblemException<DataProblemTrait<?>> {
+class DataProblemException extends ThrowableProblem {
 
     DataProblemException() {super()}
     DataProblemException(Throwable cause) {super(cause)}
 
-    Object getEntity(){ problem.getEntity() }
+    Object getEntity(){ (problem as DataProblemTrait).getEntity() }
 }

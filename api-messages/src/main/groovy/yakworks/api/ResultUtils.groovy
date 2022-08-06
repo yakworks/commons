@@ -4,11 +4,12 @@
 */
 package yakworks.api;
 
-import groovy.transform.CompileStatic;
+import groovy.transform.CompileStatic
 
-import yakworks.message.MsgServiceRegistry;
-import yakworks.message.spi.MsgService;
+import yakworks.message.MsgServiceRegistry
+import yakworks.message.spi.MsgService
 
+@SuppressWarnings(['ExplicitLinkedHashMapInstantiation'])
 @CompileStatic
 class ResultUtils {
 

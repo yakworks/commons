@@ -5,7 +5,6 @@
 package yakworks.api.problem
 
 import spock.lang.Specification
-import yakworks.api.problem.ProblemException
 import yakworks.api.problem.data.DataProblem
 import yakworks.api.problem.data.DataProblemException
 import yakworks.api.problem.data.DataProblemCodes
@@ -29,7 +28,7 @@ class DataProblemSpec extends Specification {
 
         then:
         e instanceof DataProblemException
-        e instanceof ProblemException
+        e instanceof ThrowableProblem
         e.problem
         e.code == 'foo'
         e.args.asMap().name == 'SomeEntity'
@@ -42,7 +41,7 @@ class DataProblemSpec extends Specification {
         then:
         e.detail == "foo error"
         e.message.startsWith "foo error"
-        e instanceof ProblemException
+        e instanceof ThrowableProblem
         e.problem instanceof DataProblem
     }
 

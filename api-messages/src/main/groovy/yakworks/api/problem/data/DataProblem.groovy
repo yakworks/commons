@@ -18,6 +18,9 @@ class DataProblem implements DataProblemTrait<DataProblem> {
      * Title will blank so it can come from the code on render and detail will have the custom message
      */
     static DataProblemException ex(String detailMessage){
-        return (DataProblemException) withDetail(detailMessage).toException()
+        def dpe = new DataProblem()
+        dpe.detail = detailMessage
+        return (DataProblemException) dpe.toException()
     }
+
 }

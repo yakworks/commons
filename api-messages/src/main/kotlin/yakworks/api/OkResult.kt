@@ -4,7 +4,6 @@
 */
 package yakworks.api
 
-import groovy.transform.CompileStatic
 import yakworks.message.MsgKey
 
 /**
@@ -12,7 +11,7 @@ import yakworks.message.MsgKey
  *
  * @author Joshua Burnett (@basejump)
  */
-class OkResult : Result.Fluent<OkResult> {
+open class OkResult : GenericResult<OkResult> {
 
     override val ok: Boolean = true
     override val defaultCode: String? = null
@@ -25,19 +24,4 @@ class OkResult : Result.Fluent<OkResult> {
             if(field == null) field = MsgKey.ofCode(defaultCode)
             return field
         }
-
-    constructor() {}
-
-    constructor(mk: MsgKey?) {
-        msg = mk
-    }
-
-    companion object {
-        fun ofMsg(mk: MsgKey?): OkResult {
-            return OkResult(mk)
-        }
-    }
-
-
-
 }

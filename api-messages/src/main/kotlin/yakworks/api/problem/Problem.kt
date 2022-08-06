@@ -1,10 +1,8 @@
 package yakworks.api.problem
 
-import yakworks.api.Result
+import yakworks.api.*
 import yakworks.api.ResultSupport
-import yakworks.api.ResultSupport.toMap
 import yakworks.message.MsgKey
-import yakworks.message.MsgKey.Companion.ofCode
 import java.net.URI
 
 /**
@@ -12,16 +10,14 @@ import java.net.URI
  *
  * @see [RFC 7807: Problem Details for HTTP APIs](https://tools.ietf.org/html/rfc7807)
  */
+@Suppress("UNUSED_PARAMETER")
 interface Problem : Result {
 
-    override val ok: Boolean
-        get() = false
+    override val ok: Boolean get() = false
 
     override var msg: MsgKey?
         get() = ofCode("problem.blank")
-        set(msg) {
-            super.msg = msg
-        }
+        set(v) { noImpl() }
 
     /**r
      * An absolute URI that identifies the problem type. When dereferenced,
@@ -33,7 +29,7 @@ interface Problem : Result {
      */
     var type: URI?
         get() = null
-        set(v) {}
+        set(v) { noImpl() }
 
     /**
      * A human readable explanation specific to this occurrence of the problem.
@@ -42,14 +38,21 @@ interface Problem : Result {
      */
     var detail: String?
         get() = null
-        set(v) {}
+        set(v) { noImpl() }
 
     /**
      * The list of constraint violations or any others
      */
-    var violations: List<Violation?>?
-        get() = emptyList<Violation>()
-        set(v) {}
+    var violations: List<Violation>?
+        get() = mutableListOf()
+        set(v) { noImpl() }
+
+    /**
+     * The list of constraint violations or any others
+     */
+    var problemCause: Throwable?
+        get() = null
+        set(v) { noImpl() }
 
     /**
      * converts to Map, helpfull for to json and can be overriden on concrete impls
@@ -68,30 +71,33 @@ interface Problem : Result {
      * An absolute URI that identifies the specific occurrence of the problem.
      * It may or may not yield further information if dereferenced.
      */
-    val instanceURI: URI?
+    var instanceURI: URI?
         get() = null
+        set(v) { noImpl() }
 
-    interface Fluent<E : Fluent<E>> : Problem, Result.Fluent<E> {
 
-        //Problem builders
-        fun <E: Fluent<E>> detail(v: String?): E {
-            detail = v
-            return this as E
-        }
+    companion object {
+        //STATIC HELPERS
+        //this is just to override the OK, doesnt make sense in the context of a Problem
+        @JvmStatic
+        fun OK(): ProblemResult = ProblemResult()
 
-        fun <E: Fluent<E>> type(v: URI?): E {
-            type = v
-            return this as E
-        }
+        @JvmStatic
+        fun ofCode(code: String): ProblemResult = of(code, null)
 
-        fun <E: Fluent<E>> type(v: String?): E {
-            type = URI.create(v)
-            return this as E
-        }
+        @JvmStatic
+        fun of(code: String, args: Any?): ProblemResult = ofMsg(MsgKey.of(code, args))
 
-        fun <E: Fluent<E>> violations(v: List<Violation?>?): E {
-            violations = v
-            return this as E
+        @JvmStatic
+        fun ofPayload(payload: Any?): ProblemResult = ProblemResult().payload(payload)
+
+        @JvmStatic
+        fun ofMsg(mk: MsgKey): ProblemResult = ProblemResult().msg(mk)
+
+        @JvmStatic
+        fun ofCause(problemCause: Throwable): ProblemResult {
+            val dap = ProblemResult().cause(problemCause)
+            return dap.detail(ProblemUtils2.getRootCause(problemCause)?.message)
         }
     }
 }

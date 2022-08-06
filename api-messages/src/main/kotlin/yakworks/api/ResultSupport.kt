@@ -6,7 +6,13 @@ package yakworks.api
 
 import yakworks.message.MsgServiceRegistry
 import yakworks.message.spi.MsgService
+import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass
+
+/** package level func to fire exception */
+fun noImpl(){
+    throw NotImplementedError()
+}
 
 internal object ResultSupport {
 

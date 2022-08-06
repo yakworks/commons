@@ -1,9 +1,9 @@
 package yakworks.problem;
 
-import yakworks.api.problem.Problem;
+import yakworks.api.problem.GenericProblem;
 import yakworks.message.MsgKey;
 
-public final class EmptyProblem implements Problem.Fluent<EmptyProblem> {
+public final class EmptyProblem implements GenericProblem<EmptyProblem> {
 
     @Override
     public MsgKey getMsg() {

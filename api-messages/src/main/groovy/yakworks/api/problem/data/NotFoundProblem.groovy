@@ -8,6 +8,7 @@ import groovy.transform.CompileStatic
 
 import yakworks.api.ApiStatus
 import yakworks.api.HttpStatus
+import yakworks.api.problem.ThrowableProblem
 
 /**
  * fillInStackTrace is overriden to show nothing
@@ -47,7 +48,7 @@ class NotFoundProblem implements DataProblemTrait<NotFoundProblem>  {
 
 
     @Override
-    yakworks.api.problem.ProblemException toException(){
+    ThrowableProblem toException(){
         return new NotFoundProblem.Exception().problem(this)
     }
 

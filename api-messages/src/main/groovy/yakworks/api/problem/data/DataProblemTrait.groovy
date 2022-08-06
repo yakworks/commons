@@ -7,6 +7,9 @@ package yakworks.api.problem.data
 import groovy.transform.CompileStatic
 
 import yakworks.api.ResultUtils
+import yakworks.api.problem.ProblemTrait
+import yakworks.api.problem.ProblemUtils2
+import yakworks.api.problem.ThrowableProblem
 
 /**
  * Trait implementation for the Problem that has setters and builders
@@ -15,7 +18,7 @@ import yakworks.api.ResultUtils
  * @since 7.0.8
  */
 @CompileStatic
-trait DataProblemTrait<E extends DataProblemTrait> extends yakworks.api.problem.ProblemTrait<E> {
+trait DataProblemTrait<E extends DataProblemTrait> extends ProblemTrait<E> {
 
     /**
      * convienience alias for payload so its clearer in the code
@@ -42,8 +45,13 @@ trait DataProblemTrait<E extends DataProblemTrait> extends yakworks.api.problem.
     }
 
     @Override
-    yakworks.api.problem.ProblemException toException(){
+    ThrowableProblem toException(){
         return getCause() ? new DataProblemException(getCause()).problem(this) : new DataProblemException().problem(this)
+    }
+
+    static E ofCause(final Throwable problemCause) {
+        def dap = this.newInstance([problemCause: problemCause])
+        (E) dap.detail(ProblemUtils2.getRootCause(problemCause).message)
     }
 
 }

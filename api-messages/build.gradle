@@ -1,6 +1,7 @@
 plugins {
   id "org.jetbrains.kotlin.jvm"
   id "yakworks.groovy-lib"
+  id "com.bnorm.power.kotlin-power-assert" version "0.12.0"
 }
 
 apply from: "${rootProject.projectDir}/gradle/test-unit.gradle"
@@ -23,6 +24,7 @@ dependencies {
 
   // Use the Kotlin JUnit integration.
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
   // Use the Kotlin test library.
   // testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -46,8 +48,14 @@ compileKotlin {
 
 //groovy (java?) depends on kotlin
 compileGroovy.classpath += files(compileKotlin.destinationDirectory)
+compileTestGroovy.classpath += files(compileTestKotlin.destinationDirectory)
 
 tasks.withType(Jar) {
 
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+
+// kotlinPowerAssert {
+//   functions = ["kotlin.assert", "kotlin.test.assertTrue"]
+// }
+

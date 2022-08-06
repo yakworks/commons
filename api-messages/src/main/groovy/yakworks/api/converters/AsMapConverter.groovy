@@ -7,7 +7,6 @@ package yakworks.api.converters
 import groovy.json.JsonGenerator
 import groovy.transform.CompileStatic
 
-import yakworks.api.ApiResults
 import yakworks.api.AsMap
 
 /**

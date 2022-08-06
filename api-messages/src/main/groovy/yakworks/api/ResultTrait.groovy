@@ -6,7 +6,6 @@ package yakworks.api
 
 import groovy.transform.CompileStatic
 
-import yakworks.api.Result.Fluent
 import yakworks.message.MsgKey
 
 /**
@@ -16,7 +15,7 @@ import yakworks.message.MsgKey
  * @since 1
  */
 @CompileStatic
-trait ResultTrait<E extends Fluent> implements Fluent<E> {
+trait ResultTrait<E extends GenericResult> implements GenericResult<E> {
     String defaultCode //= 'result.ok'
     Boolean ok = true
     ApiStatus status = HttpStatus.OK

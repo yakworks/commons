@@ -6,8 +6,6 @@ package yakworks.message
 
 import groovy.transform.CompileStatic
 
-import yakworks.message.MsgKey
-
 /**
  * Static helpers for messages
  */

@@ -31,10 +31,9 @@ class ResultSpec extends Specification {
         okRes.payload == [foo:'bar']
     }
 
-    void "compileers sanity checks"(){
+    void "compile sanity check"(){
         expect:
-        ResultCompileStatic.testOkResult()
-        ResultCompileStatic.testProblem()
+        ResultCompileStatic.runAll()
     }
 
     // def "simple creation"(){

@@ -4,7 +4,7 @@
 */
 package yakworks.api.problem
 
-import groovy.transform.CompileDynamic
+
 import groovy.transform.CompileStatic
 
 import yakworks.api.ApiStatus
@@ -19,7 +19,7 @@ import yakworks.message.MsgKey
  * @since 7.0.8
  */
 @CompileStatic
-trait ProblemTrait<E extends Problem.Fluent> extends ResultTrait<E> implements Problem.Fluent<E> {
+trait ProblemTrait<E extends GenericProblem> extends ResultTrait<E> implements GenericProblem<E> {
     // result overrides, always false
     Boolean getOk(){ false } //always false
     //status default to 400
@@ -35,37 +35,24 @@ trait ProblemTrait<E extends Problem.Fluent> extends ResultTrait<E> implements P
     //if there is a cause we want to retian when we convert to exception
     Throwable problemCause
 
-    // here for compatibility. can override setCause in java17
-    Throwable getCause(){
-        problemCause
-    }
-
     // URI instance
     List<Violation> violations = [] as List<Violation> //Collections.emptyList();
 
-    E addViolations(List<MsgKey> keyedErrors){
-        def ers = getViolations()
-        keyedErrors.each {
-            ers << ViolationFieldError.of(it)
-        }
-        return (E)this
-    }
-
-    @CompileDynamic
-    E cause(Throwable exCause){
-        this.problemCause = exCause
-        return (E)this
-    }
-
     @Override
     String toString() {
-        return ProblemUtils.problemToString(this)
+        return ProblemUtils2.problemToString(this)
     }
 
-    @CompileDynamic
-    ProblemException toException(){
-        return getCause() ? new DefaultProblemException(getCause()).problem(this) : new DefaultProblemException().problem(this)
-    }
+    // @CompileDynamic
+    // ProblemException toException(){
+    //     return getCause() ? new DefaultProblemException(getCause()).problem(this) : new DefaultProblemException().problem(this)
+    // }
+
+    // allows to do 'someProblem as Exception'
+    // @Override
+    // public <T> T asType(Class<T> clazz) {
+    //     Exception.isAssignableFrom(clazz) ? (T) toException() : super.asType(clazz)
+    // }
 
     //static builders
     //overrides the Result/MsgKey builders
@@ -88,22 +75,22 @@ trait ProblemTrait<E extends Problem.Fluent> extends ResultTrait<E> implements P
     static E ofMsg(MsgKey mkey){
         return (E) create().msg(mkey)
     }
+    //
+    // static E withStatus(ApiStatus status) {
+    //     return create().status(status)
+    // }
+    //
+    // static E withTitle(String title) {
+    //     return create().title(title)
+    // }
+    //
+    // static E withDetail(String detail) {
+    //     return create().detail(detail)
+    // }
 
-    static E withStatus(ApiStatus status) {
-        return create().status(status)
-    }
-
-    static E withTitle(String title) {
-        return create().title(title)
-    }
-
-    static E withDetail(String detail) {
-        return create().detail(detail)
-    }
-
-    static E ofCause(final Throwable problemCause) {
-        def dap = this.newInstance([problemCause: problemCause])
-        (E) dap.detail(ProblemUtils.getRootCause(problemCause).message)
-    }
+    // static E ofCause(final Throwable problemCause) {
+    //     def dap = this.newInstance([problemCause: problemCause])
+    //     (E) dap.detail(ProblemUtils.getRootCause(problemCause).message)
+    // }
 
 }

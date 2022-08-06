@@ -5,7 +5,7 @@
 package yakworks.api.converters
 
 import spock.lang.Specification
-import yakworks.api.problem.CoreProblem
+import yakworks.api.problem.Problem
 import yakworks.api.problem.ViolationFieldError
 import yakworks.json.groovy.JsonEngine
 import yakworks.message.MsgKey
@@ -16,7 +16,8 @@ class ProblemConverterSpec extends Specification {
 
     void "simple problem"(){
         when:
-        def prob = CoreProblem.ofCode("some.code").title("crash").detail("crash detail")
+        Problem prob2 = Problem.ofCode("foo.bar").detail("ff")
+        Problem prob = Problem.ofCode("some.code").title("crash").detail("crash detail")
         prob.violations = [
             ViolationFieldError.of(MsgKey.ofCode('v1')).field('f1')
         ]

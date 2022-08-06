@@ -4,7 +4,6 @@
 */
 package yakworks.api
 
-import yakworks.api.problem.Problem
 import yakworks.message.MsgKey
 import yakworks.message.MsgKeyDecorator
 
@@ -25,12 +24,11 @@ import yakworks.message.MsgKeyDecorator
 //@Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
 @Suppress("UNUSED_PARAMETER")
 interface Result : MsgKeyDecorator, AsMap {
-    /**
-     * success or fail? if ok is true then it still may mean that there are warnings and needs to be looked into
-     */
+    /** success or fail? if ok is true then it still may mean that there are warnings and needs to be looked into */
     val ok: Boolean?
         get() = true
 
+    /** optional default code */
     val defaultCode: String?
         get() = null
 
@@ -41,14 +39,14 @@ interface Result : MsgKeyDecorator, AsMap {
      */
     var title: String?
         get() = null
-        set(value) {}
+        set(value) { noImpl() }
 
     /**
      * status code, normally an HttpStatus.value()
      */
     var status: ApiStatus
         get() = HttpStatus.OK
-        set(value) {}
+        set(value) { noImpl() }
 
     /**
      * the response object value or result of the method/function or process
@@ -57,7 +55,7 @@ interface Result : MsgKeyDecorator, AsMap {
      */
     var payload: Any?
         get() = null
-        set(value) {}
+        set(value) { noImpl() }
 
     /**
      * get the value of the payload, keeps api similiar to Optional.
@@ -75,66 +73,19 @@ interface Result : MsgKeyDecorator, AsMap {
         //return mapOf("Vanilla" to 24, "Chocolate" to 14, "Rocky Road" to 7)
     }
 
-    @Suppress("UNCHECKED_CAST")
-    interface Fluent<E> : Result {
-        fun <E: Fluent<E>> title(v: String?): E {
-            title = v
-            return this as E
-        }
-
-        fun <E: Fluent<E>> status(v: ApiStatus): E {
-            status = v
-            return this as E
-        }
-
-        fun <E: Fluent<E>> status(v: Int?): E {
-            status = HttpStatus.valueOf(v!!)
-            return this as E
-        }
-
-        fun <E: Fluent<E>> payload(v: Any?): E {
-            payload = v
-            return this as E
-        }
-
-        fun <E : Fluent<E>> msg(v: MsgKey): E {
-            msg = v
-            return this as E
-        }
-
-        fun <E : Fluent<E>> msg(v: String?): E {
-            if (msg == null) msg = MsgKey.ofCode(v) else msg!!.code = v
-            return this as E
-        }
-
-        fun <E: Fluent<E>> msg(v: String, args: Any?): E {
-            return msg(MsgKey.of(v, args)) as E
-        }
-    }
-
     companion object {
         //STATIC HELPERS
         @JvmStatic
-        fun OK(): OkResult {
-            return OkResult()
-        }
+        fun OK(): OkResult = OkResult()
 
         @JvmStatic
-        fun ofCode(code: String): OkResult {
-            return of(code, null)
-        }
+        fun ofCode(code: String): OkResult = OkResult().msg(MsgKey.of(code, null))
 
         @JvmStatic
-        fun of(code: String, args: Any?): OkResult {
-            return OkResult(MsgKey.of(code, args))
-        }
+        fun of(code: String, args: Any?): OkResult = OkResult().msg(MsgKey.of(code, args))
 
-        /**
-         * java.util.Optional api consitency. Creates a result with the value as the payload
-         */
         @JvmStatic
-        fun of(value: Any?): OkResult {
-            return OkResult().payload(value)
-        }
+        fun ofMsgKey(mk: MsgKey): OkResult = OkResult().msg(mk)
+
     }
 }

@@ -22,7 +22,7 @@ class ProblemSpec extends Specification {
 
     void "problem of"() {
         when:
-        def p = CoreProblem.of('error.data.empty', [name: 'foo'])
+        def p = Problem.of('error.data.empty', [name: 'foo'])
 
         then:
         !p.ok
@@ -37,14 +37,14 @@ class ProblemSpec extends Specification {
         throw p.toException()
 
         then:
-        def ex = thrown(ProblemException)
+        def ex = thrown(ThrowableProblem)
         ex.problem == p
 
         when:
         throw p as Exception
 
         then:
-        def ex2 = thrown(ProblemException)
+        def ex2 = thrown(ThrowableProblem)
         ex2.problem == p
     }
 
@@ -52,10 +52,10 @@ class ProblemSpec extends Specification {
         when:
         def rte = new RuntimeException("bad stuff")
         def p = CoreProblem.of('error.data.empty', [name: 'foo']).cause(rte)
-        throw p as Exception
+        throw p.toException()
 
         then:
-        def ex = thrown(ProblemException)
+        def ex = thrown(ThrowableProblem)
         ex.problem == p
         ex.rootCause == rte
 
@@ -77,7 +77,7 @@ class ProblemSpec extends Specification {
 
     void "should Render Custom Detail And Instance"() {
         when:
-        final CoreProblem p = CoreProblem.withStatus(NOT_FOUND)
+        final CoreProblem p = new CoreProblem().status(NOT_FOUND)
             .type(URI.create("https://example.org/problem"))
             .detail("Order 123")
 
@@ -91,7 +91,7 @@ class ProblemSpec extends Specification {
 
     void shouldRenderCustomPropertiesWhenPrintingStackTrace() {
         when:
-        final CoreProblem problem = CoreProblem.withStatus(NOT_FOUND)
+        final ProblemResult problem = new ProblemResult().status(NOT_FOUND)
             .type(URI.create("https://example.org/problem"));
 
 
@@ -100,7 +100,18 @@ class ProblemSpec extends Specification {
 
         then:
         writer.toString()
-        writer.toString().contains("Problem(404")
+        writer.toString().contains("ProblemResult(404")
+    }
+
+    void addViolations() {
+        when:
+        def problem = Problem.ofCode("testing")
+        problem.addViolations([
+            MsgKey.ofCode("foo"), MsgKey.ofCode("bar")
+        ])
+
+        then:
+        problem.violations.size() == 2
     }
 
 }
