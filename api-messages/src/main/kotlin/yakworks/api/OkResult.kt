@@ -13,7 +13,7 @@ import yakworks.message.MsgKey
  */
 open class OkResult : GenericResult<OkResult> {
 
-    override val ok: Boolean = true
+    override var ok: Boolean = true
     override val defaultCode: String? = null
     override var title: String? = null
     override var status: ApiStatus = HttpStatus.OK

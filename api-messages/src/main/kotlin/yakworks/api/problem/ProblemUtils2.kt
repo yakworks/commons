@@ -42,23 +42,4 @@ internal object ProblemUtils2 {
             .joinToString(separator = ": ") { it as String }
     }
 
-    /**
-     * Retrieve the innermost cause of the given exception
-     * Returns the original passed in exception if there is no root cause
-     * so this alway returns something. to check if it hsa a root cause then
-     * can just do getRootCause(ex) == ex
-     */
-    @JvmStatic
-    fun getRootCause(original: Throwable?): Throwable? {
-        if (original == null) {
-            return null
-        }
-        var rootCause: Throwable? = null
-        var cause = original.cause
-        while (cause != null && cause !== rootCause) {
-            rootCause = cause
-            cause = cause.cause
-        }
-        return rootCause ?: original
-    }
 }

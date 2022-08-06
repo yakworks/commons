@@ -5,11 +5,13 @@
 package yakworks.api.problem
 
 import jakarta.annotation.Nullable
+import yakworks.api.problem.exception.NestedExceptionUtils
+import yakworks.api.problem.exception.NestedRuntimeException
 
 /**
  * wraps a problem as a RuntimeException
  */
-open class ThrowableProblem : RuntimeException, ProblemDecorator<ThrowableProblem> {
+open class ThrowableProblem : NestedRuntimeException, ProblemDecorator<ThrowableProblem> {
 
     //generics on exceptions are too restrictive in kotlin and java so we can't use the delegate
     // features in kotlin and we manually implement whats needed.
@@ -21,11 +23,11 @@ open class ThrowableProblem : RuntimeException, ProblemDecorator<ThrowableProble
     //constructor(message: String): super(message)
     constructor(ex: Throwable): super(ex)
 
-    constructor(
-        message: String?, cause: Throwable?,
-        enableSuppression: Boolean,
-        writableStackTrace: Boolean
-    ): super(message, cause, enableSuppression, writableStackTrace){}
+    //constructor(
+    //    message: String?, cause: Throwable?,
+    //    enableSuppression: Boolean,
+    //    writableStackTrace: Boolean
+    //): super(message, cause, enableSuppression, writableStackTrace){}
 
     fun problem(v: GenericProblem<*>): ThrowableProblem = apply { problem = v }
 
@@ -36,17 +38,6 @@ open class ThrowableProblem : RuntimeException, ProblemDecorator<ThrowableProble
     override val message: String
         get() = ProblemUtils2.buildMessage(problem)
 
-    /**
-     * Retrieve the most specific cause of this exception, that is,
-     * either the innermost cause (root cause) or this exception itself.
-     * <p>Differs from {@link #getRootCause()} in that it falls back
-     * to the present exception if there is no root cause.
-     * @return the most specific cause (never {@code null})
-     */
-    val rootCause: Throwable?
-        get() = ProblemUtils2.getRootCause(this)
-
-
     override fun toString(): String {
         return ProblemUtils2.problemToString(problem)
     }
@@ -55,48 +46,15 @@ open class ThrowableProblem : RuntimeException, ProblemDecorator<ThrowableProble
      * uses the cause in the exception
      */
     override val cause: Throwable?
-        get() = super<RuntimeException>.cause
+        get() = super<NestedRuntimeException>.cause
 
-    /**
-     * Check whether this exception contains an exception of the given type:
-     * either it is of the given class itself or it contains a nested cause
-     * of the given type.
-     * @param exType the exception type to look for
-     * @return whether there is a nested exception of the specified type
-     */
-    open fun contains(@Nullable exType: Class<*>?): Boolean {
-        if (exType == null) {
-            return false
-        }
-        if (exType.isInstance(this)) {
-            return true
-        }
-        var cause: Throwable? = this.cause
-        if (cause === this) {
-            return false
-        }
-        return if (cause is ThrowableProblem) {
-            cause.contains(exType)
-        } else {
-            while (cause != null) {
-                if (exType.isInstance(cause)) {
-                    return true
-                }
-                if (cause.cause === cause) {
-                    break
-                }
-                cause = cause.cause
-            }
-            false
-        }
-    }
 
     companion object {
 
         @JvmStatic
         fun ofCause(problemCause: Throwable): ThrowableProblem {
             val dap = ThrowableProblem(problemCause)
-            return dap.detail(ProblemUtils2.getRootCause(problemCause)?.message)
+            return dap.detail(NestedExceptionUtils.getMostSpecificCause(problemCause)?.message)
         }
     }
 }

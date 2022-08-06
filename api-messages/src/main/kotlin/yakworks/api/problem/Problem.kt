@@ -2,6 +2,7 @@ package yakworks.api.problem
 
 import yakworks.api.*
 import yakworks.api.ResultSupport
+import yakworks.api.problem.exception.NestedExceptionUtils
 import yakworks.message.MsgKey
 import java.net.URI
 
@@ -12,11 +13,10 @@ import java.net.URI
  */
 @Suppress("UNUSED_PARAMETER")
 interface Problem : Result {
-
-    override val ok: Boolean get() = false
+    override val ok: Boolean? get() = false
 
     override var msg: MsgKey?
-        get() = ofCode("problem.blank")
+        get() = MsgKey.ofCode("general.problem")
         set(v) { noImpl() }
 
     /**r
@@ -28,16 +28,7 @@ interface Problem : Result {
      * @return an absolute URI that identifies this problem's type
      */
     var type: URI?
-        get() = null
-        set(v) { noImpl() }
-
-    /**
-     * A human readable explanation specific to this occurrence of the problem.
-     *
-     * @return A human readable explaination of this problem
-     */
-    var detail: String?
-        get() = null
+        get() = URI.create("about:blank")
         set(v) { noImpl() }
 
     /**
@@ -97,7 +88,7 @@ interface Problem : Result {
         @JvmStatic
         fun ofCause(problemCause: Throwable): ProblemResult {
             val dap = ProblemResult().cause(problemCause)
-            return dap.detail(ProblemUtils2.getRootCause(problemCause)?.message)
+            return dap.detail(NestedExceptionUtils.getMostSpecificCause(problemCause)?.message)
         }
     }
 }

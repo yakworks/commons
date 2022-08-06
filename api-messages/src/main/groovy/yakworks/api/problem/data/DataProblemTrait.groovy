@@ -8,8 +8,8 @@ import groovy.transform.CompileStatic
 
 import yakworks.api.ResultUtils
 import yakworks.api.problem.ProblemTrait
-import yakworks.api.problem.ProblemUtils2
 import yakworks.api.problem.ThrowableProblem
+import yakworks.api.problem.exception.NestedExceptionUtils
 
 /**
  * Trait implementation for the Problem that has setters and builders
@@ -50,8 +50,8 @@ trait DataProblemTrait<E extends DataProblemTrait> extends ProblemTrait<E> {
     }
 
     static E ofCause(final Throwable problemCause) {
-        def dap = this.newInstance([problemCause: problemCause])
-        (E) dap.detail(ProblemUtils2.getRootCause(problemCause).message)
+        def dap = this.newInstance().cause(problemCause)
+        (E) dap.detail(NestedExceptionUtils.getMostSpecificCause(problemCause).message)
     }
 
 }

@@ -8,17 +8,40 @@ import yakworks.message.MsgKey
 import yakworks.message.MsgKeyDecorator
 
 /**
- * The fluent/chainable methods with Generics for a Results
+ * a fully writable Result fluent/chainable methods with Generics for a Results
  *
  * @author Joshua Burnett (@basejump)
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
 interface GenericResult<E: GenericResult<E>?> : Result {
+
+    /** title is really the only required ones to implements */
+    override var title: String?
+        get() = null
+        set(v) { noImpl() }
+
+    override var payload: Any?
+        get() = null
+        set(v) { noImpl() }
+
+    override var detail: String?
+        get() = null
+        set(v) { noImpl() }
+
+    override var status: ApiStatus
+        get() = HttpStatus.OK
+        set(value) { noImpl() }
+
     fun title(v: String?): E    = apply { title = v } as E
+    fun detail(v: String?): E   = apply { detail = v } as E
     fun status(v: ApiStatus): E = apply { status = v } as E
     fun status(v: Int): E       = apply { status = HttpStatus.valueOf(v) } as E
     fun payload(v: Any?): E     = apply { payload = v } as E
     fun msg(v: MsgKey): E       = apply { msg = v } as E
+
+    /** optional default code */
+    val defaultCode: String?
+        get() = null
 
     /**
      * msg from code

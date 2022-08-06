@@ -11,15 +11,17 @@ import java.net.URI
  * Some good comments here, we did not go with accepted answer as we want to stick with interfaces. https://stackoverflow.com/a/23785473/6500859
  * Also here https://medium.com/@jerzy.chalupski/emulating-self-types-in-kotlin-d64fe8ea2e62
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
 interface GenericProblem<E: GenericProblem<E>> : Problem, GenericResult<E> {
+
+    override var msg: MsgKey?
+        get() = MsgKey.ofCode("general.problem")
+        set(v) { noImpl() }
 
     val cause: Throwable?
         get() = problemCause
 
     //Problem builders
-    fun detail(v: String?): E = apply { detail = v } as E
-
     fun cause(v: Throwable?): E = apply { problemCause = v } as E
 
     /**
@@ -37,7 +39,7 @@ interface GenericProblem<E: GenericProblem<E>> : Problem, GenericResult<E> {
         return this as E
     }
 
-    fun toException(): ThrowableProblem{
+    fun toException(): RuntimeException {
         if(problemCause != null)
             return ThrowableProblem(problemCause as Throwable).problem(this)
         else

@@ -28,25 +28,28 @@ interface Result : MsgKeyDecorator, AsMap {
     val ok: Boolean?
         get() = true
 
-    /** optional default code */
-    val defaultCode: String?
-        get() = null
-
     /**
      * A short, human-readable summary of the result type. It SHOULD NOT change from occurrence to occurrence of the
      * result, except for purposes of localization (e.g., using proactive content negotiation; see [RFC7231], Section 3.4).
      * in which case code can be used for lookup and the localization with message.properties
+     * THIS AND PAYLOAD ARE THE ONLY REQUIRED ONES TO IMPLEMENT
      */
     var title: String?
+
+    /**
+     * A human readable explanation specific to this occurrence of the result/problem.
+     *
+     * @return A human readable explaination of this result/problem
+     */
+    var detail: String?
         get() = null
-        set(value) { noImpl() }
+        set(v) { noImpl() }
 
     /**
      * status code, normally an HttpStatus.value()
      */
-    var status: ApiStatus
+    val status: ApiStatus
         get() = HttpStatus.OK
-        set(value) { noImpl() }
 
     /**
      * the response object value or result of the method/function or process
@@ -55,8 +58,7 @@ interface Result : MsgKeyDecorator, AsMap {
      */
     var payload: Any?
         get() = null
-        set(value) { noImpl() }
-
+        set(v) { noImpl() }
     /**
      * get the value of the payload, keeps api similiar to Optional.
      */
@@ -86,6 +88,5 @@ interface Result : MsgKeyDecorator, AsMap {
 
         @JvmStatic
         fun ofMsgKey(mk: MsgKey): OkResult = OkResult().msg(mk)
-
     }
 }

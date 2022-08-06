@@ -2,10 +2,9 @@ package yakworks.problem;
 
 import org.junit.jupiter.api.Test;
 import yakworks.api.ApiStatus;
+import yakworks.api.problem.Exceptional;
 import yakworks.api.problem.GenericProblem;
 import yakworks.message.MsgKey;
-import yakworks.api.problem.exception.Exceptional;
-import yakworks.api.problem.exception.ProblemRuntime;
 
 import java.net.URI;
 
@@ -44,13 +43,9 @@ class EnforceCoverageTest {
         }
 
         @Override
-        public ProblemRuntime getCause() {
-            return null;
-        }
-
-        @Override
-        public <X extends Throwable> X propagateAs(final Class<X> type) throws X {
-            return type.cast(this);
+        public FakeProblem getCause() {
+            // cast is safe, since the only way to set this is our constructor
+            return (FakeProblem) super.getCause();
         }
 
     }

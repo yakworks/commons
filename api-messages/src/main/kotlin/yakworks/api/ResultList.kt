@@ -14,16 +14,16 @@ import yakworks.message.MsgKey
  */
 class ResultList(b: List<Result>) : Result, List<Result> by b {
 
-    override val ok: Boolean = true
-    override val defaultCode: String? = null
+    override val ok: Boolean? = true
+    //override val defaultCode: String? = null
     override var title: String? = null
     override var status: ApiStatus = HttpStatus.OK
     override var payload: Any? = null
 
-    override var msg: MsgKey? = null
-        get() {
-            if(field == null) field = MsgKey.ofCode(defaultCode)
-            return field
-        }
+    //override var msg: MsgKey? = null
+    //    get() {
+    //        if(field == null) field = MsgKey.ofCode(defaultCode)
+    //        return field
+    //    }
 
 }
