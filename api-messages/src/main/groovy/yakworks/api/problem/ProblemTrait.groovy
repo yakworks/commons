@@ -42,23 +42,27 @@ trait ProblemTrait<E extends GenericProblem<E>> extends ResultTrait<E> implement
         return ProblemUtils2.problemToString(this)
     }
 
+    static GenericProblem<ProblemResult> createProblem(){
+        throw new UnsupportedOperationException("Use createInstance() when using the trait")
+    }
+
     //static builders
     //overrides the Result/MsgKey builders
-    static E createInstance(){
+    static E create(){
         return (E)(this.getDeclaredConstructor() as Constructor<E>).newInstance()
     }
 
-    static E of(String code){ return (E)createInstance().msg(code) }
+    static E of(String code){ return (E)create().msg(code) }
 
-    static E of(String code, Object args){ return (E)createInstance().msg(code, args) }
+    static E of(String code, Object args){ return (E)create().msg(code, args) }
 
-    static E of(MsgKey mkey){ return (E)createInstance().msg(mkey) }
+    static E of(MsgKey mkey){ return (E)create().msg(mkey) }
 
     static E of(Throwable ex ){
-        def pt = (E)createInstance().cause(ex)
-        return pt.detailFromCause()
+        E prob = (E)create().cause(ex)
+        return prob.detailFromCause()
     }
 
-    static E ofPayload(Object payload) { createInstance().payload(payload) }
+    static E ofPayload(Object payload) { create().payload(payload) }
 
 }

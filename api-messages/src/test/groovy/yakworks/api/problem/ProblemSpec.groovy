@@ -16,7 +16,7 @@ class ProblemSpec extends Specification {
 
     void shouldRenderTestProblem() {
         expect:
-        Problem problem = Problem.of()
+        Problem problem = Problem.createProblem()
         problem.toString().contains("ProblemResult(400)")
         !problem.ok
     }

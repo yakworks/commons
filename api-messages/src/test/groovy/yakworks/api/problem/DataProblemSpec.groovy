@@ -23,6 +23,13 @@ class DataProblemSpec extends Specification {
 
     void "DataProblem entity payload"() {
         when:
+        def someEntity = DataProblem.createProblem()
+
+        then:
+        thrown(UnsupportedOperationException)
+    }
+    void "DataProblem entity payload"() {
+        when:
         def someEntity = new SomeEntity()
         def e = DataProblem.of('foo').payload(someEntity).toException()
 

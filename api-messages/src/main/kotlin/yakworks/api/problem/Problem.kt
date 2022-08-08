@@ -75,22 +75,22 @@ interface Problem : Result {
         fun OK() = noImpl()
 
         @JvmStatic
-        fun of(): ProblemResult = ProblemResult()
+        fun createProblem(): ProblemResult = ProblemResult()
 
         @JvmStatic
-        fun of(code: String): ProblemResult = ProblemResult().msg(Msg.key(code))
+        fun of(code: String) = createProblem().msg(Msg.key(code))
 
         @JvmStatic
-        fun of(code: String, args: Any? = null): ProblemResult = ProblemResult().msg(Msg.key(code, args))
+        fun of(code: String, args: Any? = null) = createProblem().msg(Msg.key(code, args))
 
         @JvmStatic
-        fun of(mk: MsgKey): ProblemResult = ProblemResult().msg(mk)
+        fun of(mk: MsgKey) = createProblem().msg(mk)
 
         @JvmStatic
-        fun of(problemCause: Throwable): ProblemResult = ProblemResult().cause(problemCause).detailFromCause()
+        fun of(problemCause: Throwable): GenericProblem<ProblemResult> = createProblem().cause(problemCause).detailFromCause()
 
         @JvmStatic
-        fun ofPayload(payload: Any?): ProblemResult = ProblemResult().payload(payload)
+        fun ofPayload(payload: Any?): GenericProblem<ProblemResult> = createProblem().payload(payload)
 
     }
 }

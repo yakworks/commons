@@ -43,7 +43,7 @@ class ProblemCompileStatic {
     static Problem compileErrors(){
         List.of(1, 2)
         // Problem prob = Problem.OK() //should throw error
-        Problem prob = Problem.of()
+        Problem prob = Problem.createProblem()
         assert prob instanceof ProblemResult
         return prob
         // prob.payload("foo").msg("ff")
