@@ -20,7 +20,7 @@ class MsgContextSpec extends Specification  {
 
     void 'check builder 2'() {
         when:
-        MsgKey msgKey = MsgKey.ofCode('named.arguments').args([name: 'foo']).fallbackMessage("foo")
+        MsgKey msgKey = Msg.key('named.arguments').args([name: 'foo']).fallbackMessage("foo")
         def msgCtx = MsgContext.of(msgKey)
 
         then:

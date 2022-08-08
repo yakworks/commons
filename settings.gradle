@@ -8,6 +8,7 @@ pluginManagement {
 rootProject.name = 'commons-root'
 //the releasable plugins
 include 'api-messages'
+// include 'api-json'
 include 'groovy-commons'
 include 'groovy-json'
 

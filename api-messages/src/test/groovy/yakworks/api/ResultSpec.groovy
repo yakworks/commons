@@ -31,6 +31,11 @@ class ResultSpec extends Specification {
         okRes.payload == [foo:'bar']
     }
 
+    void "compile sanity check"(){
+        expect:
+        ResultCompileStatic.runAll()
+    }
+
     // def "simple creation"(){
     //     expect:
     //     def okRes = Result.of

@@ -1,6 +1,6 @@
 package yakworks.problem;
 
-import yakworks.problem.spi.StackTraceProcessor;
+import yakworks.api.problem.spi.StackTraceProcessor;
 
 import java.util.Collection;
 

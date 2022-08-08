@@ -21,7 +21,7 @@ interface MsgKey {
 
     var code: String?
         get() = null
-        set(value) { throw UnsupportedOperationException("setter not implemented") }
+        set(value) { TODO() }
 
     /**
      * Return the Map of arguments to be used to resolve this message as ICU.
@@ -29,7 +29,7 @@ interface MsgKey {
      */
     var args: MsgArgs?
         get() = null
-        set(value) { throw UnsupportedOperationException("setter not implemented") }
+        set(value) { TODO() }
     /**
      * if object is passed in then will create this object setter will create  MsgArgs.of()
      */
@@ -44,24 +44,6 @@ interface MsgKey {
      */
     var fallbackMessage: String?
         get() = null
-        set(value) { throw UnsupportedOperationException("setter not implemented") }
+        set(value) { TODO() }
 
-    companion object {
-        // default void setFallbackMessage(String defMsg){ }
-        /**
-         * Make key form code
-         */
-        @JvmStatic
-        fun ofCode(code: String?): DefaultMsgKey? {
-            return DefaultMsgKey(code)
-        }
-
-        /**
-         * key from code and map args
-         */
-        @JvmStatic
-        fun of(code: String?, args: Any?): DefaultMsgKey? {
-            return DefaultMsgKey(code).args(args)
-        }
-    }
 }

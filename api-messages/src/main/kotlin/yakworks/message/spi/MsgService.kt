@@ -1,8 +1,8 @@
 package yakworks.message.spi
 
+import yakworks.message.Msg
 import yakworks.message.MsgContext
 import yakworks.message.MsgKey
-import yakworks.message.MsgKey.Companion.ofCode
 import yakworks.message.MsgMultiKey
 
 /**
@@ -30,7 +30,7 @@ interface MsgService {
      * Will use default Locale in the LocaleHolder
      */
     operator fun get(code: String?): String? {
-        return get(ofCode(code))
+        return get(Msg.key(code))
     }
 
     /**

@@ -1,14 +1,15 @@
 package yakworks.api;
 
-import yakworks.problem.exception.ProblemRuntime;
+import yakworks.api.problem.GenericProblem;
+import yakworks.api.problem.ThrowableProblem;
 
 @SuppressWarnings("unused") // since we're testing access levels we're fine if this compiles
-public final class MyProblem extends ProblemRuntime {
+public final class MyProblem extends ThrowableProblem {
 
     MyProblem() {}
 
-    MyProblem(final ProblemRuntime cause) {
-        super(cause);
+    MyProblem(final ThrowableProblem cause) {
+        super((GenericProblem<?>) cause);
     }
 
 }

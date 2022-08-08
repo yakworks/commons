@@ -1,62 +1,23 @@
 plugins {
-  id "org.jetbrains.kotlin.jvm" version "1.7.0" apply false
+  id "org.jetbrains.kotlin.jvm" version "$kotlinVersion" apply false
   id "yakworks.shipyak" version "$vShipyak"
   id "yakworks.groovy-lib" version "$vShipyak" apply false
   id "io.github.gradle-nexus.publish-plugin" version "$vMavenNexus"
 }
 
-group = "org.yakworks"
-
-if(!isSnapshot) {
-  nexusPublishing {
-    repositories {
-      sonatype()
-    }
-  }
-}
+apply from: "${rootProject.projectDir}/gradle/publish.gradle"
 
 subprojects { subprj ->
 
-  group = "org.yakworks"
+  apply from: "${rootProject.projectDir}/gradle/compile.gradle"
 
-  repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url "https://repo.grails.org/grails/core" }
-    maven {
-      url "http://repo.9ci.com/oss-snapshots"
-      allowInsecureProtocol = true
-      mavenContent {
-        snapshotsOnly()
-      }
-    }
-  }
-  // get prop with default if null, converts to boolean
-  Closure getProp = { pname, defualtv -> (subprj.findProperty(pname) ?: defualtv).toBoolean() }
-
-  ext { // see gradle.properties in sub-projects
-    //default true for isGormLibrary and isPublishable, set to false in gradle.props
-    isPublishable = getProp('isPublishable', false)
-    isExample = getProp('isExample', false)
-  }
-
-  // if its a lib then setup gpg signing, see signing.gnupg.keyName
-  if (isPublishable){
-    apply from: "${rootProject.projectDir}/gradle/publish.gradle"
-  }
   // if (isExample) {
   //   apply from: "${rootProject.projectDir}/gradle/example.gradle"
   // }
 
-  configurations {
-    //includes the compileOnly in tests too so we don't have to list twice
-    testImplementation.extendsFrom compileOnly
-    all {
-      resolutionStrategy.cacheChangingModulesFor 60, 'seconds' //when changing = true this sets the cache time
-    }
-  }
 }
 
+// codenarc setup in build.yml and shipyak, this is how to do overrides.
 ext.codenarcRuleset= '''
   // getRule('Println').enabled = false
   // getRule('AbcMetric').enabled = false

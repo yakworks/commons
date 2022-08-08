@@ -3,7 +3,7 @@ package yakworks.message
 
 /**
  * Default implementation of the MsgKey, normally should be build with
- * MsgKey.of('somekey',....), not directly with this class
+ * Msg.key('somekey',....), not directly with this class
  *
  * @author Joshua Burnett (@basejump)
  * @since 0.3.0

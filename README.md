@@ -29,11 +29,19 @@
 
 ## api-messages
 
+`org.yakworks:api-messages:<<version>>`
+
 - base library for the simplified MsgKey
 - results and problem objects for classes. 
 
 Kotlin is a dependency and is required for messages.
 groovy is not required unless taking advantage of the traits and the problem api. 
+
+## api-json
+
+`org.yakworks:api-json:<<version>>`
+
+- groovy json converters for Results and Problem api
 
 ## groovy-json
 

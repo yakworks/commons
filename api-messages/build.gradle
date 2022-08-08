@@ -1,16 +1,18 @@
 plugins {
   id "org.jetbrains.kotlin.jvm"
   id "yakworks.groovy-lib"
+  id "com.bnorm.power.kotlin-power-assert" version "0.12.0"
 }
 
-apply from: "${rootProject.projectDir}/gradle/compile.gradle"
 apply from: "${rootProject.projectDir}/gradle/test-unit.gradle"
 
 dependencies {
 
   // requires groovy to be added if using the groovy traits and classes
   implementation "org.codehaus.groovy:groovy:$groovyVersion"
+  implementation "org.codehaus.groovy:groovy-json:$groovyVersion"
 
+  api 'jakarta.annotation:jakarta.annotation-api:2.1.0'
   api 'jakarta.annotation:jakarta.annotation-api:2.1.0'
 
   // Align versions of all Kotlin components
@@ -18,21 +20,42 @@ dependencies {
   api("org.jetbrains.kotlin:kotlin-stdlib-common")
   api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+  testImplementation project(":groovy-json")
+
   // Use the Kotlin JUnit integration.
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
   // Use the Kotlin test library.
   // testImplementation("org.jetbrains.kotlin:kotlin-test")
 
 }
 
+sourceSets {
+  // main.java.srcDirs = []
+  main.java.srcDirs = ['src/main/kotlin', 'src/main/java']
+  main.groovy.srcDirs = ['src/main/kotlin', 'src/main/groovy']
+  // main.kotlin.srcDirs = ['src/main/java', 'src/main/kotlin']
+  main.resources.srcDirs = ['src/main/resources']
+}
 compileKotlin {
   kotlinOptions {
     jvmTarget = "1.8"
     freeCompilerArgs += [ "-Xjvm-default=all" ]
   }
-  classpath = sourceSets.main.compileClasspath
+  // classpath = sourceSets.main.compileClasspath
 }
 
 //groovy (java?) depends on kotlin
 compileGroovy.classpath += files(compileKotlin.destinationDirectory)
+compileTestGroovy.classpath += files(compileTestKotlin.destinationDirectory)
+
+tasks.withType(Jar) {
+
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+// kotlinPowerAssert {
+//   functions = ["kotlin.assert", "kotlin.test.assertTrue"]
+// }
+
