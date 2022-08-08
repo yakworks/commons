@@ -8,12 +8,8 @@ package yakworks.message
  */
 @Suppress("UNUSED_PARAMETER")
 interface MsgKeyDecorator : MsgKey {
-    /**
-     * the MsgKey
-     */
+    /** the MsgKey to wrap*/
     var msg: MsgKey?
-        get() = null
-        set(v) { }
 
     override var code: String?
         get() = msg?.code

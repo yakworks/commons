@@ -25,9 +25,9 @@ class MsgKeyUtils {
         Map props = target.properties
         if(props.code) {
             def args = props.params?:props.msgArgs
-            return MsgKey.ofCode(props.code as String).args((args?:props) as Map)
+            return Msg.key(props.code as String).args((args?:props) as Map)
         } else if(props.fallbackMessage) {
-            return MsgKey.ofCode("__nonexistent__").args(props).fallbackMessage(props.fallbackMessage as String)
+            return Msg.key("__nonexistent__").args(props).fallbackMessage(props.fallbackMessage as String)
         } else {
             return null
         }

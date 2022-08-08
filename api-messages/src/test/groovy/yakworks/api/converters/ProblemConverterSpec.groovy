@@ -8,6 +8,7 @@ import spock.lang.Specification
 import yakworks.api.problem.Problem
 import yakworks.api.problem.ViolationFieldError
 import yakworks.json.groovy.JsonEngine
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 
 // import yakworks.commons.map.Maps
@@ -19,7 +20,7 @@ class ProblemConverterSpec extends Specification {
         Problem prob2 = Problem.of("foo.bar").detail("ff")
         Problem prob = Problem.of("some.code").title("crash").detail("crash detail")
         prob.violations = [
-            ViolationFieldError.of(MsgKey.ofCode('v1')).field('f1')
+            ViolationFieldError.of(Msg.key('v1')).field('f1')
         ]
         String res = JsonEngine.toJson(prob)
 

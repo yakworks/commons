@@ -4,6 +4,7 @@
 */
 package yakworks.api
 
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 
 /**
@@ -21,7 +22,7 @@ open class OkResult : GenericResult<OkResult> {
 
     override var msg: MsgKey? = null
         get() {
-            if(field == null) field = MsgKey.ofCode(defaultCode)
+            if(field == null) field = Msg.key(defaultCode)
             return field
         }
 }

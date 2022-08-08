@@ -2,6 +2,7 @@ package yakworks.api.problem
 
 import yakworks.api.*
 import yakworks.api.problem.exception.NestedExceptionUtils
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 import java.net.URI
 
@@ -16,7 +17,7 @@ import java.net.URI
 interface GenericProblem<E: GenericProblem<E>> : Problem, GenericResult<E> {
 
     override var msg: MsgKey?
-        get() = MsgKey.ofCode("general.problem")
+        get() = Msg.key("general.problem")
         set(v) { noImpl() }
 
     val cause: Throwable?

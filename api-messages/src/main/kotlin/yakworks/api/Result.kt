@@ -4,6 +4,7 @@
 */
 package yakworks.api
 
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 import yakworks.message.MsgKeyDecorator
 
@@ -76,15 +77,15 @@ interface Result : MsgKeyDecorator, AsMap {
     }
 
     companion object {
-        //STATIC HELPERS
+        //STATIC HELPER to get default OkResult.
         @JvmStatic
         fun OK(): OkResult = OkResult()
 
-        @JvmStatic
-        fun ofCode(code: String): OkResult = OkResult().msg(MsgKey.of(code, null))
-
-        @JvmStatic @JvmOverloads
-        fun of(code: String, args: Any? = null): OkResult = OkResult().msg(MsgKey.of(code, args))
+        //@JvmStatic
+        //fun ofCode(code: String): OkResult = OkResult().msg(Msg.key(code, null))
+        //
+        //@JvmStatic @JvmOverloads
+        //fun of(code: String, args: Any? = null): OkResult = OkResult().msg(Msg.key(code, args))
 
         //@JvmStatic
         //fun ofMsgKey(mk: MsgKey): OkResult = OkResult().msg(mk)

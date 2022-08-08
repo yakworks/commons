@@ -2,7 +2,7 @@ package yakworks.message
 
 /**
  * Default implementation of the MsgKey, normally would be build with the static helpers
- * MsgKey.of('somekey',....), not directly with this class
+ * Msg.key('somekey',....), not directly with this class
  *
  * @author Joshua Burnett (@basejump)
  * @since 0.3.0

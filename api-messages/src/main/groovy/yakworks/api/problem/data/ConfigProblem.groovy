@@ -8,7 +8,7 @@ import groovy.transform.CompileStatic
 
 import yakworks.api.ApiStatus
 import yakworks.api.HttpStatus
-import yakworks.message.MsgKey
+import yakworks.message.Msg
 
 /**
  * Concrete problem for configuration or setup errors or inconsistencies
@@ -24,7 +24,7 @@ class ConfigProblem implements DataProblemTrait<ConfigProblem> {
      */
     static DataProblemException ex(String message){
         def cp = new ConfigProblem()
-        cp.msg = MsgKey.ofCode(DEFAULT_CODE)
+        cp.msg = Msg.key(DEFAULT_CODE)
         return (DataProblemException) cp.title(message).toException()
     }
 }

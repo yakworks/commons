@@ -6,6 +6,7 @@ package yakworks.api
 
 import groovy.transform.CompileStatic
 
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 
 /**
@@ -24,7 +25,7 @@ trait ResultTrait<E extends GenericResult> implements GenericResult<E> {
     Object payload
 
     MsgKey getMsg() {
-        if(msgKey == null) msgKey = MsgKey.ofCode(getDefaultCode())
+        if(msgKey == null) msgKey = Msg.key(getDefaultCode())
         return msgKey
     }
     void setMsg(MsgKey v) { msgKey = v }

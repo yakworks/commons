@@ -6,7 +6,7 @@ class MsgKeySpec extends Specification  {
 
     void 'check builder'() {
         when: "of static is called on ICUMsgKey"
-        MsgKey msgKey = MsgKey.ofCode('named.arguments')
+        MsgKey msgKey = Msg.key('named.arguments')
 
         then: 'should have set it up'
         msgKey instanceof DefaultMsgKey
@@ -25,7 +25,7 @@ class MsgKeySpec extends Specification  {
 
     void 'check builder 2'() {
         when:
-        MsgKey msgKey = MsgKey.ofCode('named.arguments').args([name: 'foo'])
+        MsgKey msgKey = Msg.key('named.arguments').args([name: 'foo'])
 
         then: 'should have set it up'
         msgKey.code == 'named.arguments'
@@ -40,7 +40,7 @@ class MsgKeySpec extends Specification  {
 
     void 'check fallback in map'() {
         when: "fallbackMessage is put in args"
-        MsgKey msgKey = MsgKey.ofCode('named.arguments').args([name: 'foo', fallbackMessage: 'go'])
+        MsgKey msgKey = Msg.key('named.arguments').args([name: 'foo', fallbackMessage: 'go'])
 
         then: 'should have set it up'
         msgKey.code == 'named.arguments'
@@ -51,7 +51,7 @@ class MsgKeySpec extends Specification  {
 
     void 'get argsMap and add values'() {
         when: "no args is setup"
-        MsgKey msgKey = MsgKey.ofCode('some.key')
+        MsgKey msgKey = Msg.key('some.key')
         assert msgKey.args.isEmpty()
         def args = msgKey.args.asMap()
         args.foo = 'bar'
@@ -63,7 +63,7 @@ class MsgKeySpec extends Specification  {
 
     void 'args map if already setup'() {
         when:
-        MsgKey msgKey = MsgKey.of('some.key', [foo: 'bar'])
+        MsgKey msgKey = Msg.key('some.key', [foo: 'bar'])
 
         then:
         msgKey.args.asMap() == [foo: 'bar']
@@ -71,7 +71,7 @@ class MsgKeySpec extends Specification  {
 
     void 'args map if already setup as list'() {
         when:
-        MsgKey msgKey = MsgKey.of('some.key', ['foo', 'bar'])
+        MsgKey msgKey = Msg.key('some.key', ['foo', 'bar'])
 
         then:
         msgKey.args.asMap() == null
@@ -79,7 +79,7 @@ class MsgKeySpec extends Specification  {
 
     void 'add arg'() {
         when:
-        MsgKey msgKey = MsgKey.of('some.key', [foo: 'bar'])
+        MsgKey msgKey = Msg.key('some.key', [foo: 'bar'])
         msgKey.args.put('buzz', 'bazz')
 
         then:

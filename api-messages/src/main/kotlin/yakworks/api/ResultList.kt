@@ -14,6 +14,8 @@ import yakworks.message.MsgKey
  */
 class ResultList(b: List<Result>) : Result, List<Result> by b {
 
+    override var msg: MsgKey? = null
+
     override val ok: Boolean? = true
     //override val defaultCode: String? = null
     override var title: String? = null
@@ -22,7 +24,7 @@ class ResultList(b: List<Result>) : Result, List<Result> by b {
 
     //override var msg: MsgKey? = null
     //    get() {
-    //        if(field == null) field = MsgKey.ofCode(defaultCode)
+    //        if(field == null) field = Msg.key(defaultCode)
     //        return field
     //    }
 

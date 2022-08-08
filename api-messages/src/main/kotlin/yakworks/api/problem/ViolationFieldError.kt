@@ -4,6 +4,7 @@
 */
 package yakworks.api.problem
 
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 
 /**
@@ -26,7 +27,7 @@ open class ViolationFieldError : Violation {
         @JvmStatic
         fun of(code: String, msgText: String ): ViolationFieldError {
             return ViolationFieldError().apply {
-                msg = MsgKey.ofCode(code)
+                msg = Msg.key(code)
                 message = msgText
             }
         }

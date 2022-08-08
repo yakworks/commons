@@ -3,6 +3,7 @@ package yakworks.api.problem
 import yakworks.api.*
 import yakworks.api.ResultSupport
 import yakworks.api.problem.exception.NestedExceptionUtils
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 import java.net.URI
 
@@ -16,7 +17,7 @@ interface Problem : Result {
     override val ok: Boolean? get() = false
 
     override var msg: MsgKey?
-        get() = MsgKey.ofCode("general.problem")
+        get() = Msg.key("general.problem")
         set(v) { noImpl() }
 
     /**r
@@ -77,10 +78,10 @@ interface Problem : Result {
         fun of(): ProblemResult = ProblemResult()
 
         @JvmStatic
-        fun of(code: String): ProblemResult = ProblemResult().msg(MsgKey.ofCode(code))
+        fun of(code: String): ProblemResult = ProblemResult().msg(Msg.key(code))
 
         @JvmStatic
-        fun of(code: String, args: Any? = null): ProblemResult = ProblemResult().msg(MsgKey.of(code, args))
+        fun of(code: String, args: Any? = null): ProblemResult = ProblemResult().msg(Msg.key(code, args))
 
         @JvmStatic
         fun of(mk: MsgKey): ProblemResult = ProblemResult().msg(mk)

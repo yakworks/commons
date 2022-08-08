@@ -46,22 +46,4 @@ interface MsgKey {
         get() = null
         set(value) { TODO() }
 
-    companion object {
-        // default void setFallbackMessage(String defMsg){ }
-        /**
-         * Make key form code
-         */
-        @JvmStatic
-        fun ofCode(code: String?): DefaultMsgKey {
-            return DefaultMsgKey(code)
-        }
-
-        /**
-         * key from code and map args
-         */
-        @JvmStatic
-        fun of(code: String, args: Any?): DefaultMsgKey {
-            return DefaultMsgKey(code).args(args)
-        }
-    }
 }

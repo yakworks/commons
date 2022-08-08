@@ -6,6 +6,7 @@ package yakworks.api
 
 import groovy.transform.CompileStatic
 
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 
 /**
@@ -50,7 +51,7 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
     MsgKey getMsg(){
         if(getMsgKey() == null){
             if(getDefaultCode()){
-                msgKey = MsgKey.ofCode(getDefaultCode())
+                msgKey = Msg.key(getDefaultCode())
             } else if(results.size() != 0){
                 msgKey =  results[0].msg
             }

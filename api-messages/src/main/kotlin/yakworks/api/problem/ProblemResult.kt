@@ -6,6 +6,7 @@ package yakworks.api.problem
 
 import yakworks.api.ApiStatus
 import yakworks.api.HttpStatus
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 import java.net.URI
 
@@ -21,7 +22,7 @@ open class ProblemResult : GenericProblem<ProblemResult> {
     override var payload: Any? = null
     override var msg: MsgKey? = null
         get() {
-            if(field == null) field = MsgKey.ofCode(defaultCode)
+            if(field == null) field = Msg.key(defaultCode)
             return field
         }
 

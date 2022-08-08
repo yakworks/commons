@@ -7,6 +7,7 @@ package yakworks.api.problem
 
 import spock.lang.Specification
 import spock.lang.Unroll
+import yakworks.message.Msg
 import yakworks.message.MsgKey
 
 import static yakworks.api.HttpStatus.NOT_FOUND
@@ -64,7 +65,7 @@ class ProblemSpec extends Specification {
         problem                                     | code
         Problem.of('code.args', [name: 'foo'])  | 'code.args'
         Problem.of('ofCode')                | 'ofCode'
-        Problem.of(MsgKey.ofCode('withMsg'))    | 'withMsg'
+        Problem.of(Msg.key('withMsg'))    | 'withMsg'
 
     }
 
@@ -100,7 +101,7 @@ class ProblemSpec extends Specification {
         when:
         def problem = Problem.of("testing")
         problem.addViolations([
-            MsgKey.ofCode("foo"), MsgKey.ofCode("bar")
+            Msg.key("foo"), Msg.key("bar")
         ])
 
         then:
