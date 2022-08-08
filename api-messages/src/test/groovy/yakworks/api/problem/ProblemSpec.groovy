@@ -15,8 +15,8 @@ class ProblemSpec extends Specification {
 
     void shouldRenderTestProblem() {
         expect:
-        CoreProblem problem = CoreProblem.create()
-        problem.toString().contains("Problem(400)")
+        Problem problem = Problem.of()
+        problem.toString().contains("ProblemResult(400)")
         !problem.ok
     }
 
@@ -33,25 +33,18 @@ class ProblemSpec extends Specification {
 
     void "problem throw"() {
         when:
-        def p = CoreProblem.of('error.data.empty', [name: 'foo'])
+        def p = Problem.of('error.data.empty', [name: 'foo'])
         throw p.toException()
 
         then:
         def ex = thrown(ThrowableProblem)
         ex.problem == p
-
-        when:
-        throw p as Exception
-
-        then:
-        def ex2 = thrown(ThrowableProblem)
-        ex2.problem == p
     }
 
     void "problem throw with cause"() {
         when:
         def rte = new RuntimeException("bad stuff")
-        def p = CoreProblem.of('error.data.empty', [name: 'foo']).cause(rte)
+        def p = Problem.of('error.data.empty', [name: 'foo']).cause(rte)
         throw p.toException()
 
         then:
@@ -62,22 +55,22 @@ class ProblemSpec extends Specification {
     }
 
     @Unroll
-    void "init with code statics #code"(CoreProblem problem, String code) {
+    void "init with code statics #code"(Problem problem, String code) {
         expect:
-        problem instanceof CoreProblem
+        problem instanceof Problem
         problem.code == code
 
         where:
         problem                                     | code
-        CoreProblem.of('code.args', [name: 'foo'])  | 'code.args'
-        CoreProblem.ofCode('ofCode')                | 'ofCode'
-        CoreProblem.ofMsg(MsgKey.ofCode('withMsg')) | 'withMsg'
+        Problem.of('code.args', [name: 'foo'])  | 'code.args'
+        Problem.of('ofCode')                | 'ofCode'
+        Problem.of(MsgKey.ofCode('withMsg'))    | 'withMsg'
 
     }
 
     void "should Render Custom Detail And Instance"() {
         when:
-        final CoreProblem p = new CoreProblem().status(NOT_FOUND)
+        final Problem p = new ProblemResult().status(NOT_FOUND)
             .type(URI.create("https://example.org/problem"))
             .detail("Order 123")
 
@@ -105,7 +98,7 @@ class ProblemSpec extends Specification {
 
     void addViolations() {
         when:
-        def problem = Problem.ofCode("testing")
+        def problem = Problem.of("testing")
         problem.addViolations([
             MsgKey.ofCode("foo"), MsgKey.ofCode("bar")
         ])

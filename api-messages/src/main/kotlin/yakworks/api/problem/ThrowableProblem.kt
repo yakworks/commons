@@ -52,7 +52,7 @@ open class ThrowableProblem : NestedRuntimeException, ProblemDecorator<Throwable
     companion object {
 
         @JvmStatic
-        fun ofCause(problemCause: Throwable): ThrowableProblem {
+        fun of(problemCause: Throwable): ThrowableProblem {
             val dap = ThrowableProblem(problemCause)
             return dap.detail(NestedExceptionUtils.getMostSpecificCause(problemCause)?.message)
         }

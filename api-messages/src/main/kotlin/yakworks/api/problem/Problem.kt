@@ -71,24 +71,25 @@ interface Problem : Result {
         //STATIC HELPERS
         //this is just to override the OK, doesnt make sense in the context of a Problem
         @JvmStatic
-        fun OK(): ProblemResult = ProblemResult()
+        fun OK() = noImpl()
 
         @JvmStatic
-        fun ofCode(code: String): ProblemResult = of(code, null)
+        fun of(): ProblemResult = ProblemResult()
 
         @JvmStatic
-        fun of(code: String, args: Any?): ProblemResult = ofMsg(MsgKey.of(code, args))
+        fun of(code: String): ProblemResult = ProblemResult().msg(MsgKey.ofCode(code))
+
+        @JvmStatic
+        fun of(code: String, args: Any? = null): ProblemResult = ProblemResult().msg(MsgKey.of(code, args))
+
+        @JvmStatic
+        fun of(mk: MsgKey): ProblemResult = ProblemResult().msg(mk)
+
+        @JvmStatic
+        fun of(problemCause: Throwable): ProblemResult = ProblemResult().cause(problemCause).detailFromCause()
 
         @JvmStatic
         fun ofPayload(payload: Any?): ProblemResult = ProblemResult().payload(payload)
 
-        @JvmStatic
-        fun ofMsg(mk: MsgKey): ProblemResult = ProblemResult().msg(mk)
-
-        @JvmStatic
-        fun ofCause(problemCause: Throwable): ProblemResult {
-            val dap = ProblemResult().cause(problemCause)
-            return dap.detail(NestedExceptionUtils.getMostSpecificCause(problemCause)?.message)
-        }
     }
 }

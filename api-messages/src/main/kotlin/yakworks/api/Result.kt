@@ -83,10 +83,10 @@ interface Result : MsgKeyDecorator, AsMap {
         @JvmStatic
         fun ofCode(code: String): OkResult = OkResult().msg(MsgKey.of(code, null))
 
-        @JvmStatic
-        fun of(code: String, args: Any?): OkResult = OkResult().msg(MsgKey.of(code, args))
+        @JvmStatic @JvmOverloads
+        fun of(code: String, args: Any? = null): OkResult = OkResult().msg(MsgKey.of(code, args))
 
-        @JvmStatic
-        fun ofMsgKey(mk: MsgKey): OkResult = OkResult().msg(mk)
+        //@JvmStatic
+        //fun ofMsgKey(mk: MsgKey): OkResult = OkResult().msg(mk)
     }
 }

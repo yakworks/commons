@@ -13,12 +13,13 @@ import yakworks.api.problem.exception.NestedExceptionUtils
 
 /**
  * Trait implementation for the Problem that has setters and builders
+ * The payload is always the entity intance here.
  *
  * @author Joshua Burnett (@basejump)
  * @since 7.0.8
  */
 @CompileStatic
-trait DataProblemTrait<E extends DataProblemTrait> extends ProblemTrait<E> {
+trait DataProblemTrait<E extends DataProblemTrait<E>> extends ProblemTrait<E> {
 
     /**
      * convienience alias for payload so its clearer in the code
@@ -49,9 +50,9 @@ trait DataProblemTrait<E extends DataProblemTrait> extends ProblemTrait<E> {
         return getCause() ? new DataProblemException(getCause()).problem(this) : new DataProblemException().problem(this)
     }
 
-    static E ofCause(final Throwable problemCause) {
-        def dap = this.newInstance().cause(problemCause)
-        (E) dap.detail(NestedExceptionUtils.getMostSpecificCause(problemCause).message)
-    }
+    // static E of(final Throwable problemCause) {
+    //     def dap = this.newInstance().cause(problemCause)
+    //     (E) dap.detail(NestedExceptionUtils.getMostSpecificCause(problemCause).message)
+    // }
 
 }

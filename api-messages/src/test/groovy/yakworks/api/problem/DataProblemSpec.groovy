@@ -24,7 +24,7 @@ class DataProblemSpec extends Specification {
     void "DataProblem entity payload"() {
         when:
         def someEntity = new SomeEntity()
-        def e = DataProblem.of(someEntity).msg('foo').toException()
+        def e = DataProblem.of('foo').payload(someEntity).toException()
 
         then:
         e instanceof DataProblemException

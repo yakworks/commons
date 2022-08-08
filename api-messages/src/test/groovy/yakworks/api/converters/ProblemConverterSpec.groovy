@@ -16,8 +16,8 @@ class ProblemConverterSpec extends Specification {
 
     void "simple problem"(){
         when:
-        Problem prob2 = Problem.ofCode("foo.bar").detail("ff")
-        Problem prob = Problem.ofCode("some.code").title("crash").detail("crash detail")
+        Problem prob2 = Problem.of("foo.bar").detail("ff")
+        Problem prob = Problem.of("some.code").title("crash").detail("crash detail")
         prob.violations = [
             ViolationFieldError.of(MsgKey.ofCode('v1')).field('f1')
         ]

@@ -31,8 +31,8 @@ enum DataProblemCodes {
         new DataProblem().msg(code, args)
     }
 
-    DataProblem ofCause(Throwable cause){
-        return DataProblem.ofCause(cause).msg(code)
+    DataProblem of(Throwable cause){
+        return DataProblem.of(cause).msg(code)
     }
 
 }

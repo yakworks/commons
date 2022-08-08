@@ -21,6 +21,6 @@ class UnexpectedProblem implements ProblemTrait<UnexpectedProblem> {
     ApiStatus status = HttpStatus.INTERNAL_SERVER_ERROR
 
     static ThrowableProblem ex(String message){
-        return Problem.ofCode(DEFAULT_CODE).detail(message).toException() as ThrowableProblem
+        return Problem.of(DEFAULT_CODE).detail(message).toException() as ThrowableProblem
     }
 }

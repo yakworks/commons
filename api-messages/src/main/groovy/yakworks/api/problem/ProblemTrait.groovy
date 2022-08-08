@@ -4,6 +4,7 @@
 */
 package yakworks.api.problem
 
+import java.lang.reflect.Constructor
 
 import groovy.transform.CompileStatic
 
@@ -19,13 +20,11 @@ import yakworks.message.MsgKey
  * @since 7.0.8
  */
 @CompileStatic
-trait ProblemTrait<E extends GenericProblem> extends ResultTrait<E> implements GenericProblem<E> {
+trait ProblemTrait<E extends GenericProblem<E>> extends ResultTrait<E> implements GenericProblem<E> {
     // result overrides, always false
     Boolean getOk(){ false } //always false
     //status default to 400
     ApiStatus status = HttpStatus.BAD_REQUEST
-    //this should be rendered to json if type is null
-    // URI DEFAULT_TYPE = URI.create("about:blank")
 
     // Problem impls
     URI type //= Problem.DEFAULT_TYPE
@@ -43,54 +42,23 @@ trait ProblemTrait<E extends GenericProblem> extends ResultTrait<E> implements G
         return ProblemUtils2.problemToString(this)
     }
 
-    // @CompileDynamic
-    // ProblemException toException(){
-    //     return getCause() ? new DefaultProblemException(getCause()).problem(this) : new DefaultProblemException().problem(this)
-    // }
-
-    // allows to do 'someProblem as Exception'
-    // @Override
-    // public <T> T asType(Class<T> clazz) {
-    //     Exception.isAssignableFrom(clazz) ? (T) toException() : super.asType(clazz)
-    // }
-
     //static builders
     //overrides the Result/MsgKey builders
-    static E create(){
-        return (E)this.newInstance()
+    static E createInstance(){
+        return (E)(this.getDeclaredConstructor() as Constructor<E>).newInstance()
     }
 
-    static E of(Object payload) {
-        return create().payload(payload)
+    static E of(String code){ return (E)createInstance().msg(code) }
+
+    static E of(String code, Object args){ return (E)createInstance().msg(code, args) }
+
+    static E of(MsgKey mkey){ return (E)createInstance().msg(mkey) }
+
+    static E of(Throwable ex ){
+        def pt = (E)createInstance().cause(ex)
+        return pt.detailFromCause()
     }
 
-    static E ofCode(String code){
-        return create().msg(code)
-    }
-
-    static E of(String code, Object args){
-        return create().msg(code, args)
-    }
-
-    static E ofMsg(MsgKey mkey){
-        return (E) create().msg(mkey)
-    }
-    //
-    // static E withStatus(ApiStatus status) {
-    //     return create().status(status)
-    // }
-    //
-    // static E withTitle(String title) {
-    //     return create().title(title)
-    // }
-    //
-    // static E withDetail(String detail) {
-    //     return create().detail(detail)
-    // }
-
-    // static E ofCause(final Throwable problemCause) {
-    //     def dap = this.newInstance([problemCause: problemCause])
-    //     (E) dap.detail(ProblemUtils.getRootCause(problemCause).message)
-    // }
+    static E ofPayload(Object payload) { createInstance().payload(payload) }
 
 }

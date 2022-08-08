@@ -1,6 +1,7 @@
 package yakworks.api.problem
 
 import yakworks.api.*
+import yakworks.api.problem.exception.NestedExceptionUtils
 import yakworks.message.MsgKey
 import java.net.URI
 
@@ -23,6 +24,11 @@ interface GenericProblem<E: GenericProblem<E>> : Problem, GenericResult<E> {
 
     //Problem builders
     fun cause(v: Throwable?): E = apply { problemCause = v } as E
+
+    fun detailFromCause(): E {
+        detail = NestedExceptionUtils.getMostSpecificCause(problemCause!!).message
+        return this as E
+    }
 
     /**
      * fluent setter use URI.create(v) go create from a string

@@ -35,11 +35,11 @@ class ResultCompileStatic {
     }
 
     static Problem testProblem(){
-        ProblemResult rprob = Problem.ofCode("foo.bar").title("ff").problemCause(null)
+        ProblemResult rprob = Problem.of("foo.bar").title("ff").problemCause(null)
         assert rprob instanceof ProblemResult
 
-        Problem prob = Problem.ofCode("foo.bar").payload("foo").msg("ff").detail("ff")
-        Problem prob2 = Problem.ofCode("foo.bar").title("wtf").detail("ff")
+        // Problem prob = Problem.ofCode("foo.bar").payload("foo").msg("ff").detail("ff")
+        Problem prob = Problem.of("foo.bar").title("wtf").detail("ff")
         assert prob instanceof ProblemResult
         return prob
         // prob.payload("foo").msg("ff")
@@ -50,7 +50,8 @@ class ResultCompileStatic {
     //shoudl error?
     static Problem compileErrors(){
         List.of(1, 2)
-        Problem prob = Problem.OK()
+        // Problem prob = Problem.OK() //should throw error
+        Problem prob = Problem.of()
         assert prob instanceof ProblemResult
         return prob
         // prob.payload("foo").msg("ff")

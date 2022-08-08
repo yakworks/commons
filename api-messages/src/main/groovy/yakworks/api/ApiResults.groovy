@@ -34,7 +34,7 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
     static ApiResults of(String code, Object args) {
         return new ApiResults().msg(code, args)
     }
-    static ApiResults of(Object payload) {
+    static ApiResults ofPayload(Object payload) {
         return new ApiResults().payload(payload);
     }
 
