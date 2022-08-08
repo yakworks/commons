@@ -17,6 +17,7 @@ class ProblemCompileStatic {
 
     static runAll(){
         testProblemOf()
+        testProblem()
         return true
     }
 

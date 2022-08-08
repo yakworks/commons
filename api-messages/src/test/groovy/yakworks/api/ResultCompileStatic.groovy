@@ -19,9 +19,6 @@ class ResultCompileStatic {
 
     static runAll(){
         testOkResult()
-        testProblem()
-        compileErrors()
-        problemTesting()
         return true
     }
 
@@ -32,47 +29,6 @@ class ResultCompileStatic {
         // prob.payload("foo").msg("ff")
         // Result.Fluent probtrait =  (Result.Fluent) prob
         // probtrait.payload("foo").msg()
-    }
-
-    static Problem testProblem(){
-        ProblemResult rprob = Problem.of("foo.bar").title("ff").problemCause(null)
-        assert rprob instanceof ProblemResult
-
-        // Problem prob = Problem.ofCode("foo.bar").payload("foo").msg("ff").detail("ff")
-        Problem prob = Problem.of("foo.bar").title("wtf").detail("ff")
-        assert prob instanceof ProblemResult
-        return prob
-        // prob.payload("foo").msg("ff")
-        // Result.Fluent probtrait =  (Result.Fluent) prob
-        // probtrait.payload("foo").msg()
-    }
-
-    //shoudl error?
-    static Problem compileErrors(){
-        List.of(1, 2)
-        // Problem prob = Problem.OK() //should throw error
-        Problem prob = Problem.of()
-        assert prob instanceof ProblemResult
-        return prob
-        // prob.payload("foo").msg("ff")
-        // Result.Fluent probtrait =  (Result.Fluent) prob
-        // probtrait.payload("foo").msg()
-    }
-
-    static void problemTesting(){
-        Problem prob = new ProblemTesting()
-        def tp = new ThrowableProblem(prob).payload("foo")
-        //this should not work
-        //prob.ok = true
-
-        //should be false
-        assert prob == tp.problem
-        assert !tp.ok
-        assert !tp.title
-        assert !prob.ok
-        assert !prob.title
-        //blows up on setter
-        // prob.title = "got it"
     }
 
 }
