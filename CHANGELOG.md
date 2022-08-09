@@ -1,3 +1,8 @@
+### v3.3
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.2...v3.3)
+- cleanup, change ApiResults to use list property (#4) [link](https://github.com/yakworks/commons/commit/e1ad2fc43b4b86f409b565adb55751c7a5d1bb89)
+
 ### v3.2
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.1...v3.2)
