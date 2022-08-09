@@ -19,14 +19,14 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
     ApiStatus status = HttpStatus.MULTI_STATUS
 
     //internal rep
-    @Delegate List<Result> results
+    List<Result> list
 
     /**
      * New result
      * @param isSynchronized defaults to true to create the data list as synchronizedList
      */
     ApiResults(boolean isSynchronized = true){
-        results = ( isSynchronized ? Collections.synchronizedList([]) : [] ) as List<Result>
+        list = ( isSynchronized ? Collections.synchronizedList([]) : [] ) as List<Result>
     }
 
     // ** BUILDERS STATIC OVERRIDES **
@@ -47,23 +47,36 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
     /**
      * Overrides to get msg from first item in result if main one is null
      */
-    @Override
-    MsgKey getMsg(){
-        if(getMsgKey() == null){
-            if(getDefaultCode()){
-                msgKey = Msg.key(getDefaultCode())
-            } else if(results.size() != 0){
-                msgKey =  results[0].msg
-            }
-        }
-        return msgKey
-    }
+    // MsgKey getMsgOrFirstResult(){
+    //     if(getMsgKey() == null){
+    //         if(getDefaultCode()){
+    //             msgKey = Msg.key(getDefaultCode())
+    //         } else if(list.size() != 0){
+    //             msgKey =  list[0].msg
+    //         }
+    //     }
+    //     return msgKey
+    // }
 
-    @Override //changes default list delegate so we can add ok
+    //@Override //changes default list delegate so we can add ok
     boolean add(Result result){
         if(!result.ok) ok = false
-        results << result
+        list << result
     }
+
+    /**
+     * implements the << leftshit to add items to list
+     */
+    ApiResults leftShift(Result result) {
+        add(result)
+        return this
+    }
+
+    /** short cust to list.size() */
+    int size() {
+        return list.size()
+    }
+
 
     /**
      * if resultToMerge is ApiResults then add all from its resultList
@@ -72,9 +85,9 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
     void merge(Result resultToMerge){
         if(!resultToMerge.ok) ok = false
         if(resultToMerge instanceof ApiResults){
-            results.addAll(resultToMerge.results as List<Result>)
+            list.addAll(resultToMerge.list as List<Result>)
         } else {
-            results << resultToMerge
+            list << resultToMerge
         }
 
     }
@@ -86,26 +99,24 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
     List<Result> getProblems(){
         //only look if this is not ok as it should never have problems if ok=true
         if(this.ok){
-            [] as List<Result>
+            return [] as List<Result>
         } else {
-            results.findAll{ !it.ok } as List<Result>
+            return list.findAll{ !it.ok } as List<Result>
         }
     }
 
     /**
-     * returns the successful results
+     * returns the list of successful results
      */
     List<Result> getOkResults(){
-        results.findAll{ it.ok } as List<Result>
+        list.findAll{ it.ok } as List<Result>
     }
 
-    //Add these temporarily to be compatible with old Results
-    List<Result> getFailed(){
-        getProblems()
-    }
-    List<Result> getSuccess(){
-        getOkResults()
-    }
+    /**
+     * Alias to getOkResults()
+     * @see #getOkResults()
+     */
+    List<Result> getSuccess(){ getOkResults() }
 
     /**
      * converts to Map, helpfull for to json and can be overriden on concrete impls

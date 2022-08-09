@@ -4,7 +4,6 @@
 */
 package yakworks.api.problem
 
-import jakarta.annotation.Nullable
 import yakworks.api.problem.exception.NestedExceptionUtils
 import yakworks.api.problem.exception.NestedRuntimeException
 
@@ -36,10 +35,10 @@ open class ThrowableProblem : NestedRuntimeException, ProblemDecorator<Throwable
      * if there is one.
      */
     override val message: String
-        get() = ProblemUtils2.buildMessage(problem)
+        get() = ProblemUtils.buildMessage(problem)
 
     override fun toString(): String {
-        return ProblemUtils2.problemToString(problem)
+        return ProblemUtils.problemToString(problem)
     }
 
     /**
@@ -53,8 +52,8 @@ open class ThrowableProblem : NestedRuntimeException, ProblemDecorator<Throwable
 
         @JvmStatic
         fun of(problemCause: Throwable): ThrowableProblem {
-            val dap = ThrowableProblem(problemCause)
-            return dap.detail(NestedExceptionUtils.getMostSpecificCause(problemCause)?.message)
+            val dap = ThrowableProblem(problemCause).detailFromCause()
+            return dap //.detail(NestedExceptionUtils.getMostSpecificCause(problemCause)?.message)
         }
     }
 }

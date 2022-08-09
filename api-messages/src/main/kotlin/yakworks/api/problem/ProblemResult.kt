@@ -35,7 +35,7 @@ open class ProblemResult : GenericProblem<ProblemResult> {
     fun problemCause(v: Throwable?): ProblemResult = apply { problemCause = v }
 
     override fun toString(): String {
-        return ProblemUtils2.problemToString(this)
+        return ProblemUtils.problemToString(this)
     }
 
 }

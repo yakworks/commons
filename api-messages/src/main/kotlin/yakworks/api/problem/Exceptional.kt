@@ -14,6 +14,8 @@ package yakworks.api.problem
  * @see Problem
  *
  * @see ThrowableProblem
+ *
+ * WIP Not really doen yet
  */
 interface Exceptional : Problem {
     val cause: Exceptional?

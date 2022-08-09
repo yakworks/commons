@@ -20,6 +20,7 @@ trait ResultTrait<E extends GenericResult> implements GenericResult<E> {
     String defaultCode //= 'result.ok'
     Boolean ok = true
     ApiStatus status = HttpStatus.OK
+    /** backing field for the getMsg */
     MsgKey msgKey
     String title
     Object payload
@@ -28,6 +29,7 @@ trait ResultTrait<E extends GenericResult> implements GenericResult<E> {
         if(msgKey == null) msgKey = Msg.key(getDefaultCode())
         return msgKey
     }
+
     void setMsg(MsgKey v) { msgKey = v }
 
     @Override

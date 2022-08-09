@@ -39,7 +39,7 @@ trait ProblemTrait<E extends GenericProblem<E>> extends ResultTrait<E> implement
 
     @Override
     String toString() {
-        return ProblemUtils2.problemToString(this)
+        return ProblemUtils.problemToString(this)
     }
 
     static GenericProblem<ProblemResult> createProblem(){
