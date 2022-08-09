@@ -33,7 +33,8 @@ interface Result : MsgKeyDecorator, AsMap {
      * A short, human-readable summary of the result type. It SHOULD NOT change from occurrence to occurrence of the
      * result, except for purposes of localization (e.g., using proactive content negotiation; see [RFC7231], Section 3.4).
      * in which case code can be used for lookup and the localization with message.properties
-     * THIS AND PAYLOAD ARE THE ONLY REQUIRED ONES TO IMPLEMENT
+     * THIS IS REQUIRED TO IMPLEMENT with backing field.
+     * On conversion using asMap title will be replaced with the lookup using the MsgKey.
      */
     var title: String?
 

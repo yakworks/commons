@@ -90,9 +90,9 @@ class ResultUtils {
         if(!message){
             if(result.title) {
                 message = result.title
-            } else if(result instanceof ApiResults && result.size() != 0) {
+            } else if(result instanceof ApiResults && result.list.size() != 0) {
                 //use msg form first item
-                message = msgService.get(((ApiResults)result)[0].msg)
+                message = msgService.get(((ApiResults)result).list[0].msg)
             }
         }
 

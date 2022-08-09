@@ -16,10 +16,6 @@ import java.net.URI
 @Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
 interface GenericProblem<E: GenericProblem<E>> : Problem, GenericResult<E> {
 
-    override var msg: MsgKey?
-        get() = Msg.key("general.problem")
-        set(v) { noImpl() }
-
     val cause: Throwable?
         get() = problemCause
 

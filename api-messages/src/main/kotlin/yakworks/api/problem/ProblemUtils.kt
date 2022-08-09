@@ -8,7 +8,7 @@ import yakworks.api.Result
 import yakworks.api.ResultSupport
 import java.util.Objects
 
-internal object ProblemUtils2 {
+internal object ProblemUtils {
 
     @JvmStatic
     fun resultToStringCommon(p: Result): String {

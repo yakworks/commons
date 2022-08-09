@@ -1,10 +1,8 @@
 package yakworks.message
 
 /**
- * add to a class that has a MsgKey reference as field msg
- *
+ * add to a class that has a msgKey and will delegate to it.
  * @author Joshua Burnett (@basejump)
- * @since 0.3.0
  */
 @Suppress("UNUSED_PARAMETER")
 interface MsgKeyDecorator : MsgKey {

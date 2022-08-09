@@ -1,7 +1,5 @@
 package yakworks.message
 
-import java.lang.UnsupportedOperationException
-
 /**
  * MsgKey contains the lookup code for the message and the argument map for name substitutions.
  * Can also have a defaultMessage stored as a key in the argument map
@@ -30,6 +28,7 @@ interface MsgKey {
     var args: MsgArgs?
         get() = null
         set(value) { TODO() }
+
     /**
      * if object is passed in then will create this object setter will create  MsgArgs.of()
      */

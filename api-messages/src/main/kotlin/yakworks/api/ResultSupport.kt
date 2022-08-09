@@ -18,6 +18,8 @@ internal object ResultSupport {
 
     /**
      * converts to Map, helpfull for to json and can be overriden on concrete impls
+     * Title will be the lookup on the code using the MsgServiceRegistry.service.getMessage.
+     * If no code or message returns null then it keeps the title that was set.
      */
     @JvmStatic
     fun toMap(res: Result): Map<String, Any?> {
