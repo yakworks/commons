@@ -22,13 +22,13 @@ import yakworks.commons.model.TotalCount
 class MetaMapList extends AbstractList<MetaMap> implements TotalCount  {
 
     protected List resultList
-    protected MetaMapIncludes includeMap
+    protected MetaEntity includeMap
 
     MetaMapList(List resultList) {
         this.resultList = resultList
     }
 
-    MetaMapList(List resultList, MetaMapIncludes includeMap) {
+    MetaMapList(List resultList, MetaEntity includeMap) {
         this.resultList = resultList
         this.includeMap = includeMap
     }

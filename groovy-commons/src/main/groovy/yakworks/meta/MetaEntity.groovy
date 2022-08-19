@@ -5,7 +5,6 @@
 package yakworks.meta
 
 import groovy.transform.CompileStatic
-import groovy.transform.EqualsAndHashCode
 import groovy.util.logging.Slf4j
 
 import org.codehaus.groovy.util.HashCodeHelper
@@ -14,13 +13,24 @@ import yakworks.commons.lang.NameUtils
 import yakworks.commons.map.MapFlattener
 
 /**
- * Includes tree for root entity and nested association or object properties
+ * Somewhat similiar to MetaClass.
+ * This represents either the root object of the MetaMap or a property that is an object and has its own set of includes.
+ * For exammple if Customer is the root object it might have an Address property that will be repesented with this.
+ *
+ * Customer  -> MetaEntity
+ *   name    -> MetaProp
+ *   address -> MetaEntity
+ *     city  -> MetaProp
+ *     etc....
+ *
+ * @see MetaProp
  */
 @Slf4j
 @CompileStatic
-class MetaMapIncludes extends MetaProp implements Serializable {
-    //value will be null if normal prop, if association then will have another nested MetaMapIncludes
-    Map<String, MetaProp> propsMap = [:] as Map<String, MetaProp>
+class MetaEntity extends MetaProp implements Serializable {
+
+    //either a simple MetaProp or a ref to another MetaEntityProps
+    Map<String, MetaProp> metaProps = [:] as Map<String, MetaProp>
 
     Set<String> excludeFields
 
@@ -32,36 +42,37 @@ class MetaMapIncludes extends MetaProp implements Serializable {
         for (MetaMap.Converter converter : loader) {
             CONVERTERS.add(converter)
         }
+
     }
 
-    MetaMapIncludes(){}
+    MetaEntity(){}
 
-    MetaMapIncludes(Class type) {
+    MetaEntity(Class type) {
         super(NameUtils.getShortName(type.name), type)
     }
 
-    MetaMapIncludes(String name, Class type) {
+    MetaEntity(String name, Class type) {
         super(name, type)
     }
 
-    static MetaMapIncludes of(List<String> fields){
-        def mmi = new MetaMapIncludes()
-        fields.each { mmi.propsMap[it] = new MetaProp(it, null) }
+    static MetaEntity of(List<String> fields){
+        def mmi = new MetaEntity()
+        fields.each { mmi.metaProps[it] = new MetaProp(it, null) }
         return mmi
     }
 
     /**
      * Filters the props to only the ones that are association and have a nested includes
      */
-    Map<String, MetaMapIncludes> getNestedIncludes(){
-        return propsMap.findAll {  it.value instanceof MetaMapIncludes } as Map<String, MetaMapIncludes>
+    Map<String, MetaEntity> getNestedIncludes(){
+        return metaProps.findAll {  it.value instanceof MetaEntity } as Map<String, MetaEntity>
     }
 
     /**
      * Filters the props to only the ones that dont have nested includes, basic types.
      */
     Set<String> getBasicIncludes(){
-        return propsMap.findAll{ !(it.value instanceof MetaMapIncludes) }.keySet() as Set<String>
+        return metaProps.findAll{ !(it.value instanceof MetaEntity) }.keySet() as Set<String>
     }
 
     /**
@@ -73,14 +84,14 @@ class MetaMapIncludes extends MetaProp implements Serializable {
 
     void addBlacklist(Set<String> excludeFields) {
         this.excludeFields = excludeFields
-        this.propsMap.keySet().removeAll(excludeFields)
+        this.metaProps.keySet().removeAll(excludeFields)
     }
 
     /**
-     * merges another MetaMapIncludes fields and nested includes
+     * merges another MetaEntity fields and nested includes
      */
-    void merge(MetaMapIncludes toMerge) {
-        this.propsMap.putAll(toMerge.propsMap)
+    void merge(MetaEntity toMerge) {
+        this.metaProps.putAll(toMerge.metaProps)
         // if(toMerge.nestedIncludes) this.nestedIncludes.putAll(toMerge.nestedIncludes)
     }
 
@@ -89,9 +100,9 @@ class MetaMapIncludes extends MetaProp implements Serializable {
      */
     Map<String, Object> toMap() {
         Map mmiProps = [:] as Map<String, Object>
-        for (String key in propsMap.keySet()) {
-            def val = propsMap[key]
-            if(val instanceof MetaMapIncludes) {
+        for (String key in metaProps.keySet()) {
+            def val = metaProps[key]
+            if(val instanceof MetaEntity) {
                 mmiProps[key] = val.toMap()
             } else {
                 mmiProps[key] = val
@@ -118,8 +129,8 @@ class MetaMapIncludes extends MetaProp implements Serializable {
     boolean equals(Object other) {
         if (other == null) return false
         if (this.is(other)) return true
-        if (other instanceof MetaMapIncludes) {
-            return other.className == className && other.propsMap == propsMap
+        if (other instanceof MetaEntity) {
+            return other.className == className && other.metaProps == metaProps
         }
         return false
     }
@@ -127,7 +138,7 @@ class MetaMapIncludes extends MetaProp implements Serializable {
     int hashCode() {
         int hashCode = HashCodeHelper.initHash()
         if (className) { hashCode = HashCodeHelper.updateHash(hashCode, className) }
-        if (propsMap) { hashCode = HashCodeHelper.updateHash(hashCode, propsMap) }
+        if (metaProps) { hashCode = HashCodeHelper.updateHash(hashCode, metaProps) }
         hashCode
     }
 }

@@ -7,7 +7,7 @@ package yakworks.meta
 import spock.lang.Specification
 import yakworks.commons.testing.pogos.Gadget
 
-class MetaMapIncludesSpec extends Specification {
+class MetaEntitySpec extends Specification {
 
     Map testMap(){
         return [name:"Bart", age:45, other:"stuff", info: [ phone: "1234", email: "jo@jo.com" ]]
@@ -15,8 +15,8 @@ class MetaMapIncludesSpec extends Specification {
 
     void "test equals"() {
         when:
-        def mmi1 = new MetaMapIncludes(Gadget)
-        def mmi2 = new MetaMapIncludes(Gadget)
+        def mmi1 = new MetaEntity(Gadget)
+        def mmi2 = new MetaEntity(Gadget)
 
         then:
         mmi1 == mmi2
@@ -27,7 +27,7 @@ class MetaMapIncludesSpec extends Specification {
         //simple
         def includes = ['id', 'name', 'thing.name']
 
-        MetaMapIncludes mmi = MetaMapIncludesBuilder.build(Gadget, includes)
+        MetaEntity mmi = BasicMetaEntityBuilder.build(Gadget, includes)
         Map basicMap = mmi.toMap()
 
         then:
@@ -42,7 +42,7 @@ class MetaMapIncludesSpec extends Specification {
         //simple
         def includes = ['id', 'name', 'thing.name']
         def expectedIncludes = includes
-        MetaMapIncludes mmi = MetaMapIncludesBuilder.build(Gadget, includes)
+        MetaEntity mmi = BasicMetaEntityBuilder.build(Gadget, includes)
         def flatMap = mmi.flatten()
 
         then:
@@ -57,7 +57,7 @@ class MetaMapIncludesSpec extends Specification {
         //simple
         def includes = ['id', 'name', 'thing.name']
         def expectedIncludes = includes
-        MetaMapIncludes mmi = MetaMapIncludesBuilder.build(Gadget, includes)
+        MetaEntity mmi = BasicMetaEntityBuilder.build(Gadget, includes)
         Set props = mmi.flattenProps()
 
         then:

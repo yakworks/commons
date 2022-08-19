@@ -39,8 +39,8 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         'domainClass', 'dirty', 'errors', 'dirtyPropertyNames']
 
     private Set<String> _includes = []
-    // private Map _includeProps = [:] as Map<String, MetaMapIncludes>
-    private MetaMapIncludes metaMapIncludes
+    // private Map _includeProps = [:] as Map<String, MetaEntity>
+    private MetaEntity metaMapIncludes
 
     private Map<String, Object> shadowMap = [:]
 
@@ -66,17 +66,17 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
      * @param entity The object to inspect
      * @param entity The object to inspect
      */
-    MetaMap(Object entity, MetaMapIncludes metaMapIncludes) {
+    MetaMap(Object entity, MetaEntity metaMapIncludes) {
         this(entity)
         initialise(metaMapIncludes)
     }
 
-    private void initialise(MetaMapIncludes metaMapIncludes) {
+    private void initialise(MetaEntity metaMapIncludes) {
         if(metaMapIncludes){
             this.metaMapIncludes = metaMapIncludes
-            _includes = metaMapIncludes.propsMap.keySet()
+            _includes = metaMapIncludes.metaProps.keySet()
             // _includeProps = includeMap.propsMap
-            this.converters = MetaMapIncludes.CONVERTERS
+            this.converters = MetaEntity.CONVERTERS
         }
     }
 
@@ -165,9 +165,9 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         Object val = source[prop]
         if(val == null) return null
         Map nestesIncludes = getNestedIncludes()
-        MetaMapIncludes mapIncludes = nestesIncludes[prop]
+        MetaEntity mapIncludes = nestesIncludes[prop]
         // if its an enum and doesnt have any include field specifed (which it normally should not)
-        if( val.class.isEnum() && !(mapIncludes?.propsMap)) {
+        if( val.class.isEnum() && !(mapIncludes?.metaProps)) {
             if(val instanceof IdEnum){
                 // convert Enums to string or id,name object if its IdEnum
                 Map<String, Object> idEnumMap = [id: (val as IdEnum).id, name: (val as Enum).name()]
@@ -307,8 +307,8 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
 
     //------- Helper methods --------
 
-    Map<String, MetaMapIncludes> getNestedIncludes(){
-        return (metaMapIncludes?.nestedIncludes) ?: [:] as Map<String, MetaMapIncludes>
+    Map<String, MetaEntity> getNestedIncludes(){
+        return (metaMapIncludes?.nestedIncludes) ?: [:] as Map<String, MetaEntity>
     }
 
     boolean isIncluded(String mp) {

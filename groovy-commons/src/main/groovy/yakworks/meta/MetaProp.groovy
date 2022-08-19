@@ -8,8 +8,8 @@ import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 
 /**
- * Represents a property on a bean or entity for MetaMap.
- * Basically a MetaBeanProperty but with a property for a schema reference. and
+ * Represents a property on a bean for a MetaMap.
+ * Similiar to a MetaBeanProperty. Adds a property for a openapi schema reference.
  * @see groovy.lang.MetaBeanProperty
  */
 @EqualsAndHashCode(includes=["name", "classType"], useCanEqual=false) //because its used as cache key

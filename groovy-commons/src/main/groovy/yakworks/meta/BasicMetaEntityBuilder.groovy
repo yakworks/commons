@@ -12,12 +12,12 @@ import groovy.util.logging.Slf4j
 import yakworks.commons.lang.PropertyTools
 
 /**
- * Builder to create MetaMapIncludes from a sql select like list against an entity
+ * Builder to create MetaEntity from a sql select like list against an entity
  */
 @Slf4j
 @CompileStatic
 @SuppressWarnings('InvertedIfElse')
-class MetaMapIncludesBuilder {
+class BasicMetaEntityBuilder {
     /**
      * Holds the list of fields that have display:false for a class, meaning they should not be exported
      */
@@ -27,26 +27,26 @@ class MetaMapIncludesBuilder {
     List<String> excludes = []
     String className
     Class clazz
-    MetaMapIncludes metaMapIncludes
+    MetaEntity metaMapIncludes
 
-    MetaMapIncludesBuilder(Class clazz){
+    BasicMetaEntityBuilder(Class clazz){
         this.clazz = clazz
         this.className = clazz.name
         init()
     }
 
-    MetaMapIncludesBuilder(String className, List<String> includes){
+    BasicMetaEntityBuilder(String className, List<String> includes){
         this.className = className
         this.includes = includes ?: ['*'] as List<String>
         init()
     }
 
-    MetaMapIncludesBuilder includes(List<String> includes) {
+    BasicMetaEntityBuilder includes(List<String> includes) {
         this.includes = includes ?: ['*'] as List<String>
         return this
     }
 
-    MetaMapIncludesBuilder excludes(List<String> val) {
+    BasicMetaEntityBuilder excludes(List<String> val) {
         if(val != null) this.excludes = val
         return this
     }
@@ -57,19 +57,19 @@ class MetaMapIncludesBuilder {
             clazz = classLoader.loadClass(className)
         }
 
-        this.metaMapIncludes = new MetaMapIncludes(clazz)
+        this.metaMapIncludes = new MetaEntity(clazz)
     }
 
-    static MetaMapIncludesBuilder of(Class entityClass){
-        return new MetaMapIncludesBuilder(entityClass)
+    static BasicMetaEntityBuilder of(Class entityClass){
+        return new BasicMetaEntityBuilder(entityClass)
     }
 
-    static MetaMapIncludes build(Class clazz, List<String> includes){
-        return MetaMapIncludesBuilder.of(clazz).includes(includes).build()
+    static MetaEntity build(Class clazz, List<String> includes){
+        return BasicMetaEntityBuilder.of(clazz).includes(includes).build()
     }
 
-    static MetaMapIncludes build(String entityClassName, List<String> includes){
-        def mmib = new MetaMapIncludesBuilder(entityClassName, includes)
+    static MetaEntity build(String entityClassName, List<String> includes){
+        def mmib = new BasicMetaEntityBuilder(entityClassName, includes)
         return mmib.build()
     }
 
@@ -80,7 +80,7 @@ class MetaMapIncludesBuilder {
      * @param includes the includes list in our custom dot notation
      * @return the EntityMapIncludes object that can be passed to EntityMap
      */
-    MetaMapIncludes build() {
+    MetaEntity build() {
 
         Set<String> rootProps = [] as Set<String>
         Map<String, Object> nestedProps = [:]
@@ -101,7 +101,7 @@ class MetaMapIncludesBuilder {
             if (!nestedPropName) {
                 MetaProp propm = getMetaProp(field)
                 if(propm){
-                    metaMapIncludes.propsMap[field] = propm
+                    metaMapIncludes.metaProps[field] = propm
                 }
             }
             else { // its a nestedProp
@@ -126,7 +126,7 @@ class MetaMapIncludesBuilder {
         Set blacklist = getBlacklist(null) + (this.excludes as Set)
 
         //only if it has rootProps
-        if (metaMapIncludes.propsMap) {
+        if (metaMapIncludes.metaProps) {
             if(blacklist) metaMapIncludes.addBlacklist(blacklist)
             //if it has nestedProps then go recursive
             if(nestedProps){
@@ -152,16 +152,16 @@ class MetaMapIncludesBuilder {
     }
 
     //will recursivily call build and add to the metaMapIncludes
-    MetaMapIncludes buildNested(Map<String, Object> nestedProps){
+    MetaEntity buildNested(Map<String, Object> nestedProps){
 
         // now we cycle through the nested props and recursively call this again for each associations includes
-        Map<String, MetaMapIncludes> nestedIncludesMap = [:]
+        Map<String, MetaEntity> nestedIncludesMap = [:]
         for (entry in nestedProps.entrySet()) {
             String prop = entry.key as String //the nested property name
             Map initMap = entry.value as Map
             List incProps = initMap['props'] as List
             String assocClass = initMap['className'] as String
-            MetaMapIncludes nestedIncludes
+            MetaEntity nestedIncludes
 
             if(assocClass) {
                 nestedIncludes = build(assocClass, incProps)
@@ -181,11 +181,11 @@ class MetaMapIncludesBuilder {
                 else if(Collection.isAssignableFrom(returnType)){
                     String genClass = PropertyTools.findGenericForCollection(entityClass, prop)
                     if(genClass) {
-                        nestedIncludes = MetaMapIncludesBuilder.build(genClass, incProps)
+                        nestedIncludes = BasicMetaEntityBuilder.build(genClass, incProps)
                     }
                     //TODO shouldn't we do at leas na object here? should not matter
                 } else {
-                    nestedIncludes = MetaMapIncludesBuilder.build(returnType.name, incProps)
+                    nestedIncludes = BasicMetaEntityBuilder.build(returnType.name, incProps)
                 }
             }
             //if it got valid nestedIncludes and its not already setup
@@ -193,7 +193,7 @@ class MetaMapIncludesBuilder {
         }
 
         if(nestedIncludesMap) {
-            metaMapIncludes.propsMap.putAll(nestedIncludesMap)
+            metaMapIncludes.metaProps.putAll(nestedIncludesMap)
         }
 
         return metaMapIncludes
