@@ -14,7 +14,7 @@ class BuildSupportSpec extends Specification {
         projectPath.exists()
         rootPath.exists()
         projectPath.toString().endsWith("groovy-commons")
-        rootPath.toString().endsWith("commons")
+
     }
 
 }
