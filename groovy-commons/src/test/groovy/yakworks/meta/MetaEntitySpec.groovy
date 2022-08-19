@@ -15,11 +15,11 @@ class MetaEntitySpec extends Specification {
 
     void "test equals"() {
         when:
-        def mmi1 = new MetaEntity(Gadget)
-        def mmi2 = new MetaEntity(Gadget)
+        def ment1 = new MetaEntity(Gadget)
+        def ment2 = new MetaEntity(Gadget)
 
         then:
-        mmi1 == mmi2
+        ment1 == ment2
     }
 
     void "test toBasicMap"(){
@@ -27,8 +27,8 @@ class MetaEntitySpec extends Specification {
         //simple
         def includes = ['id', 'name', 'thing.name']
 
-        MetaEntity mmi = BasicMetaEntityBuilder.build(Gadget, includes)
-        Map basicMap = mmi.toMap()
+        MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, includes)
+        Map basicMap = ment.toMap()
 
         then:
         basicMap.size() == 3
@@ -42,8 +42,8 @@ class MetaEntitySpec extends Specification {
         //simple
         def includes = ['id', 'name', 'thing.name']
         def expectedIncludes = includes
-        MetaEntity mmi = BasicMetaEntityBuilder.build(Gadget, includes)
-        def flatMap = mmi.flatten()
+        MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, includes)
+        def flatMap = ment.flatten()
 
         then:
         //in this case it should equal the passes in includes
@@ -57,8 +57,8 @@ class MetaEntitySpec extends Specification {
         //simple
         def includes = ['id', 'name', 'thing.name']
         def expectedIncludes = includes
-        MetaEntity mmi = BasicMetaEntityBuilder.build(Gadget, includes)
-        Set props = mmi.flattenProps()
+        MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, includes)
+        Set props = ment.flattenProps()
 
         then:
         //in this case it should equal the passes in includes

@@ -308,7 +308,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
     //------- Helper methods --------
 
     Map<String, MetaEntity> getNestedIncludes(){
-        return (metaMapIncludes?.nestedIncludes) ?: [:] as Map<String, MetaEntity>
+        return (metaMapIncludes?.metaEntityProps) ?: [:] as Map<String, MetaEntity>
     }
 
     boolean isIncluded(String mp) {

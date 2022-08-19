@@ -56,22 +56,22 @@ class MetaEntity extends MetaProp implements Serializable {
     }
 
     static MetaEntity of(List<String> fields){
-        def mmi = new MetaEntity()
-        fields.each { mmi.metaProps[it] = new MetaProp(it, null) }
-        return mmi
+        def ment = new MetaEntity()
+        fields.each { ment.metaProps[it] = new MetaProp(it, null) }
+        return ment
     }
 
     /**
      * Filters the props to only the ones that are association and have a nested includes
      */
-    Map<String, MetaEntity> getNestedIncludes(){
+    Map<String, MetaEntity> getMetaEntityProps(){
         return metaProps.findAll {  it.value instanceof MetaEntity } as Map<String, MetaEntity>
     }
 
     /**
      * Filters the props to only the ones that dont have nested includes, basic types.
      */
-    Set<String> getBasicIncludes(){
+    Set<String> getBasicMetaProps(){
         return metaProps.findAll{ !(it.value instanceof MetaEntity) }.keySet() as Set<String>
     }
 
@@ -123,6 +123,34 @@ class MetaEntity extends MetaProp implements Serializable {
      */
     Set<String> flattenProps() {
         return flatten().keySet()
+    }
+
+    /**
+     * Returns a flattened openapi shema map, if schema exists
+     * TODO need to mock up a test for this here. it is tested and used in gorm-tools.
+     */
+    Map<String, Map> flattenSchema(){
+        Map<String, MetaProp> flatMap = flatten()
+        Map map = [:] as Map<String, Map>
+        //iterate over and convert Schema to Map
+        flatMap.each{String k, MetaProp metaProp->
+            Map schemaMap = [:] as Map<String, Object>
+            List schemaAttrs = [
+                'name', 'title', 'multipleOf',  'maximum', 'exclusiveMaximum', 'minimum',
+                'exclusiveMinimum', 'maxLength', 'minLength', 'pattern', 'maxItems', 'minItems', 'uniqueItems',
+                'maxProperties', 'minProperties', 'required', 'type', 'not', 'description', 'format', '$ref', 'nullable',
+                'readOnly', 'writeOnly', 'example', 'enum'
+            ]
+
+            for(String attr: schemaAttrs){
+                def schema = metaProp.schema
+                if(schema && schema[attr] != null){
+                    schemaMap[attr] = schema[attr]
+                }
+            }
+            map[k] = schemaMap
+        }
+        return map
     }
 
     @Override
