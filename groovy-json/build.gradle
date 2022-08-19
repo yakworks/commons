@@ -6,11 +6,16 @@ dependencies {
   api "org.codehaus.groovy:groovy:$groovyVersion"
   api "org.codehaus.groovy:groovy-nio:$groovyVersion"
   api "org.codehaus.groovy:groovy-json:$groovyVersion"
+  api "org.codehaus.groovy:groovy-yaml:$groovyVersion"
   // api "org.codehaus.groovy:groovy-datetime:$groovyVersion"
   // api "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
 
-  api 'jakarta.annotation:jakarta.annotation-api:2.1.0'
-  api "net.lingala.zip4j:zip4j:$vZip4j"
+  api project(":groovy-commons")
+
+  api "org.yaml:snakeyaml:$vSnakeyaml"
+
+  // api 'jakarta.annotation:jakarta.annotation-api:2.1.0'
+  // api "net.lingala.zip4j:zip4j:$vZip4j"
 
   //requires jackson libs to be added in. TODO should these be api and create the dependency?
   implementation "com.fasterxml.jackson.core:jackson-core:$vJackson"

@@ -17,21 +17,11 @@ dependencies {
 
   api "commons-io:commons-io:$vCommonsIO"
 
-  implementation "com.fasterxml.jackson.core:jackson-core:$vJackson"
-  implementation "com.fasterxml.jackson.core:jackson-databind:$vJackson"
-  implementation "com.fasterxml.jackson.module:jackson-module-parameter-names:$vJackson"
-  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$vJackson"
-  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$vJackson"
-
-  //libs
-  // api "org.yakworks:i18n:$vYakworksICU4J"
-
   api "net.lingala.zip4j:zip4j:$vZip4j"
 
   // javax val
   compileOnly "javax.validation:validation-api:$vJavaxValidation"
-  // json pasrser traits and other areas
-  compileOnly "javax.servlet:javax.servlet-api:4.0.1"
+
   //javax.annotations
   compileOnly "com.github.spotbugs:spotbugs-annotations:${vSpotBugs}"
 
@@ -39,6 +29,14 @@ dependencies {
   // used only in commons password stuff
   compileOnly "bouncycastle:bcprov-jdk14:138"
 
+}
+
+processResources {
+  filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
+    expand([
+      moduleVersion: version
+    ])
+  }
 }
 
 test {

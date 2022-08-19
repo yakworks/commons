@@ -381,10 +381,10 @@ class MapsSpec extends Specification {
 
 
         then:
-        Maps.getBoolean('foo', maps)
-        !Maps.getBoolean('bar', maps)
-        Maps.getBoolean('nothing', maps, true)
-        !Maps.getBoolean('nothing2', maps, false)
+        Maps.getBoolean(maps, 'foo')
+        !Maps.getBoolean(maps, 'bar')
+        Maps.getBoolean( maps, 'nothing', true)
+        !Maps.getBoolean(maps, 'nothing2', false)
     }
 
     void "test boolean"() {

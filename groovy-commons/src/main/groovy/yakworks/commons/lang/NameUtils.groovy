@@ -713,7 +713,7 @@ class NameUtils {
      * @param name The String to decapitalize
      * @return The decapitalized version of the String
      */
-    public static String decapitalize(String name) {
+    static String decapitalize(String name) {
         if (name == null) {
             return null;
         }

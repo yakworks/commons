@@ -214,7 +214,7 @@ class Maps {
      * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false
      */
     @SuppressWarnings('EmptyCatchBlock')
-    static boolean getBoolean(String key, Map<?, ?> map, boolean defaultValue = false) {
+    static boolean getBoolean(Map<?, ?> map, String key, boolean defaultValue = false) {
         if (map == null) return defaultValue
 
         if (map.containsKey(key)) {
@@ -236,7 +236,7 @@ class Maps {
     }
 
     static boolean 'boolean'(Map<?, ?> map, String key, boolean defaultValue = false) {
-        return getBoolean(key, map, defaultValue)
+        return getBoolean(map, key, defaultValue)
     }
 
     /**

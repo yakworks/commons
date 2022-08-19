@@ -139,4 +139,24 @@ class ClassUtils {
         field.set(instance, value)
     }
 
+    /**
+     * Determine whether the {@link Class} identified by the supplied name is present
+     * and can be loaded. Will return {@code false} if either the class or
+     * one of its dependencies is not present or cannot be loaded.
+     * @param className the name of the class to check
+     * (may be {@code null}, which indicates the default class loader)
+     * @return whether the specified class is present
+     */
+    @SuppressWarnings(["ClassForName", "CatchThrowable"])
+    static boolean isPresent(String className) {
+        try {
+            Class.forName(className, false, ClassUtils.getClassLoader())
+            return true
+        }
+        catch (ex) {
+            // Class or one of its dependencies is not present...
+            return false
+        }
+    }
+
 }

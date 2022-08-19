@@ -73,7 +73,10 @@ class JsonEngine {
     }
 
     JsonEngine build() {
-        jsonGenerator = buildOptions().build()
+        def opts = buildOptions()
+        jsonGenerator = new EnhancedJsonGenerator(opts)
+        // jsonGenerator = buildOptions().build()
+
         jsonSlurper = buildSlurper()
         return this
     }
@@ -89,6 +92,10 @@ class JsonEngine {
         for (JsonGenerator.Converter converter : loader) {
             converters.add(converter)
         }
+        converters = converters.sort {
+            it.hasProperty('order') ? it['order'] : 0
+        }
+
         converters.add(new InstantJsonConverter())
         converters.add(new LocalDateJsonConverter())
         converters.add(new LocalDateTimeJsonConverter())

@@ -43,6 +43,8 @@ class Gadget {
     Kind kind // internal
     GadgetStatus status //id enum
 
+    static String staticProp = "foo"
+
     static enum Kind {CHILD, PARENT}
 
     //built in enums

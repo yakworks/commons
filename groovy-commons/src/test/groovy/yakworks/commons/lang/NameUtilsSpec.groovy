@@ -7,8 +7,6 @@ package yakworks.commons.lang
 
 import spock.lang.Specification
 import spock.lang.Unroll
-import yakworks.commons.lang.PropertyTools
-import yakworks.commons.testing.pogos.Gadget
 
 class NameUtilsSpec extends Specification{
 

@@ -44,7 +44,7 @@ public class ObjectMapperWrapper implements Serializable {
 
     public static ObjectMapper setupDefaultObjectMapper() {
         return new ObjectMapper()
-            .findAndRegisterModules()
+            .findAndRegisterModules() //uses ServiceLoader to find "Modules", registered in META-INF.services
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .registerModule(
@@ -53,7 +53,7 @@ public class ObjectMapperWrapper implements Serializable {
                     .addSerializer(OffsetDateTime.class, OffsetDateTimeSerializer.INSTANCE)
                     .addDeserializer(OffsetDateTime.class, OffsetDateTimeDeserializer.INSTANCE)
             );
-            // these are picked up by the findAndRegisterModules
+            // these should already be picked up by the findAndRegisterModules
             // .registerModule(new ParameterNamesModule())
             // .registerModule(new Jdk8Module())
             // .registerModule(new JavaTimeModule())
