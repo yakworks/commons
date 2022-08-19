@@ -42,7 +42,7 @@ class YamlUtils {
      */
     static Object loadYaml(Path path){
         Yaml yaml = new Yaml()
-        assert path.exists()
+        assert Files.exists(path)
         path.withInputStream { istream ->
             return yaml.load(Files.newInputStream(path))
         }

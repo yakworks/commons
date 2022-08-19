@@ -19,6 +19,8 @@ dependencies {
 
   api "net.lingala.zip4j:zip4j:$vZip4j"
 
+  api "org.yaml:snakeyaml:$vSnakeyaml"
+
   // javax val
   compileOnly "javax.validation:validation-api:$vJavaxValidation"
 

@@ -11,6 +11,7 @@ import org.codehaus.groovy.util.HashCodeHelper
 
 import yakworks.commons.lang.NameUtils
 import yakworks.commons.map.MapFlattener
+import yakworks.openapi.OapiUtils
 
 /**
  * Somewhat similiar to MetaClass.
@@ -135,14 +136,7 @@ class MetaEntity extends MetaProp implements Serializable {
         //iterate over and convert Schema to Map
         flatMap.each{String k, MetaProp metaProp->
             Map schemaMap = [:] as Map<String, Object>
-            List schemaAttrs = [
-                'name', 'title', 'multipleOf',  'maximum', 'exclusiveMaximum', 'minimum',
-                'exclusiveMinimum', 'maxLength', 'minLength', 'pattern', 'maxItems', 'minItems', 'uniqueItems',
-                'maxProperties', 'minProperties', 'required', 'type', 'not', 'description', 'format', '$ref', 'nullable',
-                'readOnly', 'writeOnly', 'example', 'enum'
-            ]
-
-            for(String attr: schemaAttrs){
+            for(String attr: OapiUtils.schemaAttrs){
                 def schema = metaProp.schema
                 if(schema && schema[attr] != null){
                     schemaMap[attr] = schema[attr]

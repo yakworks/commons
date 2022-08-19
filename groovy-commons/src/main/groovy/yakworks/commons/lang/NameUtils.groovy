@@ -376,6 +376,9 @@ class NameUtils {
      * @return The converted property name
      */
     static String getNaturalName(String name) {
+        //exit fast with what was passed in if its falsy
+        if(!name) return name
+
         name = getShortName(name);
         List<String> words = []
         int i = 0;

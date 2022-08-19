@@ -7,6 +7,8 @@ package yakworks.meta
 import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 
+import yakworks.commons.lang.NameUtils
+
 /**
  * Represents a property on a bean for a MetaMap.
  * Similiar to a MetaBeanProperty. Adds a property for a openapi schema reference.
@@ -16,14 +18,17 @@ import groovy.transform.EqualsAndHashCode
 @CompileStatic
 class MetaProp implements Serializable {
     private static final long serialVersionUID = 1L
-    //prop name
+    /** property name */
     String name
-    //java class for prop
+    /** title label, will use NameUtils.getNaturalName(name) if not populated.  */
+    String title
+    /** java type for prop, either this or className should be populated */
     Class classType
-    //the base or entity class name for this includes.
+    /** java type for prop, the getter will return String classType.name */
     String className
-    //--- Optional schema props that can be filled in for display and reporting. this is a subset of whats in openapi schema. ---
-    // String title //display title
+
+    //--- Optional schema props for display or reporting that can be filled in. this is a subset of whats in openapi schema. ---
+    // see https://swagger.io/specification/#schema-object
     // number, integer, boolean, array, object, string (this includes dates and files)
     // String type //basic type.
 
@@ -53,6 +58,11 @@ class MetaProp implements Serializable {
     String getClassName(){
         if(!this.className && this.classType) this.className = classType.name
         return this.className
+    }
+
+    String getTitle(){
+        if(!this.title) this.title = NameUtils.getNaturalName(name)
+        return this.title
     }
 
     @Override

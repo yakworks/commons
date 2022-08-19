@@ -25,16 +25,26 @@ class MetaEntitySpec extends Specification {
     void "test toBasicMap"(){
         when:
         //simple
-        def includes = ['id', 'name', 'thing.name']
+        def includes = ['id', 'name', 'localDate', 'thing.name', ]
 
         MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, includes)
         Map basicMap = ment.toMap()
 
         then:
-        basicMap.size() == 3
-        basicMap.keySet() == ['id', 'name', 'thing'] as Set
+        basicMap.size() == 4
+        basicMap.keySet() == ['id', 'name', 'localDate', 'thing'] as Set
         basicMap.thing.size() == 1
         basicMap.thing.keySet() == ['name'] as Set
+    }
+
+    void "test title"(){
+        when:
+        MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, ['id', 'name', 'localDate' ])
+
+        then:
+        ment.metaProps.id.title == 'Id'
+        ment.metaProps.name.title == 'Name'
+        ment.metaProps.localDate.title == 'Local Date'
     }
 
     void "test flatten"(){
