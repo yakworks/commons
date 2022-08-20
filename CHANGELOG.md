@@ -1,3 +1,8 @@
+### v3.4
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.3...v3.4)
+- Metamap and centralized json into groovy-commons (#5) [link](https://github.com/yakworks/commons/commit/d6a5e92dca4a4d96f8310fc03366504d71fd20dc)
+
 ### v3.3
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.2...v3.3)
