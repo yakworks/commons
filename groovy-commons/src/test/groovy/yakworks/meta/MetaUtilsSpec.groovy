@@ -4,9 +4,12 @@
 */
 package yakworks.meta
 
+import io.swagger.v3.oas.models.media.Schema
 import spock.lang.Specification
 import yakworks.commons.testing.pogos.Gadget
 import yakworks.commons.testing.pogos.Thing
+import yakworks.openapi.OapiMocks
+import yakworks.openapi.OapiUtils
 
 class MetaUtilsSpec extends Specification {
 

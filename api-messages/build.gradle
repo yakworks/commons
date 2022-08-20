@@ -20,7 +20,7 @@ dependencies {
   api("org.jetbrains.kotlin:kotlin-stdlib-common")
   api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-  testImplementation project(":groovy-json")
+  testImplementation project(":groovy-commons")
 
   // Use the Kotlin JUnit integration.
   testImplementation("org.jetbrains.kotlin:kotlin-test-junit")

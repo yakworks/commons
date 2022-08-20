@@ -78,4 +78,29 @@ class MetaEntitySpec extends Specification {
         props == expectedIncludes as Set
     }
 
+    void "test toSchemaMap"(){
+        when:
+        //simple
+        def includes = ['id', 'thing.name' ]
+
+        MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, ['id', 'thing.name' ])
+        Map schemap = ment.toSchemaMap()
+
+        then:
+        /**
+         "name" -> "Gadget"
+         "title" -> "Gadget"
+         "properties" -> {LinkedHashMap@3239}  size = 2
+           "id" -> {LinkedHashMap@4281}  size = 0
+           "thing" -> {LinkedHashMap@4283}  size = 2
+
+         */
+        schemap.size() == 3
+        schemap.keySet() == ['name', 'title', 'properties'] as Set
+        def props = schemap['properties']
+        props.size() == 2
+        props.keySet() == ['id', "thing"] as Set
+
+    }
+
 }

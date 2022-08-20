@@ -8,6 +8,7 @@ dependencies {
   api "org.codehaus.groovy:groovy:$groovyVersion"
   api "org.codehaus.groovy:groovy-templates:$groovyVersion"
   api "org.codehaus.groovy:groovy-nio:$groovyVersion"
+  api "org.codehaus.groovy:groovy-json:$groovyVersion"
   api "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
   api "org.codehaus.groovy:groovy-datetime:$groovyVersion"
 
@@ -21,6 +22,15 @@ dependencies {
 
   api "org.yaml:snakeyaml:$vSnakeyaml"
 
+  //requires jackson libs to be added in. TODO should these be api and create the dependency?
+  api "com.fasterxml.jackson.core:jackson-core:$vJackson"
+  api "com.fasterxml.jackson.core:jackson-databind:$vJackson"
+  api "com.fasterxml.jackson.module:jackson-module-parameter-names:$vJackson"
+  //support for other new Java 8 datatypes outside of date/time: most notably Optional
+  api "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$vJackson"
+  // support for Java 8 date/time types
+  api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$vJackson"
+
   // javax val
   compileOnly "javax.validation:validation-api:$vJavaxValidation"
 
@@ -31,6 +41,10 @@ dependencies {
   // used only in commons password stuff
   compileOnly "bouncycastle:bcprov-jdk14:138"
 
+  // json pasrser traits and other areas
+  compileOnly "javax.servlet:javax.servlet-api:4.0.1"
+
+  testImplementation "io.swagger.parser.v3:swagger-parser-v3:$vSwagger"
 }
 
 processResources {

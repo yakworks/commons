@@ -1,6 +1,6 @@
 /*
-* Copyright 2020 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
-* You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+* Copyright 2020 original authors
+* SPDX-License-Identifier: Apache-2.0
 */
 package yakworks.meta
 
@@ -43,7 +43,6 @@ class MetaEntity extends MetaProp implements Serializable {
         for (MetaMap.Converter converter : loader) {
             CONVERTERS.add(converter)
         }
-
     }
 
     MetaEntity(){}
@@ -97,7 +96,9 @@ class MetaEntity extends MetaProp implements Serializable {
     }
 
     /**
-     * convert to map of maps to use for flatting
+     * convert to Map of Maps or MetaProps. Can be used to use for flatting or rendering to json.
+     * Its is not json-schema or openapi spec compliant.
+     * For UI its easier to
      */
     Map<String, Object> toMap() {
         Map mmiProps = [:] as Map<String, Object>
@@ -110,6 +111,26 @@ class MetaEntity extends MetaProp implements Serializable {
             }
         }
         return mmiProps
+    }
+
+    /**
+     * convert to openApi schema in map form, ready to be dumped to json parser.
+     *
+     * Example:
+     *    MetaEntity src                    Schema yml
+     * -----------------------------------------------
+     * name: "Org"                      ->    name: Org
+     * title: "Org"                     ->    title: Organizations
+     * classType: yak.rally.Org         ->    type: object
+     * metaProps: [                     ->    properties:
+     *  [num: [                         ->      num:
+     *    classType: java.lang.String   ->        type: string
+     *    schema.maxLength: 50          ->        maxLength: 50
+     *  ], [name: etc..                 ->      name: ...
+     *
+     */
+    Map<String, Object> toSchemaMap() {
+        return OapiUtils.toSchemaMap(this)
     }
 
     Map<String, MetaProp> flatten() {

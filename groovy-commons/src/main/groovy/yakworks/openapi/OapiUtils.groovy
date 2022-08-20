@@ -1,6 +1,6 @@
 /*
-* Copyright 2022 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
-* You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+* Copyright 2022 original authors
+* SPDX-License-Identifier: Apache-2.0
 */
 package yakworks.openapi
 
@@ -9,6 +9,8 @@ import java.time.LocalDateTime
 
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
+
+import yakworks.meta.MetaEntity
 
 @CompileStatic
 class OapiUtils {
@@ -78,5 +80,66 @@ class OapiUtils {
     static String[] convertEnum(Class enumClazz){
         return enumClazz.values()*.name() as String[]
     }
+
+
+    /**
+     * convert to openApi schema in map form, ready to be dumped to json parser.
+     *
+     * Example:
+     *    MetaEntity src                    Schema yml
+     * -----------------------------------------------
+     * name: "Org"                      ->    name: Org
+     * title: "Org"                     ->    title: Organizations
+     * classType: yak.rally.Org         ->    type: object
+     * metaProps: [                     ->    properties:
+     *  [num: [                         ->      num:
+     *    classType: java.lang.String   ->        type: string
+     *    schema.maxLength: 50          ->        maxLength: 50
+     *  ], [name: etc..                 ->      name: ...
+     *
+     */
+    static Map<String, Object> toSchemaMap(MetaEntity ment, boolean isChild = false) {
+        Map schemap = [:] as Map<String, Object>
+        if(!isChild) schemap.name = ment.name
+        schemap.title = ment.title
+        // schemap.type = 'object' //object is the default
+
+        Map props = [:]
+        for (String key in ment.metaProps.keySet()) {
+            def val = ment.metaProps[key]
+            if(val instanceof MetaEntity) {
+                props[key] = toSchemaMap(val, true)
+            } else {
+                props[key] = OapiUtils.schemaPropToMap(val.schema)
+            }
+        }
+        schemap['properties'] = props
+        return schemap
+    }
+
+    /**
+     * converts a schema property to map.
+     * example would properteis schema under the num prop below.
+     * properties: [
+     *   amount: [
+     *     type: "number",
+     *     format: "money"
+     *     title: "amount due"
+     *     etc..
+     *   ] <- this is the map it returns
+     *   ...
+     * ]
+     */
+    static Map<String, Object> schemaPropToMap(Object schemaProp) {
+        if(!schemaProp) return [:]
+        Map schemaMap = [:] as Map<String, Object>
+        for(String attr: OapiUtils.schemaAttrs){
+            if(schemaProp[attr] != null){
+                schemaMap[attr] = schemaProp[attr]
+            }
+        }
+        return schemaMap
+    }
+
 
 }
