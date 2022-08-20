@@ -7,7 +7,7 @@ package yakworks.meta
 import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 
-import yakworks.commons.lang.NameUtils
+import yakworks.commons.lang.LabelUtils
 
 /**
  * Represents a property on a bean for a MetaMap.
@@ -20,7 +20,7 @@ class MetaProp implements Serializable {
     private static final long serialVersionUID = 1L
     /** property name */
     String name
-    /** title label, will use NameUtils.getNaturalName(name) if not populated.  */
+    /** title label, will use LabelUtils.getNaturalTitle(name) if not populated.  */
     String title
     /** java type for prop, either this or className should be populated */
     Class classType
@@ -60,8 +60,14 @@ class MetaProp implements Serializable {
         return this.className
     }
 
+    /** gets title , if no title then uses LabelUtils.getNaturalTitle to create one from name */
     String getTitle(){
-        if(!this.title) this.title = NameUtils.getNaturalName(name)
+        if(!this.title) this.title = LabelUtils.getNaturalTitle(name)
+        return this.title
+    }
+
+    /** gets title , if no title then uses LabelUtils.getNaturalTitle to create one from name */
+    boolean hasTitle(){
         return this.title
     }
 

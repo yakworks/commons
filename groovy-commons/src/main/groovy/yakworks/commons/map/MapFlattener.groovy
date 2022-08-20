@@ -135,7 +135,7 @@ class MapFlattener {
             return [:]
         }
 
-        Map keyValues = [:]
+        Map keyValues = [:] as Map<String, Object>
         keyValues.put(currentName, jsonArray)
 
         int index = 0

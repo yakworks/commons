@@ -42,7 +42,10 @@ class MetaEntitySpec extends Specification {
         MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, ['id', 'name', 'localDate' ])
 
         then:
+        !ment.metaProps.id.hasTitle()
         ment.metaProps.id.title == 'Id'
+        ment.metaProps.id.hasTitle()
+
         ment.metaProps.name.title == 'Name'
         ment.metaProps.localDate.title == 'Local Date'
     }
