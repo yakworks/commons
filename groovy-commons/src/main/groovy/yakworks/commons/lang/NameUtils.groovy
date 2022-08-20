@@ -1,6 +1,6 @@
 /*
-* Copyright 2008 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
-* You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+* Copyright 2008 original authors
+* SPDX-License-Identifier: Apache-2.0
 */
 package yakworks.commons.lang
 
@@ -376,6 +376,9 @@ class NameUtils {
      * @return The converted property name
      */
     static String getNaturalName(String name) {
+        //exit fast with what was passed in if its falsy
+        if(!name) return name
+
         name = getShortName(name);
         List<String> words = []
         int i = 0;
@@ -713,7 +716,7 @@ class NameUtils {
      * @param name The String to decapitalize
      * @return The decapitalized version of the String
      */
-    public static String decapitalize(String name) {
+    static String decapitalize(String name) {
         if (name == null) {
             return null;
         }

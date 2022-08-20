@@ -9,7 +9,6 @@ import yakworks.api.problem.Problem
 import yakworks.api.problem.ViolationFieldError
 import yakworks.json.groovy.JsonEngine
 import yakworks.message.Msg
-import yakworks.message.MsgKey
 
 // import yakworks.commons.map.Maps
 

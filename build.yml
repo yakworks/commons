@@ -34,12 +34,18 @@ maven:
   repoUrl: http://repo.9ci.com/public-libs
   snapshotUrl: http://repo.9ci.com/oss-snapshots
 
+spotless:
+  enabled: true
+  # default license header file to use
+  licenseHeader: |
+    ${'/*\n' +
+    '* Copyright \$YEAR original authors\n' +
+    '* SPDX-License-Identifier: Apache-2.0\n' +
+    '*/'
+    }
+
 #codenarc:
 #  toolVersion: 2.2.0
 #  main:
 #    excludes: ['**/BootStrap.*', '**/UrlMappings.*']
 
-#spotless:
-#  groovy:
-#    excludes:
-#      - '**/conf/**/*.groovy'

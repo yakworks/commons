@@ -7,7 +7,7 @@ package yakworks.api;
 import java.util.Map;
 
 /**
- * hekper for an asMap method
+ * helper for an asMap method
  */
 public interface AsMap {
 

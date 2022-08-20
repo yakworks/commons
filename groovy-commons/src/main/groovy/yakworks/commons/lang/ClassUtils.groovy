@@ -1,6 +1,6 @@
 /*
-* Copyright 2021 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
-* You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+* Copyright 2021 original authors
+* SPDX-License-Identifier: Apache-2.0
 */
 package yakworks.commons.lang
 
@@ -137,6 +137,26 @@ class ClassUtils {
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL)
         //set the value now
         field.set(instance, value)
+    }
+
+    /**
+     * Determine whether the {@link Class} identified by the supplied name is present
+     * and can be loaded. Will return {@code false} if either the class or
+     * one of its dependencies is not present or cannot be loaded.
+     * @param className the name of the class to check
+     * (may be {@code null}, which indicates the default class loader)
+     * @return whether the specified class is present
+     */
+    @SuppressWarnings(["ClassForName", "CatchThrowable"])
+    static boolean isPresent(String className) {
+        try {
+            Class.forName(className, false, ClassUtils.getClassLoader())
+            return true
+        }
+        catch (ex) {
+            // Class or one of its dependencies is not present...
+            return false
+        }
     }
 
 }

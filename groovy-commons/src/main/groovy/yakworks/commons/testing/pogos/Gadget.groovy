@@ -1,6 +1,6 @@
 /*
-* Copyright 2019 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
-* You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+* Copyright 2019 original authors
+* SPDX-License-Identifier: Apache-2.0
 */
 package yakworks.commons.testing.pogos
 
@@ -42,6 +42,8 @@ class Gadget {
     //enums
     Kind kind // internal
     GadgetStatus status //id enum
+
+    static String staticProp = "foo"
 
     static enum Kind {CHILD, PARENT}
 

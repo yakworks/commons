@@ -1,6 +1,6 @@
 /*
-* Copyright 2019 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
-* You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+* Copyright 2019 original authors
+* SPDX-License-Identifier: Apache-2.0
 */
 package yakworks.commons.map
 
@@ -135,7 +135,7 @@ class MapFlattener {
             return [:]
         }
 
-        Map keyValues = [:]
+        Map keyValues = [:] as Map<String, Object>
         keyValues.put(currentName, jsonArray)
 
         int index = 0
