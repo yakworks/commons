@@ -4,6 +4,7 @@
 */
 package yakworks.commons.lang
 
+import java.lang.reflect.Type
 
 import spock.lang.Specification
 import yakworks.commons.lang.PropertyTools
@@ -11,11 +12,22 @@ import yakworks.commons.testing.pogos.Gadget
 
 class PropertyToolsSpec extends Specification{
 
-    static class Thing {
+    static trait ThingTrait {
+        //test overriding getter works
+        List<Object> traitList
+    }
+
+    static class Thing implements ThingTrait{
         List<Map> mapList
         List<String> stringList
+
         List<Object> objectList
         List simpleList
+
+        @Override //make it more specific here to make sure the findGenericForCollection picks up right one
+        List<String> getTraitList(){
+            stringList
+        }
     }
 
     void "getPropertyValue for object"() {
@@ -89,7 +101,20 @@ class PropertyToolsSpec extends Specification{
         'stringList' | 'java.lang.String'
         'objectList' | 'java.lang.Object'
         'simpleList' | 'java.lang.Object'
+        'traitList'  | 'java.lang.String'
+    }
 
+    void "findGenericTypeForCollection"(String prop, Type genericClass) {
+        expect:
+        genericClass == PropertyTools.findGenericTypeForCollection(Thing, prop)
+
+        where:
+        prop         | genericClass
+        'mapList'    | java.util.Map
+        'stringList' | java.lang.String
+        'objectList' | java.lang.Object
+        'simpleList' | java.lang.Object
+        'traitList'  | java.lang.String
     }
 
 }

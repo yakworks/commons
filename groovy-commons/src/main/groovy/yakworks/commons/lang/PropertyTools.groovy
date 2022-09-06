@@ -4,6 +4,7 @@
 */
 package yakworks.commons.lang
 
+import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -120,18 +121,29 @@ class PropertyTools {
      * @param clazz the class to look on
      * @param prop the class property to check
      * @return the generic class name or implies 'java.lang.Object' if no generic found
+     * @see #findGenericTypeForCollection
      */
     static String findGenericForCollection(Class clazz, String prop){
-        MetaBeanProperty metaProp = PropertyTools.getMetaBeanProp(clazz, prop)
-        CachedMethod gen = metaProp.getter as CachedMethod
-        Type genericReturnType = gen.cachedMethod.genericReturnType
-        if(genericReturnType && genericReturnType instanceof ParameterizedType){
-            Type[] actualTypeArguments = genericReturnType.getActualTypeArguments()
-            return actualTypeArguments[0].typeName
-        } else {
-            //return the default 'java.lang.Object'
-            return 'java.lang.Object'
+        return findGenericTypeForCollection(clazz, prop).typeName
+    }
+
+    static Type findGenericTypeForCollection(Class clazz, String prop){
+        Method[] allMethods = clazz.getDeclaredMethods()
+        String getterName = NameUtils.getGetterName(prop)
+
+        //defaults to java.lang.Object
+        Type type = Object
+
+        Method m = allMethods.find { it.name == getterName}
+
+        if(m){
+            def genericReturnType = m.getGenericReturnType()
+            if(genericReturnType && genericReturnType instanceof ParameterizedType){
+                Type[] actualTypeArguments = genericReturnType.getActualTypeArguments()
+                return actualTypeArguments[0]
+            }
         }
+        return type
     }
 
 }
