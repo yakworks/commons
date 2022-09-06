@@ -1,3 +1,9 @@
+### v3.5
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.4...v3.5)
+- release [link](https://github.com/yakworks/commons/commit/e3d10afba2a6c04a30bcf1b37ffeeb982e0d3454)
+- fix findGenericTypeForCollection to use clazz.getDeclaredMethods() (#6) [link](https://github.com/yakworks/commons/commit/4c806c5c0187f838062176a65e7d4db2e3887bce)
+
 ### v3.4
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.3...v3.4)
