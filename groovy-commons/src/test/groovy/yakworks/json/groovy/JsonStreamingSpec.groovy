@@ -121,6 +121,18 @@ class JsonStreamingSpec extends Specification implements JsonEngineTrait {
         path.getText().endsWith('},\n]')
     }
 
+    void "test streamToFile with list of numbers"() {
+        when:
+        def path = getJsonFile("multi.json")
+        Files.deleteIfExists(path)
+        def dataList = [1,2,3,4,5,6,7,8,9,10]
+        JsonStreaming.streamToFile(dataList, path)
+
+        then:
+        Files.exists(path)
+        path.getText().startsWith('[1,2,3')
+    }
+
     void "sanity check merging files"() {
         when:
         def path1 = getJsonFile("merge1.txt")
