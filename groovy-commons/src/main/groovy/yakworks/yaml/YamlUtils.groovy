@@ -13,7 +13,7 @@ import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 
 /**
- * Helper to dump yml to file
+ * Helper to dump yml to file using SnakeYaml
  */
 @CompileStatic
 class YamlUtils {

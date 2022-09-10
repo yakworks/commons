@@ -40,7 +40,8 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
 
     private Set<String> _includes = []
     // private Map _includeProps = [:] as Map<String, MetaEntity>
-    private MetaEntity metaMapIncludes
+
+    MetaEntity metaEntity
 
     private Map<String, Object> shadowMap = [:]
 
@@ -66,15 +67,15 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
      * @param entity The object to inspect
      * @param entity The object to inspect
      */
-    MetaMap(Object entity, MetaEntity metaMapIncludes) {
+    MetaMap(Object entity, MetaEntity metaEntity) {
         this(entity)
-        initialise(metaMapIncludes)
+        initialise(metaEntity)
     }
 
-    private void initialise(MetaEntity metaMapIncludes) {
-        if(metaMapIncludes){
-            this.metaMapIncludes = metaMapIncludes
-            _includes = metaMapIncludes.metaProps.keySet()
+    private void initialise(MetaEntity metaEntity) {
+        if(metaEntity){
+            this.metaEntity = metaEntity
+            _includes = metaEntity.metaProps.keySet()
             // _includeProps = includeMap.propsMap
             this.converters = MetaEntity.CONVERTERS
         }
@@ -308,7 +309,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
     //------- Helper methods --------
 
     Map<String, MetaEntity> getNestedIncludes(){
-        return (metaMapIncludes?.metaEntityProps) ?: [:] as Map<String, MetaEntity>
+        return (metaEntity?.metaEntityProps) ?: [:] as Map<String, MetaEntity>
     }
 
     boolean isIncluded(String mp) {
