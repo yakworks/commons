@@ -31,8 +31,6 @@ import yakworks.json.groovy.converters.ZonedDateTimeJsonConverter
 @CompileStatic
 class JsonEngine {
 
-    public static JsonEngine INSTANCE
-
     String dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
     String timeZone = "GMT"
@@ -118,14 +116,21 @@ class JsonEngine {
         getGenerator().toJson(object)
     }
 
+    // see good explanation of thread safe static instance stratgey https://stackoverflow.com/a/16106598/6500859
+    private static class Holder {
+        private static final JsonEngine INSTANCE = new JsonEngine().build();
+    }
+
+    static JsonEngine getInstance() {
+        return Holder.INSTANCE
+    }
+
     static JsonGenerator getGenerator(){
-        if(!INSTANCE) INSTANCE = new JsonEngine().build()
-        INSTANCE.jsonGenerator
+        getInstance().jsonGenerator
     }
 
     static JsonSlurper getSlurper(){
-        if(!INSTANCE) INSTANCE = new JsonEngine().build()
-        INSTANCE.jsonSlurper
+        getInstance().jsonSlurper
     }
 
     /**
