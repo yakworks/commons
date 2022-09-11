@@ -11,8 +11,6 @@ import java.lang.reflect.Type
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
-import org.codehaus.groovy.reflection.CachedMethod
-
 /**
  * PropertyTools contains a set of static helpers, which provides a convenient way
  * for manipulating the object's properties.
@@ -29,6 +27,23 @@ class PropertyTools {
     static Object value(Object source, String property) {
         getProperty(source, property)
     }
+
+    /**
+     * just uses groovy getAt but wraps MissingPropertyException so if it doesnt exist then returns null
+     */
+    static Object getOrNull(Object source, String property) {
+        if (source == null) return null
+        Object value
+        try {
+            value = source[property]
+        }
+        catch (MissingPropertyException e) {
+            // swallow the exceptin basically, if obj is a map then this never happens, but if prop doesn't exist
+            // then this get thrown for objects
+            value = null
+        }
+        return value
+    }
     /**
      * Return the value of the (probably nested if your using this) property of the specified name, for the specified source object
      *
@@ -42,19 +57,16 @@ class PropertyTools {
         Validate.notNull(source, '[source]')
         Validate.notEmpty(property, '[property]')
 
-        Object result = property.tokenize('.').inject(source) { Object obj, String prop ->
-            Object value
-            if (obj != null){
-                try {
-                    value = obj[prop]
-                }
-                catch (MissingPropertyException e) {
-                    // swallow the exceptin basically, if obj is a map then this never happens, but if prop doesn't exist
-                    // then this get thrown for objects
-                    value = null
-                }
+        Object result
+
+        if(property.contains('.')) {
+            result = property.tokenize('.').inject(source) { Object obj, String prop ->
+                Object value = getOrNull(obj, prop)
+                return value
             }
-            return value
+        }
+        else {
+            result = getOrNull(source, property)
         }
 
         return result

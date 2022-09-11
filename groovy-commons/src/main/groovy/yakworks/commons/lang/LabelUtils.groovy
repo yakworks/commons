@@ -4,10 +4,13 @@
 */
 package yakworks.commons.lang
 
+import groovy.transform.CompileStatic
+
 /**
  * helper for names and labels.
  * Leans on the the common trait props in the model package.
  */
+@CompileStatic
 class LabelUtils {
 
     /**
@@ -26,7 +29,8 @@ class LabelUtils {
 
         propName = getObjectAndProp(propName)
         // make foo.bar into fooBar so we can pass it through the getNaturalName
-        propName = propName.replaceAll("(\\.)([A-Za-z0-9])") { Object[] it -> it[2].toUpperCase() }
+        //note it[2] is the second matched string in the group, [0] is the global string of the matched group, [1] is first match of group
+        propName = propName.replaceAll("(\\.)([A-Za-z0-9])") { List<String> it -> it[2].toUpperCase() }
         //text
         return NameUtils.getNaturalName(propName)
 

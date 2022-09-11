@@ -149,7 +149,7 @@ class MetaEntity extends MetaProp implements Serializable {
 
     /**
      * Returns a flattened openapi shema map, if schema exists
-     * TODO need to mock up a test for this here. it is tested and used in gorm-tools.
+     * TODO need to mock up a test for this here. NOTE: it is tested and used in gorm-tools.
      */
     Map<String, Map> flattenSchema(){
         Map<String, MetaProp> flatMap = flatten()

@@ -66,7 +66,7 @@ class MetaProp implements Serializable {
         return this.title
     }
 
-    /** gets title , if no title then uses LabelUtils.getNaturalTitle to create one from name */
+    /** check if has a title set */
     boolean hasTitle(){
         return this.title
     }

@@ -5,9 +5,11 @@
 package yakworks.json.groovy
 
 import groovy.json.DefaultJsonGenerator
+import groovy.transform.CompileStatic
 
 import yakworks.meta.MetaUtils
 
+@CompileStatic
 class EnhancedJsonGenerator extends DefaultJsonGenerator {
 
     protected EnhancedJsonGenerator(Options options) {

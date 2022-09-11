@@ -13,7 +13,7 @@ import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 
 /**
- * Helper to dump yml to file
+ * Helper to dump yml to file using SnakeYaml
  */
 @CompileStatic
 class YamlUtils {
@@ -37,7 +37,7 @@ class YamlUtils {
 
     /**
      * Use snake to load the yaml file
-     * @param path
+     * @param path file to load
      * @return the List or Map depending on the the yaml parsed.
      */
     static Object loadYaml(Path path){
