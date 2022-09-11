@@ -4,10 +4,13 @@
 */
 package yakworks.commons.lang
 
+import groovy.transform.CompileStatic
+
 /**
  * helper for names and labels.
  * Leans on the the common trait props in the model package.
  */
+@CompileStatic
 class LabelUtils {
 
     /**

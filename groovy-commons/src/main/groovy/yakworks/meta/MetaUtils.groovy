@@ -8,8 +8,6 @@ import java.lang.reflect.Modifier
 
 import groovy.transform.CompileStatic
 
-import yakworks.openapi.OapiUtils
-
 /**
  * A bunch of helper and lookup/finder statics for dealing with domain classes and PersistentEntity.
  * Useful methods to find the PersistentEntity and the mapping and meta fields.

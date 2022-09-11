@@ -117,6 +117,7 @@ class JsonEngine {
     }
 
     // see good explanation of thread safe static instance stratgey https://stackoverflow.com/a/16106598/6500859
+    @SuppressWarnings('UnusedPrivateField')
     private static class Holder {
         private static final JsonEngine INSTANCE = new JsonEngine().build();
     }
