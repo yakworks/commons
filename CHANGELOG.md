@@ -1,3 +1,8 @@
+### v3.6
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.5...v3.6)
+- MetaEntity prop name consistent,  PathKeyMap, JsonEngine thread safe, (#8) [link](https://github.com/yakworks/commons/commit/1a49b765ede5a3769249c16518686e970bc3ee3f)
+
 ### v3.5
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.4...v3.5)
