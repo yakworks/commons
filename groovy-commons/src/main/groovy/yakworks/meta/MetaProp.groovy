@@ -32,8 +32,14 @@ class MetaProp implements Serializable {
     // number, integer, boolean, array, object, string (this includes dates and files)
     // String type //basic type.
 
-    //OpenAPI schema is added if using the schema plugin and the proper oapi.yml is on path.
+    /**
+     * OpenAPI schema is added if using the schema plugin and the proper oapi.yml is on path.
+     * will be an instance of io.swagger.v3.oas.models.media.Schema or one of its types (such as StringSchema, etc)
+     */
     Object schema
+
+    /** set to true if should be hidden and not shown on reports or exports */
+    Boolean hidden
 
     MetaProp() {}
 

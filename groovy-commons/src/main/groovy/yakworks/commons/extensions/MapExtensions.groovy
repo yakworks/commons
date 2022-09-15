@@ -6,6 +6,8 @@ package yakworks.commons.extensions
 
 import groovy.transform.CompileStatic
 
+import yakworks.commons.map.Maps
+
 /**
  * Extensions to the {@code Map} interface.
  */
@@ -36,5 +38,13 @@ class MapExtensions {
             self[key] = value = create()
         }
         return value
+    }
+
+    static boolean getBoolean(Map<?, ?> map, Object key, boolean defaultValue = false) {
+        Maps.getBoolean(map, key, defaultValue)
+    }
+
+    static List getList(Map<?, ?> map, Object key, List defaultValue = []) {
+        Maps.getList(map, key, defaultValue)
     }
 }

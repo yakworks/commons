@@ -14,7 +14,7 @@ import groovy.transform.builder.SimpleStrategy
 import org.codehaus.groovy.runtime.DefaultGroovyMethodsSupport
 
 /**
- * Json Parser
+ * Simple streaming to file
  *
  * @author Joshua Burnett (@basejump)
  * @since 7.0.8
@@ -31,14 +31,17 @@ class JsonStreaming {
      * @param payload the object to write to file
      * @param filePath the file as a Path object
      */
-    static void streamToFile(Collection<Map> payload, Path path){
+    static void streamToFile(Collection payload, Path path){
         def writer = path.newWriter()
-        def sjb = new StreamingJsonBuilder(writer, JsonEngine.generator)
+        def generator = JsonEngine.generator
+        // def sjb = new StreamingJsonBuilder(writer, generator)
         writer.write('[\n')
         int i = 0
-        for (Map entry : payload) {
-            sjb.call(entry)
-            writer.write(',\n')
+        int psize = payload.size() - 1
+        for (Object entry : payload) {
+            writer.write(generator.toJson(entry))
+            if(i < psize ) writer.write(',')
+            writer.write('\n')
             //to avoid OOM error flush every 1000 just in case
             if (i % 1000 == 0) {
                 writer.flush()

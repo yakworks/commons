@@ -52,6 +52,21 @@ class JsonStreamingSpec extends Specification implements JsonEngineTrait {
         return list
     }
 
+    List<Integer> generateNumList(int num) {
+        List result = []
+        for(int i in (1..num)) {
+            result << i
+        }
+        return result
+    }
+    List<String> generateStringList(int num) {
+        List result = []
+        for(int i in (1..num)) {
+            result << "$i"
+        }
+        return result
+    }
+
     void flushAndClose(Writer writer){
         try {
             writer.flush();
@@ -118,7 +133,33 @@ class JsonStreamingSpec extends Specification implements JsonEngineTrait {
         then:
         Files.exists(path)
         path.getText().startsWith('[\n{"num":"1","name":"Sink1"')
-        path.getText().endsWith('},\n]')
+        path.getText().endsWith('}\n]')
+    }
+
+    void "test streamToFile simple list"() {
+        when:
+        def path = getJsonFile("multi.json")
+        Files.deleteIfExists(path)
+        List dataList = generateNumList(10000)
+        JsonStreaming.streamToFile(dataList, path)
+
+        then:
+        Files.exists(path)
+        path.getText().startsWith('[\n1')
+        path.getText().endsWith('10000\n]')
+    }
+
+    void "test streamToFile simple string list"() {
+        when:
+        def path = getJsonFile("multi.json")
+        Files.deleteIfExists(path)
+        List dataList = generateStringList(10000)
+        JsonStreaming.streamToFile(dataList, path)
+
+        then:
+        Files.exists(path)
+        path.getText().startsWith('[\n"1"')
+        path.getText().endsWith('"10000"\n]')
     }
 
     void "sanity check merging files"() {

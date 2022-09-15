@@ -33,7 +33,10 @@ class MetaEntity extends MetaProp implements Serializable {
     //either a simple MetaProp or a ref to another MetaEntityProps
     Map<String, MetaProp> metaProps = [:] as Map<String, MetaProp>
 
-    Set<String> excludeFields
+    /** The source includes, these will be translated, for example '*' will be translated to the fields */
+    Set<String> includes
+    /** The source excludes */
+    Set<String> excludes
 
     //if any special converters then can be set here and the MetaMap will get them
     public static Set<MetaMap.Converter> CONVERTERS = [] as Set<MetaMap.Converter>
@@ -83,7 +86,7 @@ class MetaEntity extends MetaProp implements Serializable {
     }
 
     void addBlacklist(Set<String> excludeFields) {
-        this.excludeFields = excludeFields
+        this.excludes = excludeFields
         this.metaProps.keySet().removeAll(excludeFields)
     }
 

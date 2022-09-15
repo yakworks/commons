@@ -9,6 +9,8 @@ import java.util.regex.Pattern
 import groovy.text.SimpleTemplateEngine
 import groovy.transform.CompileStatic
 
+import yakworks.commons.lang.Transform
+
 /**
  * String utilities.
  *
@@ -105,5 +107,16 @@ class StringUtils {
         def template = engine.createTemplate(theString)
         def result = template.make(binding).toString()
         return result
+    }
+
+    /**
+     * splits string into list, trims first.
+     */
+    static List<String> split(String theString, String token = ',') {
+        return theString.tokenize(token)*.trim()
+    }
+
+    static List<Integer> splitInt(String theString, String token = ',') {
+        return Transform.toIntList(split(theString, token))
     }
 }
