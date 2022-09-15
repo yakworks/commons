@@ -1,3 +1,8 @@
+### v3.7
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.6...v3.7)
+- enable simple streaming for basic types, enhance metaentity, add test… (#9) [link](https://github.com/yakworks/commons/commit/6b6dc0284d1eb277eb0a8d74a8d656867b12337f)
+
 ### v3.6
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.5...v3.6)
