@@ -214,7 +214,7 @@ class Maps {
      * @return A boolean value which will be false if the map is null, the map doesn't contain the key or the value is false
      */
     @SuppressWarnings('EmptyCatchBlock')
-    static boolean getBoolean(Map<?, ?> map, String key, boolean defaultValue = false) {
+    static boolean getBoolean(Map<?, ?> map, Object key, boolean defaultValue = false) {
         if (map == null) return defaultValue
 
         if (map.containsKey(key)) {
@@ -235,8 +235,28 @@ class Maps {
         return defaultValue
     }
 
-    static boolean 'boolean'(Map<?, ?> map, String key, boolean defaultValue = false) {
+    static boolean 'boolean'(Map<?, ?> map, Object key, boolean defaultValue = false) {
         return getBoolean(map, key, defaultValue)
+    }
+
+    static List getList(Map<?, ?> map, Object key, List defaultValue = []) {
+        if (map?.containsKey(key)) {
+            Object o = map.get(key)
+            if (o == null) return defaultValue
+            if (o.getClass().isArray()) {
+                return Arrays.asList((Object[])o)
+            }
+            if (o instanceof Collection) {
+                return o as List
+            }
+            try {
+                return StringUtils.split(o.toString())
+            }
+            catch (Exception e) {
+                /* swallow exception and will return default */
+            }
+        }
+        return defaultValue
     }
 
     /**

@@ -27,7 +27,7 @@ class BasicMetaEntityBuilder {
     List<String> excludes = []
     String className
     Class clazz
-    MetaEntity metaMapIncludes
+    MetaEntity metaEntity
 
     BasicMetaEntityBuilder(Class clazz){
         this.clazz = clazz
@@ -57,7 +57,7 @@ class BasicMetaEntityBuilder {
             clazz = classLoader.loadClass(className)
         }
 
-        this.metaMapIncludes = new MetaEntity(clazz)
+        this.metaEntity = new MetaEntity(clazz)
     }
 
     static BasicMetaEntityBuilder of(Class entityClass){
@@ -101,7 +101,7 @@ class BasicMetaEntityBuilder {
             if (!nestedPropName) {
                 MetaProp propm = getMetaProp(field)
                 if(propm){
-                    metaMapIncludes.metaProps[field] = propm
+                    metaEntity.metaProps[field] = propm
                 }
             }
             else { // its a nestedProp
@@ -126,13 +126,14 @@ class BasicMetaEntityBuilder {
         Set blacklist = getBlacklist(null) + (this.excludes as Set)
 
         //only if it has rootProps
-        if (metaMapIncludes.metaProps) {
-            if(blacklist) metaMapIncludes.addBlacklist(blacklist)
+        if (metaEntity.metaProps) {
+            if(blacklist) metaEntity.addBlacklist(blacklist)
+            if(includes) metaEntity.includes = includes as Set<String>
             //if it has nestedProps then go recursive
             if(nestedProps){
                 buildNested(nestedProps)
             }
-            return metaMapIncludes
+            return metaEntity
         } else {
             return null
         }
@@ -155,16 +156,16 @@ class BasicMetaEntityBuilder {
     MetaEntity buildNested(Map<String, Object> nestedProps){
 
         // now we cycle through the nested props and recursively call this again for each associations includes
-        Map<String, MetaEntity> nestedIncludesMap = [:]
+        Map<String, MetaEntity> nestedMetaEntityMap = [:]
         for (entry in nestedProps.entrySet()) {
             String prop = entry.key as String //the nested property name
             Map initMap = entry.value as Map
             List incProps = initMap['props'] as List
             String assocClass = initMap['className'] as String
-            MetaEntity nestedIncludes
+            MetaEntity nestedMetaEntity
 
             if(assocClass) {
-                nestedIncludes = build(assocClass, incProps)
+                nestedMetaEntity = build(assocClass, incProps)
             }
             // if no class then it wasn't a gorm association or gorm prop didn't have type
             // so try by getting value through meta reflection
@@ -181,22 +182,22 @@ class BasicMetaEntityBuilder {
                 else if(Collection.isAssignableFrom(returnType)){
                     String genClass = PropertyTools.findGenericForCollection(entityClass, prop)
                     if(genClass) {
-                        nestedIncludes = BasicMetaEntityBuilder.build(genClass, incProps)
+                        nestedMetaEntity = BasicMetaEntityBuilder.build(genClass, incProps)
                     }
                     //TODO shouldn't we do at leas na object here? should not matter
                 } else {
-                    nestedIncludes = BasicMetaEntityBuilder.build(returnType.name, incProps)
+                    nestedMetaEntity = BasicMetaEntityBuilder.build(returnType.name, incProps)
                 }
             }
             //if it got valid nestedIncludes and its not already setup
-            if(nestedIncludes && !nestedIncludesMap[prop]) nestedIncludesMap[prop] = nestedIncludes
+            if(nestedMetaEntity && !nestedMetaEntityMap[prop]) nestedMetaEntityMap[prop] = nestedMetaEntity
         }
 
-        if(nestedIncludesMap) {
-            metaMapIncludes.metaProps.putAll(nestedIncludesMap)
+        if(nestedMetaEntityMap) {
+            metaEntity.metaProps.putAll(nestedMetaEntityMap)
         }
 
-        return metaMapIncludes
+        return metaEntity
     }
 
     static Set<String> getBlacklist(Object entity){

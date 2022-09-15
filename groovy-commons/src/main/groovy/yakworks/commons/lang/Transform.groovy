@@ -17,6 +17,14 @@ class Transform {
     /**
      * simple util that collects a list into a Long list
      */
+    static List<Integer> toIntList(List dataList){
+        if(!dataList) return []
+        return dataList.collect { it as Integer }
+    }
+
+    /**
+     * simple util that collects a list into a Long list
+     */
     static List<Long> toLongList(List dataList){
         if(!dataList) return []
         return dataList.collect { it as Long }

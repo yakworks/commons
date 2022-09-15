@@ -383,8 +383,22 @@ class MapsSpec extends Specification {
         then:
         Maps.getBoolean(maps, 'foo')
         !Maps.getBoolean(maps, 'bar')
+        //no key defaults to false
+        !Maps.getBoolean( maps, 'nothing')
         Maps.getBoolean( maps, 'nothing', true)
         !Maps.getBoolean(maps, 'nothing2', false)
+    }
+
+    void "test getList"() {
+        when:
+        def maps = [csv: 'ab, cd', csv1: 'ab', csv2: ['ab', 'cd'], csv3: ['ab', 'cd'].toArray()]
+
+        List abcd = ['ab', 'cd']
+        then:
+        Maps.getList(maps, 'csv') == abcd
+        Maps.getList(maps, 'csv1') == ['ab']
+        Maps.getList(maps, 'csv2') == abcd
+        Maps.getList(maps, 'csv3') == abcd
     }
 
     void "test boolean"() {
