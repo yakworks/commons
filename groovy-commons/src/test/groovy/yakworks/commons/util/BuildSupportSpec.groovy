@@ -7,8 +7,8 @@ class BuildSupportSpec extends Specification {
     // SEE the grade.build for how these get set.
     void "test setup"() {
         setup:
-        def rootPath = BuildSupport.gradleRootProjectPath
-        def projectPath = BuildSupport.gradleProjectPath
+        def rootPath = BuildSupport.rootProjectPath
+        def projectPath = BuildSupport.projectPath
 
         expect:
         projectPath.exists()

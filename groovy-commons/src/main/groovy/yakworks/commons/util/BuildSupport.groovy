@@ -13,40 +13,40 @@ import groovy.transform.CompileStatic
 class BuildSupport {
 
     /**
-     * setup gradle to assign gradle.projectDir for the directory of the build to system properties
+     * setup gradle to assign project.projectDir for the directory of the build to system properties
      * example:
      * subprojects {
      *   plugins.withId('groovy') {
      *     compileGroovy {
      *       groovyOptions.fork = true
-     *       groovyOptions.forkOptions.jvmArgs = ['-Dgradle.projectDir=' + project.projectDir.absolutePath]
+     *       groovyOptions.forkOptions.jvmArgs = ['-Dproject.projectDir=' + project.projectDir.absolutePath]
      *     }
      *   }
      * }
      *
      */
-    static String getGradleProjectDir(){
-        return System.getProperty("gradle.projectDir")
+    static String getProjectDir(){
+        return System.getProperty("project.projectDir")
     }
 
-    static Path getGradleProjectPath(){
-        return Paths.get(getGradleProjectDir())
+    static Path getProjectPath(){
+        return Paths.get(getProjectDir())
     }
 
     /**
-     * on multiproject builds this returns the gradle.rootProjectDir property
-     * example:
-     * tasks.withType(Test) {
-     *   systemProperty "gradle.rootProjectDir", rootProject.projectDir.absolutePath
-     *   systemProperty "gradle.projectDir", project.projectDir.absolutePath
+     * on multiproject builds this returns the project.rootProjectDir that is setup in System properties
+     * example in gradle:
+     * tasks.withType(Test) { //and with spring would have it under bootRun {  as well
+     *   systemProperty "project.rootProjectDir", rootProject.projectDir.absolutePath
+     *   systemProperty "project.projectDir", project.projectDir.absolutePath
      * }
      *
      */
-    static String getGradleRootProjectDir(){
-        return System.getProperty("gradle.rootProjectDir")
+    static String getRootProjectDir(){
+        return System.getProperty("project.rootProjectDir")
     }
 
-    static Path getGradleRootProjectPath(){
-        return Paths.get(getGradleRootProjectDir())
+    static Path getRootProjectPath(){
+        return Paths.get(getRootProjectDir())
     }
 }
