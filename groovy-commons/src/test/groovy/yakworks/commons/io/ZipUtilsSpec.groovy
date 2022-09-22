@@ -11,8 +11,8 @@ class ZipUtilsSpec extends Specification {
 
     void testUnzip() {
         when:
-        Path zip = BuildSupport.gradleRootProjectPath.resolve("examples/resources/zip-test.zip")
-        Path build = BuildSupport.gradleProjectPath.resolve('build/zipTest')
+        Path zip = BuildSupport.rootProjectPath.resolve("examples/resources/zip-test.zip")
+        Path build = BuildSupport.projectPath.resolve('build/zipTest')
         PathTools.deleteDirectory(build) //clean it
         // Files.createDirectories(build)
 
@@ -27,7 +27,7 @@ class ZipUtilsSpec extends Specification {
     void testZip() {
         when:
         File tempDir = new File(System.getProperty("java.io.tmpdir"))
-        File test = new File(BuildSupport.gradleRootProjectDir,"examples/resources/zip/test.txt")
+        File test = new File(BuildSupport.rootProjectDir,"examples/resources/zip/test.txt")
         File zip = ZipUtils.zip(test)
 
         then:
@@ -59,7 +59,7 @@ class ZipUtilsSpec extends Specification {
     void "test zip dir recursively"() {
         setup:
 
-        File csvDir =  new File(BuildSupport.gradleRootProjectDir,"examples/resources/csv")
+        File csvDir =  new File(BuildSupport.rootProjectDir,"examples/resources/csv")
         //create a dir inside resources/csv/
         File nestedDir = new File(csvDir, "test")
         nestedDir.mkdirs()
@@ -71,7 +71,7 @@ class ZipUtilsSpec extends Specification {
 
 
         when: "zip dir with all its files and sub dirs"
-        File test = new File(BuildSupport.gradleRootProjectDir,"examples/resources/csv")
+        File test = new File(BuildSupport.rootProjectDir,"examples/resources/csv")
         File zip = ZipUtils.zip("test.zip", test.parentFile, test)
 
         then:

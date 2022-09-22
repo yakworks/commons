@@ -25,7 +25,7 @@ class JsonStreamingSpec extends Specification implements JsonEngineTrait {
     static final String API_BUILD = 'build/api-docs'
 
     Path getJsonFile(String file = 'streamed.json'){
-        return Paths.get(BuildSupport.gradleProjectDir, "build/$file")
+        return Paths.get(BuildSupport.projectDir, "build/$file")
     }
 
     Map generateData(Long id) {
