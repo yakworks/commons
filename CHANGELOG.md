@@ -1,3 +1,8 @@
+### v3.8
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.7...v3.8)
+- change gradle.projectDir and gradle.rootProjectDir to project prefix … (#10) [link](https://github.com/yakworks/commons/commit/7823b02f84dc7b1126c0d4c171c9b1cc10f0e931)
+
 ### v3.7
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.6...v3.7)
