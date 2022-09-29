@@ -40,11 +40,11 @@ class MapExtensions {
         return value
     }
 
-    static boolean getBoolean(Map<?, ?> map, Object key, boolean defaultValue = false) {
-        Maps.getBoolean(map, key, defaultValue)
+    static boolean getBoolean(Map<?, ?> self, Object key, boolean defaultValue = false) {
+        Maps.getBoolean(self, key, defaultValue)
     }
 
-    static List getList(Map<?, ?> map, Object key, List defaultValue = []) {
-        Maps.getList(map, key, defaultValue)
+    static List getList(Map<?, ?> self, Object key, List defaultValue = []) {
+        Maps.getList(self, key, defaultValue)
     }
 }

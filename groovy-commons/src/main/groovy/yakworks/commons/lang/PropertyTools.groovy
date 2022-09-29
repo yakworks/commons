@@ -158,4 +158,10 @@ class PropertyTools {
         return type
     }
 
+    /**
+     * @see ClassUtils#setFieldValue
+     */
+    static void setFieldValue(Object instance, String fieldName, Object value){
+        ClassUtils.setFieldValue(instance, fieldName, value)
+    }
 }

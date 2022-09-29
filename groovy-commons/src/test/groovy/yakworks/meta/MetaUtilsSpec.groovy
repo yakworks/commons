@@ -29,9 +29,10 @@ class MetaUtilsSpec extends Specification {
         List<MetaProperty> metaProps = MetaUtils.getMetaProperties(Thing)
 
         then:
-        metaProps.size() == 2
+        metaProps.size() == 3
         metaProps.find { it.name == 'id' }
         metaProps.find { it.name == 'name' }
+        metaProps.find { it.name == 'localDate' }
 
     }
 
@@ -40,7 +41,7 @@ class MetaUtilsSpec extends Specification {
         Map thing = MetaUtils.getProperties(Thing.of(1, "thing"))
 
         then:
-        thing == [id:1, name: 'thing']
+        thing == [id:1, name: 'thing', localDate:null]
     }
 
 }

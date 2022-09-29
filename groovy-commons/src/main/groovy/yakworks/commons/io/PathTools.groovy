@@ -14,6 +14,7 @@ import java.nio.file.attribute.BasicFileAttributes
 
 import groovy.transform.CompileStatic
 
+import org.apache.commons.io.file.Counters
 import org.apache.commons.io.file.PathUtils
 
 import yakworks.commons.lang.Validate
@@ -43,16 +44,19 @@ abstract class PathTools {
 
     /**
      * Deletes a directory recursively. does not throw error, returns false on IOException
+     * Deletes a file or directory recursively. If the path is a directory, delete it and all sub-directories. <br>
+     *
+     * The difference between File.delete() and this method are: <br>
+     * - A directory to delete does not have to be empty. <br>
+     * - You get exceptions when a file or directory cannot be deleted; File.delete() returns a boolean. <br>
+     *
+     * @return the count of files and dirs deleted or 0
+     * @throws IOException if an I/O error occurs
      */
-    static boolean delete(Path fileOrDir) {
-        if (fileOrDir == null) return false
-
-        try {
-            return PathUtils.delete(fileOrDir)
-        }
-        catch (IOException ex) {
-            return false
-        }
+    static long delete(Path fileOrDir) {
+        if (fileOrDir == null) return 0
+        Counters.PathCounters cntr =  PathUtils.delete(fileOrDir)
+        return cntr.directoryCounter.get() + cntr.fileCounter.get()
     }
 
     /**
@@ -93,6 +97,20 @@ abstract class PathTools {
     static Path createDirectories(Path dir){
         if(!Files.exists(dir)) return Files.createDirectories(dir)
         return dir
+    }
+
+    /**
+     * Creates the parent directories for the given path.
+     * the Path.getParent might not operate as one would expect. check out its javadocs to understand what this does
+     * @see Path#getParent
+     * @see Files#createDirectories
+     */
+    static Path createParentDirectories(Path path){
+        final Path parent = path.getParent()
+        if (parent == null) {
+            return null
+        }
+        return Files.createDirectories(parent);
     }
 
     static String getBaseName(String filename) {

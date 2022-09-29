@@ -7,9 +7,9 @@ package yakworks.meta
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 
-import yakworks.commons.lang.ClassUtils
 import yakworks.commons.map.Maps
 import yakworks.commons.model.TotalCount
+import yakworks.util.ClassUtils
 
 /**
  * A list wrapper that will wrap object in EntityMap on a get()
@@ -37,7 +37,8 @@ class MetaMapList extends AbstractList<MetaMap> implements TotalCount  {
     @Override
     @CompileDynamic //not a performance hit
     int getTotalCount() {
-        if(ClassUtils.isPresent('grails.gorm.PagedResultList') || resultList instanceof TotalCount) {
+        boolean hasGormPagedResultList = ClassUtils.isPresent('grails.gorm.PagedResultList', MetaMapList.classLoader)
+        if(hasGormPagedResultList || resultList instanceof TotalCount) {
             return resultList.totalCount
         }
         else {

@@ -62,7 +62,7 @@ class ZipUtilsSpec extends Specification {
         File csvDir =  new File(BuildSupport.rootProjectDir,"examples/resources/csv")
         //create a dir inside resources/csv/
         File nestedDir = new File(csvDir, "test")
-        nestedDir.mkdirs()
+        nestedDir.mkdir()
         File contactCopy = new File(nestedDir, "contact2.csv")
         contactCopy.createNewFile()
 

@@ -4,6 +4,8 @@
 */
 package yakworks.commons.testing.pogos
 
+import java.time.LocalDate
+
 import groovy.transform.CompileStatic
 
 @CompileStatic
@@ -11,6 +13,8 @@ class Thing {
     Long id
     // address fields
     String name
+
+    LocalDate localDate
 
     static String someStatic = "foo"
 

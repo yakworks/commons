@@ -14,6 +14,14 @@ import org.codehaus.groovy.reflection.ClassInfo
 import org.codehaus.groovy.runtime.InvokerHelper
 import org.codehaus.groovy.transform.trait.Traits
 
+import jakarta.annotation.Nullable
+import yakworks.util.ReflectionUtils
+
+/**
+ * There are 2 ClassUtils. This groovy based one and the one in yakworks.utils which is the java/spring one.
+ * This is the one to mostly use.
+ *
+ */
 @CompileStatic
 @SuppressWarnings("unchecked")
 class ClassUtils {
@@ -93,7 +101,7 @@ class ClassUtils {
     }
 
     private static <T> T returnOnlyIfInstanceOf(Object value, Class<T> type) {
-        if (value != null && (type == Object || ReflectionUtils.isAssignableFrom(type, value.getClass()))) {
+        if (value != null && (type == Object || AssignUtils.isAssignableFrom(type, value.getClass()))) {
             return (T)value;
         }
         return null;
@@ -140,23 +148,50 @@ class ClassUtils {
     }
 
     /**
+     * Cleaner trickery to set a private or final field.
+     * Uses yakworks.util.ReflectionUtils to find the field, so it can be in the super class <br>
+     * then will make it accesible if it needs to <br>
+     * then will set the value on the field.
+     *
+     * @param instance the instance to set it on
+     * @param fieldName the name of the field
+     * @param value the value to set
+     */
+    static void setFieldValue(Object instance, String fieldName, Object value){
+        setFieldValue(instance.getClass(), instance, fieldName, value)
+        def field = ReflectionUtils.findField(instance.getClass(), fieldName);
+        ReflectionUtils.makeAccessible(field)
+        field.set(instance, value)
+    }
+
+    /**
+     * see the instance based one for docs.
+     * If doesnt works by not specifying the class and letting it find the field
+     * or performance is critical and your shaving yaktoseconds then use this one.
+     */
+    static void setFieldValue(Class<?> clazz, Object instance, String fieldName, Object value){
+        //its private so set with reflection
+        def field = ReflectionUtils.findField(clazz, fieldName);
+        ReflectionUtils.makeAccessible(field)
+        field.set(instance, value)
+    }
+
+    /**
      * Determine whether the {@link Class} identified by the supplied name is present
      * and can be loaded. Will return {@code false} if either the class or
      * one of its dependencies is not present or cannot be loaded.
      * @param className the name of the class to check
-     * (may be {@code null}, which indicates the default class loader)
-     * @return whether the specified class is present
+     * @param classLoader the class loader to use
+     * (may be {@code null} which indicates the default class loader)
+     * @return whether the specified class is present (including all of its
+     * superclasses and interfaces)
+     * @throws IllegalStateException if the corresponding class is resolvable but
+     * there was a readability mismatch in the inheritance hierarchy of the class
+     * (typically a missing dependency declaration in a Jigsaw module definition
+     * for a superclass or interface implemented by the class to be checked here)
      */
-    @SuppressWarnings(["ClassForName", "CatchThrowable"])
-    static boolean isPresent(String className) {
-        try {
-            Class.forName(className, false, ClassUtils.getClassLoader())
-            return true
-        }
-        catch (ex) {
-            // Class or one of its dependencies is not present...
-            return false
-        }
+    public static boolean isPresent(String className, @Nullable ClassLoader classLoader) {
+        yakworks.util.ClassUtils.isPresent(className, classLoader)
     }
 
 }

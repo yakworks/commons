@@ -16,23 +16,16 @@ package yakworks.commons.lang;
 
 import yakworks.commons.util.StringUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Provides methods to help with reflective operations
- *
- * @author Graeme Rocher
- * @since 1.0
+ * @see yakworks.util.ReflectionUtils
  */
-public class ReflectionUtils {
+public class AssignUtils {
 
     public static final Map<Class<?>, Class<?>> PRIMITIVE_TYPE_COMPATIBLE_CLASSES = new HashMap<Class<?>, Class<?>>();
-    @SuppressWarnings("rawtypes")
-    private static final Class[] EMPTY_CLASS_ARRAY = {};
 
     /**
      * Just add two entries to the class compatibility map
@@ -53,40 +46,6 @@ public class ReflectionUtils {
         registerPrimitiveClassPair(Long.class, long.class);
         registerPrimitiveClassPair(Float.class, float.class);
         registerPrimitiveClassPair(Double.class, double.class);
-    }
-
-   /**
-    * Make the given field accessible, explicitly setting it accessible if necessary.
-    * The <code>setAccessible(true)</code> method is only called when actually necessary,
-    * to avoid unnecessary conflicts with a JVM SecurityManager (if active).
-    *
-    * Based on the same method in Spring core.
-    *
-    * @param field the field to make accessible
-    * @see Field#setAccessible
-    */
-   public static void makeAccessible(Field field) {
-       if (!Modifier.isPublic(field.getModifiers()) ||
-               !Modifier.isPublic(field.getDeclaringClass().getModifiers())) {
-           field.setAccessible(true);
-       }
-   }
-
-    /**
-     * Make the given method accessible, explicitly setting it accessible if necessary.
-     * The <code>setAccessible(true)</code> method is only called when actually necessary,
-     * to avoid unnecessary conflicts with a JVM SecurityManager (if active).
-     *
-     * Based on the same method in Spring core.
-     *
-     * @param method the method to make accessible
-     * @see Method#setAccessible
-     */
-    public static void makeAccessible(Method method) {
-        if (!Modifier.isPublic(method.getModifiers()) ||
-                !Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
-            method.setAccessible(true);
-        }
     }
 
     /**
@@ -135,10 +94,6 @@ public class ReflectionUtils {
         return result;
     }
 
-    private static boolean isTypeInstanceOfPropertyType(Class<?> type, Class<?> propertyType) {
-        return propertyType.isAssignableFrom(type) && !propertyType.equals(Object.class);
-    }
-
     /**
      * Returns true if the name of the method specified and the number of arguments make it a javabean property
      *
@@ -173,5 +128,6 @@ public class ReflectionUtils {
 
         return false;
     }
+
 
 }

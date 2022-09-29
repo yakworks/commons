@@ -38,6 +38,21 @@ class Pogo {
         InvokerHelper.setProperties(pogo, values)
     }
 
+    /**
+     * sets the properties in taget from the source
+     */
+    public static <T> T setProps(T target, Object source){
+        InvokerHelper.setProperties(target, source.properties)
+        return target
+    }
+
+    /**
+     * alias to setProps
+     */
+    public static <T> T copy(T target, Object source){
+        return setProps(target, source)
+    }
+
     //standard deep copy implementation
     //take from here https://stackoverflow.com/questions/13155127/deep-copy-map-in-groovy
     //also see @groovy.transform.AutoClone
