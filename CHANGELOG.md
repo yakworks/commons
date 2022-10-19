@@ -1,3 +1,9 @@
+### v3.9
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.8...v3.9)
+- add springframework.utils for reflection so we can use the nice features without full dependecy on the framework. [link](https://github.com/yakworks/commons/commit/c665cad14778515edd79a4f47af514b9612dde43)
+- copy in springframework.util for reflection and calss utils add mkdirs and delete to the path object add setFieldValue that can be used to set privates and finals for those pesky situations. [link](https://github.com/yakworks/commons/commit/9f362b2172ae2bab1d9e68a249e7e6683017d48e)
+
 ### v3.8
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.7...v3.8)
