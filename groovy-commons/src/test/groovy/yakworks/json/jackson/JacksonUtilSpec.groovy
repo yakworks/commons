@@ -7,6 +7,9 @@ package yakworks.json.jackson
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+import groovy.transform.CompileStatic
+
+import com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Specification
 import yakworks.commons.testing.pogos.Thing
 
@@ -14,6 +17,21 @@ import yakworks.commons.testing.pogos.Thing
  * sanity checks for streaming to a file
  */
 class JacksonUtilSpec extends Specification {
+
+    @CompileStatic
+    static class AdminUser {
+        String name
+        String city
+        Integer age
+        String onlyAdmin = "foo"
+        Thing thing
+        List<Thing> things = [] as List<Thing>
+
+        @CompileStatic
+        static class Thing {
+            String name
+        }
+    }
 
     Map generateData(Long id) {
         return [
@@ -56,6 +74,44 @@ class JacksonUtilSpec extends Specification {
 
         then:
         obj == [num: '1', inactive: false, amount: 0.00, localDate: "2021-02-01"]
+    }
+
+    void "using jackson to bind"(){
+        when:
+        // Create ObjectMapper instance
+        ObjectMapper mapper = ObjectMapperWrapper.INSTANCE.objectMapper
+        // Converting POJO to Map
+        // Map<String, Object> map = mapper.convertValue(foo, new TypeReference<Map<String, Object>>() {});
+        // Convert Map to POJO
+        def map = [
+            name: 'Galts',
+            city: 'Gulch',
+            age: 22,
+            thing: [name: 'thing1'],
+            things: [[name: 'thing2'], [name: 'thing3']]
+        ]
+        AdminUser au = JacksonUtil.bind(map, AdminUser);
+
+        then:
+        au.name == 'Galts'
+        au.city == 'Gulch'
+        au.age == 22
+        au.thing instanceof AdminUser.Thing
+        au.thing.name == 'thing1'
+        au.things[0] instanceof AdminUser.Thing
+        au.things[0].name == 'thing2'
+
+        when:
+        AdminUser au2 = JacksonUtil.bind(new AdminUser(), map);
+
+        then:
+        au2.name == 'Galts'
+        au2.city == 'Gulch'
+        au2.age == 22
+        au2.thing instanceof AdminUser.Thing
+        au2.thing.name == 'thing1'
+        au2.things[0] instanceof AdminUser.Thing
+        au2.things[0].name == 'thing2'
     }
 
 }

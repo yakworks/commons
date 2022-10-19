@@ -9,9 +9,11 @@ import java.lang.reflect.Type
 import groovy.transform.CompileStatic
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 
 /**
- * @author Vlad Mihalcea
+ * Static helpers around Jackson. Many of these are not really needed but serves as what we consider more obvious
+ * naming when dealing with Maps. Also serve as reminders or a dingus on how things can be done.
  */
 @CompileStatic
 public class JacksonUtil {
@@ -44,5 +46,17 @@ public class JacksonUtil {
 
     public static JsonNode toJsonNode(String value) {
         return ObjectMapperWrapper.INSTANCE.toJsonNode(value);
+    }
+
+    /** binds the data to new instance of the pased in class */
+    public static <T> T bind(Object data, Class<T> toValueType) throws IllegalArgumentException {
+        ObjectMapper mapper = ObjectMapperWrapper.INSTANCE.objectMapper
+        return mapper.convertValue(data, toValueType);
+    }
+
+    /** binds the data to new instance of the pased in class */
+    public static <T> T bind(T instance, Object data) {
+        ObjectMapper mapper = ObjectMapperWrapper.INSTANCE.objectMapper
+        return mapper.updateValue(instance, data);
     }
 }

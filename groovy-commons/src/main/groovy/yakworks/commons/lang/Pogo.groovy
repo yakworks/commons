@@ -27,22 +27,25 @@ class Pogo {
 
 
     /**
-     * Merge the a map, nested or not, onto the pogo. Uses the InvokerHelper.setProperties(values)
+     * Uses built in Groovy for Simple merging from a map to object, nested or not, onto the pogo.
+     * Uses the InvokerHelper.setProperties(values)
+     * Works well for most simple cases but does handle binding of a list of generics. Use Jackson for those cases
+     * @see yakworks.json.jackson.JacksonUtil#bind
      */
-    //FIXME needs test for merge
-    static void merge( Map args = [:], Object pogo, Map values){
+    static Object merge( Object pogo, Map values, Map args = [:]){
         boolean ignoreNulls = args.containsKey('ignoreNulls') ? args['ignoreNulls'] : true
         if(ignoreNulls){
             values = Maps.prune(values)
         }
-        InvokerHelper.setProperties(pogo, values)
+        return setProps(pogo, values)
     }
 
     /**
      * sets the properties in taget from the source
      */
     public static <T> T setProps(T target, Object source){
-        InvokerHelper.setProperties(target, source.properties)
+        Map propsToMerge = source instanceof Map ? source : source.properties
+        InvokerHelper.setProperties(target, propsToMerge)
         return target
     }
 
