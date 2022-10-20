@@ -2,7 +2,7 @@
 * Copyright 2019 original authors
 * SPDX-License-Identifier: Apache-2.0
 */
-package yakworks.commons.lang
+package yakworks.commons.beans
 
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
@@ -11,13 +11,16 @@ import java.lang.reflect.Type
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
+import yakworks.commons.lang.ClassUtils
+import yakworks.commons.lang.NameUtils
+import yakworks.commons.lang.Validate
+
 /**
  * PropertyTools contains a set of static helpers, which provides a convenient way
  * for manipulating the object's properties.
  *
  * For example, it allows to retrieve object's properties using filters and place them in a map.
  */
-@Deprecated
 @Slf4j
 @CompileStatic
 class PropertyTools {
@@ -26,14 +29,24 @@ class PropertyTools {
      * shorter and more semanticly correct alias to getProperty
      */
     static Object value(Object source, String property) {
-        yakworks.commons.beans.PropertyTools.value(source, property)
+        getProperty(source, property)
     }
 
     /**
      * just uses groovy getAt but wraps MissingPropertyException so if it doesnt exist then returns null
      */
     static Object getOrNull(Object source, String property) {
-        yakworks.commons.beans.PropertyTools.getOrNull(source, property)
+        if (source == null) return null
+        Object value
+        try {
+            value = source[property]
+        }
+        catch (MissingPropertyException e) {
+            // swallow the exceptin basically, if obj is a map then this never happens, but if prop doesn't exist
+            // then this get thrown for objects
+            value = null
+        }
+        return value
     }
     /**
      * Return the value of the (probably nested if your using this) property of the specified name, for the specified source object
@@ -45,7 +58,22 @@ class PropertyTools {
      * @return value of the specified property or null if any of the intermediate objects are null
      */
     static Object getProperty(Object source, String property) {
-        yakworks.commons.beans.PropertyTools.getProperty(source, property)
+        Validate.notNull(source, '[source]')
+        Validate.notEmpty(property, '[property]')
+
+        Object result
+
+        if(property.contains('.')) {
+            result = property.tokenize('.').inject(source) { Object obj, String prop ->
+                Object value = getOrNull(obj, prop)
+                return value
+            }
+        }
+        else {
+            result = getOrNull(source, property)
+        }
+
+        return result
     }
 
     /**
@@ -55,7 +83,7 @@ class PropertyTools {
      * @param targetType the expected type of the property value
      */
     static <T> T getProperty(Object source, String path, Class<T> targetType){
-        yakworks.commons.beans.PropertyTools.getProperty(source, path) as T
+        getProperty(source, path) as T
     }
 
     /**
@@ -73,7 +101,12 @@ class PropertyTools {
      * Returns the deepest nested bean
      */
     static getNestedBean(Object bean, String path) {
-        yakworks.commons.beans.PropertyTools.getNestedBean(bean, path)
+        int i = path.lastIndexOf(".")
+        if (i > -1) {
+            path = path.substring(0, i)
+            path.split('\\.').each { String it -> bean = bean[it] }
+        }
+        return bean
     }
 
     /**
@@ -111,7 +144,22 @@ class PropertyTools {
     }
 
     static Type findGenericTypeForCollection(Class clazz, String prop){
-        yakworks.commons.beans.PropertyTools.findGenericTypeForCollection(clazz, prop)
+        Method[] allMethods = clazz.getDeclaredMethods()
+        String getterName = NameUtils.getGetterName(prop)
+
+        //defaults to java.lang.Object
+        Type type = Object
+
+        Method m = allMethods.find { it.name == getterName}
+
+        if(m){
+            def genericReturnType = m.getGenericReturnType()
+            if(genericReturnType && genericReturnType instanceof ParameterizedType){
+                Type[] actualTypeArguments = genericReturnType.getActualTypeArguments()
+                return actualTypeArguments[0]
+            }
+        }
+        return type
     }
 
     /**

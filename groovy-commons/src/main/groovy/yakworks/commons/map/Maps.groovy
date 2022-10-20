@@ -8,7 +8,7 @@ package yakworks.commons.map
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
-import yakworks.commons.lang.PropertyTools
+import yakworks.commons.beans.PropertyTools
 import yakworks.commons.util.StringUtils
 
 /**

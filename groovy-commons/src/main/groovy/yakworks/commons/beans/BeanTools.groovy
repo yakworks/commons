@@ -2,13 +2,14 @@
 * Copyright 2019 original authors
 * SPDX-License-Identifier: Apache-2.0
 */
-package yakworks.commons.lang
+package yakworks.commons.beans
 
 import groovy.transform.CompileStatic
 
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import yakworks.commons.map.Maps
+import yakworks.json.jackson.JacksonUtil
 
 /**
  * helpers for Plain Old Groovy Objects and Beans
@@ -16,7 +17,7 @@ import yakworks.commons.map.Maps
  * @author Joshua Burnett (@basejump)
  */
 @CompileStatic
-class Pogo {
+class BeanTools {
 
     /**
      * shorter and more semanticly correct alias to getProperty
@@ -29,7 +30,8 @@ class Pogo {
     /**
      * Uses built in Groovy for Simple merging from a map to object, nested or not, onto the pogo.
      * Uses the InvokerHelper.setProperties(values)
-     * Works well for most simple cases but does handle binding of a list of generics. Use Jackson for those cases
+     * Works well for most simple cases but does handle binding of a list of generics. Use Jackson for those cases or bind which does it
+     *
      * @see yakworks.json.jackson.JacksonUtil#bind
      */
     static Object merge( Object pogo, Map values, Map args = [:]){
@@ -56,17 +58,14 @@ class Pogo {
         return setProps(target, source)
     }
 
-    //standard deep copy implementation
-    //take from here https://stackoverflow.com/questions/13155127/deep-copy-map-in-groovy
-    //also see @groovy.transform.AutoClone
-    def deepcopy(Object orig) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream()
-        ObjectOutputStream oos = new ObjectOutputStream(bos)
-        oos.writeObject(orig)
-        oos.flush()
-        ByteArrayInputStream bin = new ByteArrayInputStream(bos.toByteArray())
-        ObjectInputStream ois = new ObjectInputStream(bin)
-        return ois.readObject()
+    /** Uses JacksonUtil and binds the data to new instance of the pased in clazz */
+    public static <T> T bind(Object data, Class<T> clazz)  {
+        return JacksonUtil.bind(data, clazz)
+    }
+
+    /** Uses JacksonUtil to bind to new instance of the pased in class */
+    public static <T> T bind(T instance, Object data) {
+        return JacksonUtil.bind(instance, data)
     }
 
 }

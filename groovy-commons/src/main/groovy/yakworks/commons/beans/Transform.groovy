@@ -2,7 +2,7 @@
 * Copyright 2019 original authors
 * SPDX-License-Identifier: Apache-2.0
 */
-package yakworks.commons.lang
+package yakworks.commons.beans
 
 import groovy.transform.CompileStatic
 
