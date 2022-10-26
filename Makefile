@@ -40,6 +40,17 @@ publish:
 	fi
 
 
+## publish snapsot to repo.9ci
+publish.snapshot:
+	if [ "$(IS_SNAPSHOT)" ]; then
+		$(gradlew) publishJavaLibraryPublicationToMavenRepository
+		$(logr.done) "- libs with version $(VERSION)$(VERSION_SUFFIX) published to snapshot repo"
+	fi
+
+## alias to publish.snapshot
+snapshot.publish: publish.snapshot
+
+
 ifdef PUBLISHABLE_BRANCH_OR_DRY_RUN
 
  # removed  ship.docker kube.deploy for now

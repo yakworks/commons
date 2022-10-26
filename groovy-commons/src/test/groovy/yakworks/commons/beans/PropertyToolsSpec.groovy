@@ -2,12 +2,12 @@
 * Copyright 2019 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
 * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 */
-package yakworks.commons.lang
+package yakworks.commons.beans
 
 import java.lang.reflect.Type
 
 import spock.lang.Specification
-import yakworks.commons.lang.PropertyTools
+import yakworks.commons.beans.PropertyTools
 import yakworks.commons.testing.pogos.Gadget
 
 class PropertyToolsSpec extends Specification{

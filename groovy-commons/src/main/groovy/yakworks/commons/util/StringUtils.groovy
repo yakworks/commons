@@ -9,7 +9,7 @@ import java.util.regex.Pattern
 import groovy.text.SimpleTemplateEngine
 import groovy.transform.CompileStatic
 
-import yakworks.commons.lang.Transform
+import yakworks.commons.beans.Transform
 
 /**
  * String utilities.

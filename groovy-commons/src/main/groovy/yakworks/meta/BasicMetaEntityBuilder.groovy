@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
-import yakworks.commons.lang.PropertyTools
+import yakworks.commons.beans.PropertyTools
 
 /**
  * Builder to create MetaEntity from a sql select like list against an entity

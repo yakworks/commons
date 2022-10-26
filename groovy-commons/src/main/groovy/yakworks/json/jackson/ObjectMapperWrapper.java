@@ -6,10 +6,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+
 import groovy.lang.GString;
 
 import java.io.IOException;
@@ -30,7 +27,7 @@ import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
  */
 public class ObjectMapperWrapper implements Serializable {
 
-    public static final ObjectMapperWrapper INSTANCE = new ObjectMapperWrapper();
+    public static final ObjectMapperWrapper instance = new ObjectMapperWrapper();
 
     private final ObjectMapper objectMapper;
 
@@ -46,6 +43,7 @@ public class ObjectMapperWrapper implements Serializable {
         return new ObjectMapper()
             .findAndRegisterModules() //uses ServiceLoader to find "Modules", registered in META-INF.services
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .registerModule(
                 new SimpleModule()
