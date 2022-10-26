@@ -9,7 +9,7 @@ import groovy.transform.CompileStatic
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import yakworks.commons.map.Maps
-import yakworks.json.jackson.JacksonUtil
+import yakworks.json.jackson.JacksonJson
 
 /**
  * helpers for Plain Old Groovy Objects and Beans
@@ -30,9 +30,10 @@ class BeanTools {
     /**
      * Uses built in Groovy for Simple merging from a map to object, nested or not, onto the pogo.
      * Uses the InvokerHelper.setProperties(values)
-     * Works well for most simple cases but does handle binding of a list of generics. Use Jackson for those cases or bind which does it
+     * Works well for most simple cases but does handle binding of a list of generics.
+     * Use Jackson for those cases, see the bind mehtod here which does it.
      *
-     * @see yakworks.json.jackson.JacksonUtil#bind
+     * @see JacksonJson#bind
      */
     static Object merge( Object pogo, Map values, Map args = [:]){
         boolean ignoreNulls = args.containsKey('ignoreNulls') ? args['ignoreNulls'] : true
@@ -60,12 +61,12 @@ class BeanTools {
 
     /** Uses JacksonUtil and binds the data to new instance of the pased in clazz */
     public static <T> T bind(Object data, Class<T> clazz)  {
-        return JacksonUtil.bind(data, clazz)
+        return JacksonJson.bind(data, clazz)
     }
 
     /** Uses JacksonUtil to bind to new instance of the pased in class */
     public static <T> T bind(T instance, Object data) {
-        return JacksonUtil.bind(instance, data)
+        return JacksonJson.bind(instance, data)
     }
 
 }

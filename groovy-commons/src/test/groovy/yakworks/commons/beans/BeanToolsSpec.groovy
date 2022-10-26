@@ -4,12 +4,9 @@
 */
 package yakworks.commons.beans
 
-
 import groovy.transform.CompileStatic
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Specification
-import yakworks.json.jackson.ObjectMapperWrapper
 
 class BeanToolsSpec extends Specification{
 
@@ -89,7 +86,6 @@ class BeanToolsSpec extends Specification{
     void "bind new or existing with underlyng jackson"(){
         when:
         // Create ObjectMapper instance
-        ObjectMapper mapper = ObjectMapperWrapper.INSTANCE.objectMapper
         // Converting POJO to Map
         // Map<String, Object> map = mapper.convertValue(foo, new TypeReference<Map<String, Object>>() {});
         // Convert Map to POJO

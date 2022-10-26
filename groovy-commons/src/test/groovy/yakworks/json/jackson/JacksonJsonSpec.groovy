@@ -9,14 +9,13 @@ import java.time.LocalDateTime
 
 import groovy.transform.CompileStatic
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import spock.lang.Specification
 import yakworks.commons.testing.pogos.Thing
 
 /**
  * sanity checks for streaming to a file
  */
-class JacksonUtilSpec extends Specification {
+class JacksonJsonSpec extends Specification {
 
     @CompileStatic
     static class AdminUser {
@@ -50,7 +49,7 @@ class JacksonUtilSpec extends Specification {
 
     void "sanity check toJson"() {
         when:
-        String res = JacksonUtil.toJson([foo: 1, bar: 'buzz'])
+        String res = JacksonJson.toJson([foo: 1, bar: 'buzz'])
 
         then:
         res == '{"foo":1,"bar":"buzz"}'
@@ -58,7 +57,7 @@ class JacksonUtilSpec extends Specification {
 
     void "full toJson"() {
         when:
-        String res = JacksonUtil.toJson(generateData(1))
+        String res = JacksonJson.toJson(generateData(1))
 
         then:
         def expected = '{"num":"1","inactive":false,"amount":0.00,"localDate":"2021-02-01",' +
@@ -70,7 +69,7 @@ class JacksonUtilSpec extends Specification {
     void "parseJson"() {
         when:
         def jsonString = '{"num":"1","inactive":false,"amount":0.00,"localDate":"2021-02-01"}'
-        Map obj = JacksonUtil.parseJson(jsonString, Map)
+        Map obj = JacksonJson.parseJson(jsonString, Map)
 
         then:
         obj == [num: '1', inactive: false, amount: 0.00, localDate: "2021-02-01"]
@@ -79,7 +78,6 @@ class JacksonUtilSpec extends Specification {
     void "using jackson to bind"(){
         when:
         // Create ObjectMapper instance
-        ObjectMapper mapper = ObjectMapperWrapper.INSTANCE.objectMapper
         // Converting POJO to Map
         // Map<String, Object> map = mapper.convertValue(foo, new TypeReference<Map<String, Object>>() {});
         // Convert Map to POJO
@@ -90,7 +88,7 @@ class JacksonUtilSpec extends Specification {
             thing: [name: 'thing1'],
             things: [[name: 'thing2'], [name: 'thing3']]
         ]
-        AdminUser au = JacksonUtil.bind(map, AdminUser);
+        AdminUser au = JacksonJson.bind(map, AdminUser);
 
         then:
         au.name == 'Galts'
@@ -102,7 +100,7 @@ class JacksonUtilSpec extends Specification {
         au.things[0].name == 'thing2'
 
         when:
-        AdminUser au2 = JacksonUtil.bind(new AdminUser(), map);
+        AdminUser au2 = JacksonJson.bind(new AdminUser(), map);
 
         then:
         au2.name == 'Galts'

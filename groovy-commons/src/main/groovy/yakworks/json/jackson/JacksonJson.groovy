@@ -15,48 +15,60 @@ import com.fasterxml.jackson.databind.ObjectMapper
  * Static helpers around Jackson. Many of these are not really needed but serves as what we consider more obvious
  * naming when dealing with Maps. Also serve as reminders or a dingus on how things can be done.
  */
-@CompileStatic
-public class JacksonUtil {
+@CompileStatic //JacksonJson.
+class JacksonJson {
 
+    static ObjectMapper getObjectMapper() {
+        ObjectMapperWrapper.instance.objectMapper
+    }
+
+    /** convert object to json string */
     static String toJson(Object object){
         stringify(object)
     }
 
-    static String stringify(Object object){
-        return ObjectMapperWrapper.INSTANCE.toString(object);
+    /** convert object to json string */
+    static String stringify(Object value){
+        return objectMapper.writeValueAsString(value)
     }
 
     /**
      * parse string and expect the class type back.
      * usually would call this with parseJson(text, Map) or parseJson(text, List)
      */
-    static <T> T parseJson(String text, Class<T> clazz) {
-        def parsedObj = ObjectMapperWrapper.INSTANCE.fromString(text, clazz);
-
+    public static <T> T parseJson(String text, Class<T> clazz) {
+        def parsedObj = objectMapper.readValue(text, clazz)
         return (T)parsedObj
     }
 
     public static <T> T fromString(String string, Class<T> clazz) {
-        return ObjectMapperWrapper.INSTANCE.fromString(string, clazz);
+        return objectMapper.readValue(string, clazz)
     }
 
     public static <T> T fromString(String string, Type type) {
-        return ObjectMapperWrapper.INSTANCE.fromString(string, type);
+        return objectMapper.readValue(string, objectMapper.getTypeFactory().constructType(type))
     }
 
-    public static JsonNode toJsonNode(String value) {
-        return ObjectMapperWrapper.INSTANCE.toJsonNode(value);
+    static JsonNode toJsonNode(String value) {
+        return objectMapper.readTree(value)
     }
 
     /** binds the data to new instance of the pased in class */
     public static <T> T bind(Object data, Class<T> toValueType) throws IllegalArgumentException {
-        ObjectMapper mapper = ObjectMapperWrapper.INSTANCE.objectMapper
-        return mapper.convertValue(data, toValueType);
+        return objectMapper.convertValue(data, toValueType);
     }
 
     /** binds the data to new instance of the pased in class */
     public static <T> T bind(T instance, Object data) {
-        ObjectMapper mapper = ObjectMapperWrapper.INSTANCE.objectMapper
-        return mapper.updateValue(instance, data);
+        return objectMapper.updateValue(instance, data);
+    }
+
+    public static <T> T fromBytes(byte[] value, Class<T> clazz) throws IOException {
+        return objectMapper.readValue(value, clazz);
+    }
+
+    public static <T> T fromBytes(byte[] value, Type type) throws IOException {
+        return objectMapper.readValue(value, objectMapper.getTypeFactory().constructType(type));
+
     }
 }
