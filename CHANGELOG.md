@@ -1,3 +1,8 @@
+### v3.10
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.9...v3.10)
+- Binder with Jackson, new BeanTools and JacksonJson utils.  (#11) [link](https://github.com/yakworks/commons/commit/ef64861e660c155e6a771e52467ac67f61d6da2f)
+
 ### v3.9
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.8...v3.9)
