@@ -181,7 +181,6 @@ class PathKeyMapSpec extends Specification {
         assert params['prefix']['alpha'].beta == 'delta'
     }
 
-
     void testCloning() {
         Map sub = ["name":"Dierk Koenig", "address.postCode": "345435", "dob": "01/01/1970"]
         theMap =  PathKeyMap.of(sub)
@@ -209,5 +208,29 @@ class PathKeyMapSpec extends Specification {
             assert theMap[k] == theClone[k], "theclone should have the same value for $k as the original"
         }
     }
+
+    void "test when value contains simple collection"() {
+        setup:
+        Map sub = ["name":"Dierk Koenig",  "address.postCode": "345435", "tags": [1,2,3]]
+        theMap =  PathKeyMap.of(sub)
+
+        when: "contains a tags collection of non PathKeyMap type elements"
+        PathKeyMap theClone = theMap.clone()
+
+        then:
+        noExceptionThrown()
+        theMap.size() == theClone.size()
+        theClone["address.postCode"] == "345435"
+        theClone.tags == [1,2,3]
+
+        when:
+        theClone.init()
+
+        then:
+        noExceptionThrown()
+        theClone.address.postCode == "345435"
+        theClone.tags == [1,2,3]
+    }
+
 
 }

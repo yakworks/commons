@@ -74,7 +74,7 @@ class PathKeyMap<K,V> implements Map<K,V>, Cloneable  {
                     clonedMap[k] = (val as PathKeyMap).cloneMap()
                 }
                 // if its a list of PathKeyMaps then iterate over and clone those too
-                else if(val instanceof Collection<PathKeyMap>) {
+                else if(val && val instanceof Collection && ((Collection)val)[0] instanceof PathKeyMap) {
                     clonedMap[k] = val.collect{
                         (it as PathKeyMap).cloneMap()
                     } as Collection<PathKeyMap>
@@ -176,7 +176,7 @@ class PathKeyMap<K,V> implements Map<K,V>, Cloneable  {
         if (nestedIndex == -1) {
             def val = requestMap.get(key)
             if(val instanceof PathKeyMap) val.init()
-            if(val instanceof Collection<PathKeyMap>) {
+            if(val && val instanceof Collection && ((Collection)val)[0] instanceof PathKeyMap) {
                 val.each{ ((PathKeyMap)it).init()}
             }
             return
