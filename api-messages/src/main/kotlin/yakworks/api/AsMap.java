@@ -12,7 +12,7 @@ import java.util.Map;
 public interface AsMap {
 
     /**
-     * converts to Map, helpfull for to json and can be overriden on concrete impls
+     * converts to Map, helpfull for to __json__ and can be overriden on concrete impls
      */
     Map<String, Object> asMap();
 
