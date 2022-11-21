@@ -18,7 +18,9 @@ import com.github.jknack.handlebars.helper.NumberHelper
 import com.github.jknack.handlebars.helper.StringHelpers
 
 /**
- * Wrapper for groovy Json slurper and generator
+ * Wrapper to setup handlebars to use a common instance.
+ * see https://github.com/jknack/handlebars.java
+ * and https://jknack.github.io/handlebars.java/
  *
  * @author Joshua Burnett (@basejump)
  */
