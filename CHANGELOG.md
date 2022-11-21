@@ -1,3 +1,9 @@
+### v3.11
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.10...v3.11)
+- Handlebars (#13) [link](https://github.com/yakworks/commons/commit/8a4e14783b4dc37f0313703e20751e1257e77452)
+- 9ci/domain9#1377 Fix pathkeymap to support list of elements which are… (#12) [link](https://github.com/yakworks/commons/commit/dbbe14a36efd9cd77115ed6dbc890c319825025a)
+
 ### v3.10
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.9...v3.10)
