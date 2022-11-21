@@ -10,6 +10,8 @@ import groovy.transform.builder.SimpleStrategy
 
 import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.Template
+import com.github.jknack.handlebars.cache.HighConcurrencyTemplateCache
+import com.github.jknack.handlebars.cache.TemplateCache
 import com.github.jknack.handlebars.helper.AssignHelper
 import com.github.jknack.handlebars.helper.ConditionalHelpers
 import com.github.jknack.handlebars.helper.NumberHelper
@@ -28,9 +30,12 @@ class Bars {
     // see good explanation of thread safe static instance stratgey https://stackoverflow.com/a/16106598/6500859
     @SuppressWarnings('UnusedPrivateField')
     private static class Holder {
+
         //not final as we need ability to override it and set it,
         // in our spring boot we do just that so we are shaing the same instance across the board.
         private static Handlebars instance = new Handlebars()
+            .with(new HighConcurrencyTemplateCache())
+
         static {
             //setting so wrapping args in quotes is optional
             instance.stringParams(true)

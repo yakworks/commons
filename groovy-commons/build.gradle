@@ -34,6 +34,7 @@ dependencies {
   //HANDLEBARS
   api "com.github.jknack:handlebars:$vHandlebars"
   api "com.github.jknack:handlebars-helpers:$vHandlebars"
+  // api "com.github.jknack:handlebars-caffeine:$vHandlebars"
   // api "com.github.jknack:handlebars-springmvc:$vHandlebars"
 
   // javax val
