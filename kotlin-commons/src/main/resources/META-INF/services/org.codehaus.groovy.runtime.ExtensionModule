@@ -1,0 +1,5 @@
+moduleName = groovy-commons-extensions
+moduleVersion = ${moduleVersion}
+extensionClasses = yakworks.commons.extensions.PathExtensions,\
+                   yakworks.commons.extensions.MapExtensions
+# staticExtensionClasses = yakworks.commons.extensions.MathStaticExtensions

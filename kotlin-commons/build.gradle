@@ -1,0 +1,83 @@
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "yakworks.groovy-lib"
+  id "com.bnorm.power.kotlin-power-assert" version "0.12.0"
+}
+
+apply from: "${rootProject.projectDir}/gradle/test-unit.gradle"
+
+dependencies {
+  api project(":api-messages")
+
+  //groovy
+  api "org.codehaus.groovy:groovy:$groovyVersion"
+  api "org.codehaus.groovy:groovy-templates:$groovyVersion"
+  api "org.codehaus.groovy:groovy-nio:$groovyVersion"
+  api "org.codehaus.groovy:groovy-json:$groovyVersion"
+  api "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
+  api "org.codehaus.groovy:groovy-datetime:$groovyVersion"
+
+  compileOnly "org.slf4j:slf4j-api:${vSlf4j}"
+
+  api 'jakarta.annotation:jakarta.annotation-api:2.1.0'
+
+  api "commons-io:commons-io:$vCommonsIO"
+
+  api "net.lingala.zip4j:zip4j:$vZip4j"
+
+  api "org.yaml:snakeyaml:$vSnakeyaml"
+
+  //requires jackson libs to be added in. TODO should these be api and create the dependency?
+  api "com.fasterxml.jackson.core:jackson-core:$vJackson"
+  api "com.fasterxml.jackson.core:jackson-databind:$vJackson"
+  api "com.fasterxml.jackson.module:jackson-module-parameter-names:$vJackson"
+  //support for other new Java 8 datatypes outside of date/time: most notably Optional
+  api "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$vJackson"
+  // support for Java 8 date/time types
+  api "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$vJackson"
+
+  //HANDLEBARS
+  api "com.github.jknack:handlebars:$vHandlebars"
+  api "com.github.jknack:handlebars-helpers:$vHandlebars"
+  // api "com.github.jknack:handlebars-caffeine:$vHandlebars"
+  // api "com.github.jknack:handlebars-springmvc:$vHandlebars"
+
+  // javax val
+  compileOnly "javax.validation:validation-api:$vJavaxValidation"
+
+  //javax.annotations
+  compileOnly "com.github.spotbugs:spotbugs-annotations:${vSpotBugs}"
+
+  // jasper uses itext 2.1.7 which uses bouncy 138, so until we sort that out we keep it stuck at this version
+  // used only in commons password stuff
+  compileOnly "bouncycastle:bcprov-jdk14:138"
+
+  // json pasrser traits and other areas
+  compileOnly "javax.servlet:javax.servlet-api:4.0.1"
+
+  testImplementation "io.swagger.parser.v3:swagger-parser-v3:$vSwagger"
+}
+
+processResources {
+  filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
+    expand([
+      moduleVersion: version
+    ])
+  }
+}
+
+compileKotlin {
+  kotlinOptions.jvmTarget = '11'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+sourceSets {
+  // main.java.srcDirs = []
+  // main.java.srcDirs = ['src/main/kotlin', 'src/main/java']
+  // main.groovy.srcDirs = ['src/main/kotlin', 'src/main/groovy']
+  main.kotlin.srcDirs = ['src/main/groovy', 'src/main/kotlin']
+  main.resources.srcDirs = ['src/main/resources']
+}

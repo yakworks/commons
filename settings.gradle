@@ -10,7 +10,8 @@ rootProject.name = 'commons-root'
 include 'api-messages'
 // include 'api-json'
 include 'groovy-commons'
-include 'groovy-json'
+// include 'groovy-json'
+include 'kotlin-commons'
 
 // tests will be included in main runs but not deploy tasks and doc tasks
 include "examples/kotlin-check"
