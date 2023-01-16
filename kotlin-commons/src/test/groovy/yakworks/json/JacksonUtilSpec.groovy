@@ -2,7 +2,7 @@
 * Copyright 2019 Yak.Works - Licensed under the Apache License, Version 2.0 (the "License")
 * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
 */
-package yakworks.json.jackson
+package yakworks.json
 
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -15,7 +15,7 @@ import yakworks.commons.testing.pogos.Thing
 /**
  * sanity checks for streaming to a file
  */
-class JacksonJsonSpec extends Specification {
+class JacksonUtilSpec extends Specification {
 
     @CompileStatic
     static class AdminUser {
@@ -30,6 +30,8 @@ class JacksonJsonSpec extends Specification {
         static class Thing {
             String name
         }
+
+        static String someStatic = "some val"
     }
 
     Map generateData(Long id) {
@@ -47,9 +49,17 @@ class JacksonJsonSpec extends Specification {
         ]
     }
 
+    void "mapper sanity"() {
+        when:
+        def mapper = JacksonUtil.objectMapper
+
+        then:
+        mapper
+    }
+
     void "sanity check toJson"() {
         when:
-        String res = JacksonJson.toJson([foo: 1, bar: 'buzz'])
+        String res = JacksonUtil.toJson([foo: 1, bar: 'buzz'])
 
         then:
         res == '{"foo":1,"bar":"buzz"}'
@@ -57,7 +67,7 @@ class JacksonJsonSpec extends Specification {
 
     void "full toJson"() {
         when:
-        String res = JacksonJson.toJson(generateData(1))
+        String res = JacksonUtil.toJson(generateData(1))
 
         then:
         def expected = '{"num":"1","inactive":false,"amount":0.00,"localDate":"2021-02-01",' +
@@ -66,10 +76,19 @@ class JacksonJsonSpec extends Specification {
         res == expected
     }
 
+    void "AdminUser toJson"() {
+        when:
+        String res = JacksonUtil.toJson(new AdminUser(name: "Bob"))
+
+        then:
+        def expected = '{"name":"Bob","onlyAdmin":"foo","things":[]}'
+        res == expected
+    }
+
     void "parseJson"() {
         when:
         def jsonString = '{"num":"1","inactive":false,"amount":0.00,"localDate":"2021-02-01"}'
-        Map obj = JacksonJson.parseJson(jsonString, Map)
+        Map obj = JacksonUtil.parseJson(jsonString, Map)
 
         then:
         obj == [num: '1', inactive: false, amount: 0.00, localDate: "2021-02-01"]
@@ -86,9 +105,10 @@ class JacksonJsonSpec extends Specification {
             city: 'Gulch',
             age: 22,
             thing: [name: 'thing1'],
-            things: [[name: 'thing2'], [name: 'thing3']]
+            things: [[name: 'thing2'], [name: 'thing3']],
+            someStatic: "no bind"
         ]
-        AdminUser au = JacksonJson.bind(map, AdminUser);
+        AdminUser au = JacksonUtil.bind(map, AdminUser)
 
         then:
         au.name == 'Galts'
@@ -98,9 +118,11 @@ class JacksonJsonSpec extends Specification {
         au.thing.name == 'thing1'
         au.things[0] instanceof AdminUser.Thing
         au.things[0].name == 'thing2'
+        //should not have bind the static
+        au.someStatic == "some val"
 
         when:
-        AdminUser au2 = JacksonJson.bind(new AdminUser(), map);
+        AdminUser au2 = JacksonUtil.bindUpdate(new AdminUser(), map);
 
         then:
         au2.name == 'Galts'

@@ -9,7 +9,7 @@ import groovy.transform.CompileStatic
 import org.codehaus.groovy.runtime.InvokerHelper
 
 import yakworks.commons.map.Maps
-import yakworks.json.jackson.JacksonJson
+import yakworks.json.JacksonUtil
 
 /**
  * helpers for Plain Old Groovy Objects and Beans
@@ -61,12 +61,12 @@ class BeanTools {
 
     /** Uses JacksonUtil and binds the data to new instance of the pased in clazz */
     public static <T> T bind(Object data, Class<T> clazz)  {
-        return JacksonJson.bind(data, clazz)
+        return JacksonUtil.bind(data, clazz)
     }
 
     /** Uses JacksonUtil to bind to new instance of the pased in class */
     public static <T> T bind(T instance, Object data) {
-        return JacksonJson.bind(instance, data)
+        return JacksonUtil.bindUpdate(instance, data)
     }
 
 }

@@ -22,6 +22,8 @@ class MetaUtilsSpec extends Specification {
         then:
         //groovy's default returns class and staticProp.
         props
+        //has the static in it.
+        props.someStatic
     }
 
     void "test getMetaProperties"() {

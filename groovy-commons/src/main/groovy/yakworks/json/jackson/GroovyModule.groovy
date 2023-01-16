@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 /**
  * Jackson "Module" (normal java Service that gets loaded with ServiceLoader)
  * that will serialize GStrings properly with groovy
+ * this is specified in META-INF.services and will get registered on the call to .findAndRegisterModules()
  */
 @CompileStatic
 class GroovyModule  extends SimpleModule {
