@@ -863,8 +863,8 @@ object StringUtils {
      * (potentially `null` or empty)
      * @return the resulting `String` array
      */
-    fun toStringArray(@Nullable collection: Collection<String?>): Array<String> {
-        return if (!CollectionUtils.isEmpty(collection)) {
+    fun toStringArray(collection: Collection<String?>): Array<String> {
+        return if (!collection.isEmpty()) {
             collection.stream().toArray { arrayOfNulls<String>(it) }
         } else {
             EMPTY_STRING_ARRAY
@@ -1214,10 +1214,8 @@ object StringUtils {
      * @return the delimited `String`
      */
     @JvmOverloads
-    fun collectionToDelimitedString(
-        @Nullable coll: Collection<*>, delim: String, prefix: String = "", suffix: String = ""
-    ): String {
-        if (CollectionUtils.isEmpty(coll)) {
+    fun collectionToDelimitedString(coll: Collection<*>, delim: String, prefix: String = "", suffix: String = ""): String {
+        if (coll.isEmpty()) {
             return ""
         }
         var totalLength = coll.size * (prefix.length + suffix.length) + (coll.size - 1) * delim.length

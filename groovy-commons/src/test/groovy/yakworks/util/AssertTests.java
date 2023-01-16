@@ -98,13 +98,6 @@ class AssertTests {
 	}
 
 	@Test
-	void isTrueWithFalseAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.isTrue(false, (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void isNullWithMessage() {
 		Assert.isNull(null, "Bla");
 	}
@@ -143,13 +136,6 @@ class AssertTests {
 		assertThatIllegalArgumentException().isThrownBy(() ->
 				Assert.notNull(null, () -> "enigma"))
 			.withMessageContaining("enigma");
-	}
-
-	@Test
-	void notNullWithNullAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.notNull(null, (Supplier<String>) null))
-			.withMessage(null);
 	}
 
 	@Test

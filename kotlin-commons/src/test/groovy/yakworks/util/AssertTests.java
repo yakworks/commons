@@ -67,13 +67,6 @@ class AssertTests {
 	}
 
 	@Test
-	void stateWithFalseExpressionAndNullMessageSupplier() {
-		assertThatIllegalStateException().isThrownBy(() ->
-				Assert.state(false, (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void isTrueWithMessage() {
 		Assert.isTrue(true, "enigma");
 	}
@@ -98,13 +91,6 @@ class AssertTests {
 	}
 
 	@Test
-	void isTrueWithFalseAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.isTrue(false, (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void isNullWithMessage() {
 		Assert.isNull(null, "Bla");
 	}
@@ -122,13 +108,6 @@ class AssertTests {
 	}
 
 	@Test
-	void isNullWithNonNullObjectAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.isNull("foo", (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void notNullWithMessage() {
 		Assert.notNull("foo", "enigma");
 	}
@@ -143,13 +122,6 @@ class AssertTests {
 		assertThatIllegalArgumentException().isThrownBy(() ->
 				Assert.notNull(null, () -> "enigma"))
 			.withMessageContaining("enigma");
-	}
-
-	@Test
-	void notNullWithNullAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.notNull(null, (Supplier<String>) null))
-			.withMessage(null);
 	}
 
 	@Test
@@ -198,13 +170,6 @@ class AssertTests {
 		assertThatIllegalArgumentException().isThrownBy(() ->
 				Assert.hasLength(null, () -> "enigma"))
 			.withMessageContaining("enigma");
-	}
-
-	@Test
-	void hasLengthWithNullAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.hasLength(null, (Supplier<String>) null))
-			.withMessage(null);
 	}
 
 	@Test
@@ -259,13 +224,6 @@ class AssertTests {
 	}
 
 	@Test
-	void hasTextWithNullAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.hasText(null, (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void doesNotContainWithNullSearchString() {
 		Assert.doesNotContain(null, "rod", "enigma");
 	}
@@ -313,13 +271,6 @@ class AssertTests {
 	}
 
 	@Test
-	void doesNotContainWithNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.doesNotContain("1234", "23", (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void notEmptyArray() {
 		Assert.notEmpty(new String[] {"1234"}, "enigma");
 	}
@@ -358,13 +309,6 @@ class AssertTests {
 	}
 
 	@Test
-	void notEmptyArrayWithEmptyArrayAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.notEmpty(new String[] {}, (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void noNullElements() {
 		Assert.noNullElements(new String[] { "1234" }, "enigma");
 	}
@@ -394,13 +338,6 @@ class AssertTests {
 		assertThatIllegalArgumentException().isThrownBy(() ->
 				Assert.noNullElements(new String[] { "foo", null, "bar" }, () -> "enigma"))
 			.withMessageContaining("enigma");
-	}
-
-	@Test
-	void noNullElementsWithNullElementsAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.noNullElements(new String[] { "foo", null, "bar" }, (Supplier<String>) null))
-			.withMessage(null);
 	}
 
 	@Test
@@ -460,13 +397,6 @@ class AssertTests {
 	}
 
 	@Test
-	void noNullElementsWithCollectionAndNullElementAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.noNullElements(asList("foo", null, "bar"), (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void notEmptyCollection() {
 		Assert.notEmpty(singletonList("foo"), "enigma");
 	}
@@ -505,13 +435,6 @@ class AssertTests {
 	}
 
 	@Test
-	void notEmptyCollectionWithEmptyCollectionAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.notEmpty(emptyList(), (Supplier<String>) null))
-			.withMessage(null);
-	}
-
-	@Test
 	void notEmptyMap() {
 		Assert.notEmpty(singletonMap("foo", "bar"), "enigma");
 	}
@@ -547,13 +470,6 @@ class AssertTests {
 		assertThatIllegalArgumentException().isThrownBy(() ->
 				Assert.notEmpty((Map<?, ?>) null, () -> "enigma"))
 			.withMessageContaining("enigma");
-	}
-
-	@Test
-	void notEmptyMapWithEmptyMapAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.notEmpty(emptyMap(), (Supplier<String>) null))
-			.withMessage(null);
 	}
 
 	@Test
@@ -620,13 +536,6 @@ class AssertTests {
 		assertThatIllegalArgumentException().isThrownBy(() ->
 				Assert.isInstanceOf(String.class, null, () -> "enigma"))
 			.withMessageContaining("enigma: null");
-	}
-
-	@Test
-	void isInstanceOfWithTypeMismatchAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.isInstanceOf(String.class, 42L, (Supplier<String>) null))
-			.withMessageContaining("Object of class [java.lang.Long] must be an instance of class java.lang.String");
 	}
 
 	@Test
@@ -700,13 +609,6 @@ class AssertTests {
 		assertThatIllegalArgumentException().isThrownBy(() ->
 				Assert.isAssignable(Integer.class, null, () -> "enigma"))
 			.withMessageContaining("enigma: null");
-	}
-
-	@Test
-	void isAssignableWithTypeMismatchAndNullMessageSupplier() {
-		assertThatIllegalArgumentException().isThrownBy(() ->
-				Assert.isAssignable(String.class, Integer.class, (Supplier<String>) null))
-			.withMessageContaining("class java.lang.Integer is not assignable to class java.lang.String");
 	}
 
 	@Test
