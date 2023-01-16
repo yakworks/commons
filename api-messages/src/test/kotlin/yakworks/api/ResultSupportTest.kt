@@ -1,4 +1,4 @@
-package yakworks.api.problem
+package yakworks.api
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
@@ -6,7 +6,7 @@ import yakworks.api.Result
 import yakworks.api.ResultSupport
 
 //junit5 example
-internal class SamplelTest {
+internal class ResultSupportTest {
 
     var x = 2
 
@@ -14,6 +14,12 @@ internal class SamplelTest {
     fun this_is_an_example() {
         val okRes = Result.OK()
         val okMap = ResultSupport.toMap(okRes)
+        val emptyString = ""
+        val nullString: String? = null
+
+        assert(emptyString.isEmpty())
+        assert(nullString.isNullOrEmpty())
+
         assert(okRes.ok)
         assert(okMap["ok"] == true)
     }

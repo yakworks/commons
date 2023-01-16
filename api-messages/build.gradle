@@ -18,7 +18,7 @@ dependencies {
   // Align versions of all Kotlin components
   api(platform("org.jetbrains.kotlin:kotlin-bom"))
   api("org.jetbrains.kotlin:kotlin-stdlib-common")
-  api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+  api("org.jetbrains.kotlin:kotlin-stdlib")
 
   testImplementation project(":groovy-commons")
 
@@ -35,12 +35,15 @@ sourceSets {
   // main.java.srcDirs = []
   main.java.srcDirs = ['src/main/kotlin', 'src/main/java']
   main.groovy.srcDirs = ['src/main/kotlin', 'src/main/groovy']
-  // main.kotlin.srcDirs = ['src/main/java', 'src/main/kotlin']
+  //main.kotlin.srcDirs = ['src/main/java', 'src/main/kotlin']
   main.resources.srcDirs = ['src/main/resources']
 }
 compileKotlin {
+  // kotlinOptions.jvmTarget = '1.8'
   kotlinOptions {
     jvmTarget = "1.8"
+    //see https://kotlinlang.org/docs/java-to-kotlin-interop.html#compatibility-modes-for-default-methods
+    // "Generate JVM default methods for all interface declarations with bodies in the module"
     freeCompilerArgs += [ "-Xjvm-default=all" ]
   }
   // classpath = sourceSets.main.compileClasspath

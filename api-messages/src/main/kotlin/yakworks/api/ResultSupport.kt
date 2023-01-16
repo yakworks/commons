@@ -14,7 +14,7 @@ fun noImpl(){
     throw NotImplementedError()
 }
 
-internal object ResultSupport {
+object ResultSupport {
 
     /**
      * converts to Map, helpfull for to json and can be overriden on concrete impls

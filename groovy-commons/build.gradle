@@ -1,10 +1,15 @@
-apply plugin: "yakworks.groovy-lib"
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "yakworks.groovy-lib"
+  id "com.bnorm.power.kotlin-power-assert" version "0.12.0"
+}
 
 apply from: "${rootProject.projectDir}/gradle/test-unit.gradle"
 
 dependencies {
   api project(":api-messages")
 
+  //groovy
   api "org.codehaus.groovy:groovy:$groovyVersion"
   api "org.codehaus.groovy:groovy-templates:$groovyVersion"
   api "org.codehaus.groovy:groovy-nio:$groovyVersion"
@@ -61,6 +66,18 @@ processResources {
   }
 }
 
+compileKotlin {
+  kotlinOptions.jvmTarget = '1.8'
+}
+
 test {
   useJUnitPlatform()
+}
+
+sourceSets {
+  // main.java.srcDirs = []
+  // main.java.srcDirs = ['src/main/kotlin', 'src/main/java']
+  // main.groovy.srcDirs = ['src/main/kotlin', 'src/main/groovy']
+  main.kotlin.srcDirs = ['src/main/groovy', 'src/main/kotlin']
+  main.resources.srcDirs = ['src/main/resources']
 }
