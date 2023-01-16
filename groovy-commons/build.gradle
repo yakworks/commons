@@ -56,6 +56,9 @@ dependencies {
   compileOnly "javax.servlet:javax.servlet-api:4.0.1"
 
   testImplementation "io.swagger.parser.v3:swagger-parser-v3:$vSwagger"
+
+  testImplementation("org.mockito:mockito-core:4.6.1")
+  testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
 }
 
 processResources {

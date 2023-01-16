@@ -857,67 +857,6 @@ public abstract class ClassUtils {
 	}
 
 	/**
-	 * Check whether the given object is a CGLIB proxy.
-	 * @param object the object to check
-	 * @see #isCglibProxyClass(Class)
-	 * @see org.springframework.aop.support.AopUtils#isCglibProxy(Object)
-	 * @deprecated as of 5.2, in favor of custom (possibly narrower) checks
-	 */
-	@Deprecated
-	public static boolean isCglibProxy(Object object) {
-		return isCglibProxyClass(object.getClass());
-	}
-
-	/**
-	 * Check whether the specified class is a CGLIB-generated class.
-	 * @param clazz the class to check
-	 * @see #isCglibProxyClassName(String)
-	 * @deprecated as of 5.2, in favor of custom (possibly narrower) checks
-	 */
-	@Deprecated
-	public static boolean isCglibProxyClass(@Nullable Class<?> clazz) {
-		return (clazz != null && isCglibProxyClassName(clazz.getName()));
-	}
-
-	/**
-	 * Check whether the specified class name is a CGLIB-generated class.
-	 * @param className the class name to check
-	 * @deprecated as of 5.2, in favor of custom (possibly narrower) checks
-	 */
-	@Deprecated
-	public static boolean isCglibProxyClassName(@Nullable String className) {
-		return (className != null && className.contains(CGLIB_CLASS_SEPARATOR));
-	}
-
-	/**
-	 * Return the user-defined class for the given instance: usually simply
-	 * the class of the given instance, but the original class in case of a
-	 * CGLIB-generated subclass.
-	 * @param instance the instance to check
-	 * @return the user-defined class
-	 */
-	public static Class<?> getUserClass(Object instance) {
-		Assert.notNull(instance, "Instance must not be null");
-		return getUserClass(instance.getClass());
-	}
-
-	/**
-	 * Return the user-defined class for the given class: usually simply the given
-	 * class, but the original class in case of a CGLIB-generated subclass.
-	 * @param clazz the class to check
-	 * @return the user-defined class
-	 */
-	public static Class<?> getUserClass(Class<?> clazz) {
-		if (clazz.getName().contains(CGLIB_CLASS_SEPARATOR)) {
-			Class<?> superclass = clazz.getSuperclass();
-			if (superclass != null && superclass != Object.class) {
-				return superclass;
-			}
-		}
-		return clazz;
-	}
-
-	/**
 	 * Return a descriptive name for the given object's type: usually simply
 	 * the class name, but component type class name + "[]" for arrays,
 	 * and an appended list of implemented interfaces for JDK proxies.
@@ -1301,21 +1240,7 @@ public abstract class ClassUtils {
 	 * <p>This is particularly useful for arriving at a public exported type on Jigsaw
 	 * which can be reflectively invoked without an illegal access warning.
 	 * @param method the method to be invoked, potentially from an implementation class
-	 * @return the corresponding interface method, or the original method if none found
-	 * @since 5.1
-	 * @deprecated in favor of {@link #getInterfaceMethodIfPossible(Method, Class)}
-	 */
-	@Deprecated
-	public static Method getInterfaceMethodIfPossible(Method method) {
-		return getInterfaceMethodIfPossible(method, null);
-	}
-
-	/**
-	 * Determine a corresponding interface method for the given method handle, if possible.
-	 * <p>This is particularly useful for arriving at a public exported type on Jigsaw
-	 * which can be reflectively invoked without an illegal access warning.
-	 * @param method the method to be invoked, potentially from an implementation class
-	 * @param targetClass the target class to check for declared interfaces
+	 * @param targetClass the target class to check for declared interfaces, can be null
 	 * @return the corresponding interface method, or the original method if none found
 	 * @since 5.3.16
 	 * @see #getMostSpecificMethod
