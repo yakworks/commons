@@ -25,20 +25,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 
 import jakarta.annotation.Nullable;
 
@@ -117,7 +104,7 @@ public abstract class ClassUtils {
 	/**
 	 * Cache for equivalent methods on an interface implemented by the declaring class.
 	 */
-	private static final Map<Method, Method> interfaceMethodCache = new ConcurrentReferenceHashMap<>(256);
+	private static final Map<Method, Method> interfaceMethodCache = Collections.synchronizedMap(new WeakHashMap<>());
 
 
 	static {

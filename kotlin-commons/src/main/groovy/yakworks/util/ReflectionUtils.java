@@ -16,16 +16,14 @@
 
 package yakworks.util;
 
+import java.lang.ref.Reference;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import jakarta.annotation.Nullable;
 
@@ -79,12 +77,13 @@ public abstract class ReflectionUtils {
 	 * Cache for {@link Class#getDeclaredMethods()} plus equivalent default methods
 	 * from Java 8 based interfaces, allowing for fast iteration.
 	 */
-	private static final Map<Class<?>, Method[]> declaredMethodsCache = new ConcurrentReferenceHashMap<>(256);
+	private static final Map<Class<?>, Method[]> declaredMethodsCache = Collections.synchronizedMap(new WeakHashMap<>());
+        //new ConcurrentReferenceHashMap<>(256);
 
 	/**
 	 * Cache for {@link Class#getDeclaredFields()}, allowing for fast iteration.
 	 */
-	private static final Map<Class<?>, Field[]> declaredFieldsCache = new ConcurrentReferenceHashMap<>(256);
+	private static final Map<Class<?>, Field[]> declaredFieldsCache = Collections.synchronizedMap(new WeakHashMap<>());
 
 
 	// Exception handling
