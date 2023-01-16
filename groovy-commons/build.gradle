@@ -8,6 +8,7 @@ apply from: "${rootProject.projectDir}/gradle/test-unit.gradle"
 
 dependencies {
   api project(":api-messages")
+  api project(":kotlin-commons")
 
   //groovy
   api "org.codehaus.groovy:groovy:$groovyVersion"
