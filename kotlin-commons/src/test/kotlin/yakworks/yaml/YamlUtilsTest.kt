@@ -1,13 +1,13 @@
 package yakworks.yaml
 
 import org.junit.jupiter.api.Test
-import yakworks.commons.util.BuildSupport
 import java.nio.file.Files
+import java.nio.file.Paths
 
 //junit5 example
 internal class YamlUtilsTest {
 
-    val path = BuildSupport.getRootProjectPath()
+    val path = Paths.get(System.getProperty("project.rootProjectDir"))
 
     @Test
     fun test_loadYaml() {

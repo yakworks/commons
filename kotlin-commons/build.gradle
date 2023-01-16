@@ -55,7 +55,7 @@ dependencies {
   // json pasrser traits and other areas
   compileOnly "javax.servlet:javax.servlet-api:4.0.1"
 
-  testImplementation project(":groovy-commons")
+  // testImplementation project(":groovy-commons")
   testImplementation "io.swagger.parser.v3:swagger-parser-v3:$vSwagger"
   testImplementation("org.mockito:mockito-core:4.6.1")
   testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
@@ -79,12 +79,12 @@ test {
 
 sourceSets {
   // main.java.srcDirs = []
-  // main.java.srcDirs = ['src/main/kotlin', 'src/main/java']
+  main.java.srcDirs = ['src/main/kotlin', 'src/main/java']
   // main.java.srcDirs = ['src/main/kotlin', 'src/main/groovy', 'src/main/java']
   // main.groovy.srcDirs = ['src/main/kotlin', 'src/main/groovy', 'src/main/java']
-  main.kotlin.srcDirs = ['src/main/kotlin', 'src/main/groovy', 'src/main/java']
+  // main.kotlin.srcDirs = ['src/main/kotlin', 'src/main/groovy', 'src/main/java']
   main.resources.srcDirs = ['src/main/resources']
 }
 
-compileGroovy.classpath += files(compileKotlin.destinationDirectory)
-compileTestGroovy.classpath += files(compileTestKotlin.destinationDirectory)
+// compileGroovy.classpath += files(compileKotlin.destinationDirectory)
+// compileTestGroovy.classpath += files(compileTestKotlin.destinationDirectory)

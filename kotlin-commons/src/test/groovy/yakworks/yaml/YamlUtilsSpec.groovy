@@ -6,15 +6,15 @@ package yakworks.yaml
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 
 import spock.lang.Specification
-import yakworks.commons.util.BuildSupport
 
 class YamlUtilsSpec extends Specification {
 
     void "test loadYaml"(){
         when:
-        Path path = BuildSupport.getRootProjectPath()
+        Path path =  Paths.get(System.getProperty("project.rootProjectDir"))
         assert(Files.exists(path))
         Path builYmlPath = path.resolve("build.yml")
         assert Files.exists(path)
