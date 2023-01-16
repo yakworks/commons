@@ -51,7 +51,7 @@ class JacksonUtilSpec extends Specification {
 
     void "mapper sanity"() {
         when:
-        def mapper = JacksonUtil.objectMapper
+        def mapper = JacksonUtils.objectMapper
 
         then:
         mapper
@@ -59,7 +59,7 @@ class JacksonUtilSpec extends Specification {
 
     void "sanity check toJson"() {
         when:
-        String res = JacksonUtil.toJson([foo: 1, bar: 'buzz'])
+        String res = JacksonUtils.toJson([foo: 1, bar: 'buzz'])
 
         then:
         res == '{"foo":1,"bar":"buzz"}'
@@ -67,7 +67,7 @@ class JacksonUtilSpec extends Specification {
 
     void "full toJson"() {
         when:
-        String res = JacksonUtil.toJson(generateData(1))
+        String res = JacksonUtils.toJson(generateData(1))
 
         then:
         def expected = '{"num":"1","inactive":false,"amount":0.00,"localDate":"2021-02-01",' +
@@ -78,7 +78,7 @@ class JacksonUtilSpec extends Specification {
 
     void "AdminUser toJson"() {
         when:
-        String res = JacksonUtil.toJson(new AdminUser(name: "Bob"))
+        String res = JacksonUtils.toJson(new AdminUser(name: "Bob"))
 
         then:
         def expected = '{"name":"Bob","onlyAdmin":"foo","things":[]}'
@@ -88,7 +88,7 @@ class JacksonUtilSpec extends Specification {
     void "parseJson"() {
         when:
         def jsonString = '{"num":"1","inactive":false,"amount":0.00,"localDate":"2021-02-01"}'
-        Map obj = JacksonUtil.parseJson(jsonString, Map)
+        Map obj = JacksonUtils.parseJson(jsonString, Map)
 
         then:
         obj == [num: '1', inactive: false, amount: 0.00, localDate: "2021-02-01"]
@@ -108,7 +108,7 @@ class JacksonUtilSpec extends Specification {
             things: [[name: 'thing2'], [name: 'thing3']],
             someStatic: "no bind"
         ]
-        AdminUser au = JacksonUtil.bind(map, AdminUser)
+        AdminUser au = JacksonUtils.bind(map, AdminUser)
 
         then:
         au.name == 'Galts'
@@ -122,7 +122,7 @@ class JacksonUtilSpec extends Specification {
         au.someStatic == "some val"
 
         when:
-        AdminUser au2 = JacksonUtil.bindUpdate(new AdminUser(), map);
+        AdminUser au2 = JacksonUtils.bindUpdate(new AdminUser(), map);
 
         then:
         au2.name == 'Galts'

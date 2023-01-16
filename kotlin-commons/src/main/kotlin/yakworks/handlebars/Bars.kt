@@ -6,7 +6,6 @@ import com.github.jknack.handlebars.helper.AssignHelper
 import com.github.jknack.handlebars.helper.ConditionalHelpers
 import com.github.jknack.handlebars.helper.NumberHelper
 import com.github.jknack.handlebars.helper.StringHelpers
-import yakworks.json.JacksonUtil
 
 
 object Bars {

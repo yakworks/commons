@@ -15,7 +15,7 @@ import java.time.format.DateTimeParseException
 import java.util.*
 
 
-object JacksonUtil {
+object JacksonUtils {
     @JvmField
     val objectMapper: ObjectMapper = ObjectMapper()
         .findAndRegisterModules() //uses ServiceLoader to find "Modules", registered in META-INF.services
