@@ -21,8 +21,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * <p>Utility library to provide helper methods for Java enums.</p>
@@ -144,6 +144,12 @@ public class EnumUtils {
      */
     public static <E extends Enum<E>> List<E> getEnumList(final Class<E> enumClass) {
         return new ArrayList<>(Arrays.asList(enumClass.getEnumConstants()));
+    }
+
+    public static <E extends Enum<E>> List<String> getNameList(final Class<E> enumClass) {
+        return Arrays.stream(enumClass.getEnumConstants())
+            .map(v -> v.name())
+            .collect(toList());
     }
 
     /**

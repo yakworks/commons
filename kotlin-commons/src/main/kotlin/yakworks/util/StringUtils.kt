@@ -74,7 +74,7 @@ object StringUtils {
      * @see .hasText
      */
     @JvmStatic
-    fun hasLength(@Nullable str: CharSequence?): Boolean {
+    fun hasLength(str: CharSequence?): Boolean {
         return str != null && str.length > 0
     }
 
@@ -89,7 +89,7 @@ object StringUtils {
      * @see .hasText
      */
     @JvmStatic
-    fun hasLength(@Nullable str: String?): Boolean {
+    fun hasLength(str: String?): Boolean {
         return str != null && !str.isEmpty()
     }
 
@@ -115,7 +115,7 @@ object StringUtils {
      * @see Character.isWhitespace
      */
     @JvmStatic
-    fun hasText(@Nullable str: CharSequence?): Boolean {
+    fun hasText(str: CharSequence?): Boolean {
         return str != null && str.length > 0 && containsText(str)
     }
 
@@ -133,7 +133,7 @@ object StringUtils {
      * @see Character.isWhitespace
      */
     @JvmStatic
-    fun hasText(@Nullable str: String?): Boolean {
+    fun hasText(str: String?): Boolean {
         return str != null && !str.isEmpty() && containsText(str)
     }
 
@@ -154,7 +154,7 @@ object StringUtils {
      * contains at least 1 whitespace character
      * @see Character.isWhitespace
      */
-    fun containsWhitespace(@Nullable str: CharSequence): Boolean {
+    fun containsWhitespace(str: CharSequence): Boolean {
         if (str.isNullOrEmpty()) {
             return false
         }
@@ -175,7 +175,7 @@ object StringUtils {
      * @see .containsWhitespace
      */
     @JvmStatic
-    fun containsWhitespace(@Nullable str: String?): Boolean {
+    fun containsWhitespace(str: String?): Boolean {
         if (str.isNullOrEmpty()) {
             return false
         }
@@ -306,7 +306,7 @@ object StringUtils {
      * @since 5.2.9
      */
     @JvmStatic
-    fun matchesCharacter(@Nullable str: String?, singleCharacter: Char): Boolean {
+    fun matchesCharacter(str: String?, singleCharacter: Char): Boolean {
         return str != null && str.length == 1 && str[0] == singleCharacter
     }
 
@@ -318,7 +318,7 @@ object StringUtils {
      * @see java.lang.String.startsWith
      */
     @JvmStatic
-    fun startsWithIgnoreCase(@Nullable str: String?, @Nullable prefix: String?): Boolean {
+    fun startsWithIgnoreCase(str: String?, prefix: String?): Boolean {
         return str != null && prefix != null && str.length >= prefix.length &&
                 str.regionMatches(0, prefix, 0, prefix.length, ignoreCase = true)
     }
@@ -331,7 +331,7 @@ object StringUtils {
      * @see java.lang.String.endsWith
      */
     @JvmStatic
-    fun endsWithIgnoreCase(@Nullable str: String?, @Nullable suffix: String?): Boolean {
+    fun endsWithIgnoreCase(str: String?, suffix: String?): Boolean {
         return str != null && suffix != null && str.length >= suffix.length &&
                 str.regionMatches(str.length - suffix.length, suffix, 0, suffix.length, ignoreCase = true)
     }
@@ -384,7 +384,7 @@ object StringUtils {
      * @return a `String` with the replacements
      */
     @JvmStatic
-    fun replace(inString: String, oldPattern: String, @Nullable newPattern: String?): String {
+    fun replace(inString: String, oldPattern: String, newPattern: String?): String {
         if (!hasLength(inString) || !hasLength(oldPattern) || newPattern == null) {
             return inString
         }
@@ -431,7 +431,7 @@ object StringUtils {
      * @return the resulting `String`
      */
     @JvmStatic
-    fun deleteAny(inString: String, @Nullable charsToDelete: String?): String {
+    fun deleteAny(inString: String, charsToDelete: String?): String {
         if (!hasLength(inString) || !hasLength(charsToDelete)) {
             return inString
         }
@@ -457,8 +457,7 @@ object StringUtils {
      * or `null` if the input was `null`
      */
     @JvmStatic
-    @Nullable
-    fun quote(@Nullable str: String?): String? {
+    fun quote(str: String?): String? {
         return if (str != null) "'$str'" else null
     }
 
@@ -470,8 +469,7 @@ object StringUtils {
      * or the input object as-is if not a `String`
      */
     @JvmStatic
-    @Nullable
-    fun quoteIfString(@Nullable obj: Any?): Any? {
+    fun quoteIfString(obj: Any?): Any? {
         return if (obj is String) quote(obj as String?) else obj
     }
     /**
@@ -541,8 +539,7 @@ object StringUtils {
      * @return the extracted filename, or `null` if none
      */
     @JvmStatic
-    @Nullable
-    fun getFilename(@Nullable path: String?): String? {
+    fun getFilename(path: String?): String? {
         if (path == null) {
             return null
         }
@@ -557,8 +554,7 @@ object StringUtils {
      * @return the extracted filename extension, or `null` if none
      */
     @JvmStatic
-    @Nullable
-    fun getFilenameExtension(@Nullable path: String?): String? {
+    fun getFilenameExtension(path: String?): String? {
         if (path == null) {
             return null
         }
@@ -767,7 +763,6 @@ object StringUtils {
      * @see Locale.forLanguageTag
      */
     @JvmStatic
-    @Nullable
     fun parseLocale(localeValue: String): Locale? {
         val tokens = tokenizeLocaleSource(localeValue)
         if (tokens.size == 1) {
@@ -797,7 +792,6 @@ object StringUtils {
      * @throws IllegalArgumentException in case of an invalid locale specification
      */
     @JvmStatic
-    @Nullable
     fun parseLocaleString(localeString: String): Locale? {
         return parseLocaleTokens(localeString, tokenizeLocaleSource(localeString))
     }
@@ -806,7 +800,6 @@ object StringUtils {
         return tokenizeToStringArray(localeSource, "_ ", false, false)
     }
 
-    @Nullable
     private fun parseLocaleTokens(localeString: String, tokens: Array<String>): Locale? {
         val language = if (tokens.size > 0) tokens[0] else ""
         var country = if (tokens.size > 1) tokens[1] else ""
@@ -880,7 +873,7 @@ object StringUtils {
      * @return the resulting `String` array
      */
     @JvmStatic
-    fun toStringArray(@Nullable enumeration: Enumeration<String?>?): Array<String> {
+    fun toStringArray(enumeration: Enumeration<String?>?): Array<String> {
         return if (enumeration != null) toStringArray(Collections.list(enumeration)) else EMPTY_STRING_ARRAY
     }
 
@@ -893,7 +886,7 @@ object StringUtils {
      * @return the new array (never `null`)
      */
     @JvmStatic
-    fun addStringToArray(@Nullable array: Array<String?>, str: String?): Array<String?> {
+    fun addStringToArray(array: Array<String?>, str: String?): Array<String?> {
         if (ObjectUtils.isEmpty(array)) {
             return arrayOf(str)
         }
@@ -913,8 +906,7 @@ object StringUtils {
      * @return the new array (`null` if both given arrays were `null`)
      */
     @JvmStatic
-    @Nullable
-    fun concatenateStringArrays(@Nullable array1: Array<String?>?, @Nullable array2: Array<String?>?): Array<String?>? {
+    fun concatenateStringArrays(array1: Array<String?>?, array2: Array<String?>?): Array<String?>? {
         if (array1.isNullOrEmpty()) {
             return array2
         }
@@ -985,8 +977,7 @@ object StringUtils {
      * or `null` if the delimiter wasn't found in the given input `String`
      */
     @JvmStatic
-    @Nullable
-    fun split(@Nullable toSplit: String?, @Nullable delimiter: String?): Array<String>? {
+    fun split(toSplit: String?, delimiter: String?): Array<String>? {
         if (toSplit.isNullOrEmpty() || delimiter.isNullOrEmpty()) {
             return null
         }
@@ -1011,7 +1002,6 @@ object StringUtils {
      * or `null` if the array to process was `null` or empty
      */
     @JvmStatic
-    @Nullable
     fun splitArrayElementsIntoProperties(array: Array<String>, delimiter: String): Properties? {
         return splitArrayElementsIntoProperties(array, delimiter, null)
     }
@@ -1032,9 +1022,8 @@ object StringUtils {
      * or `null` if the array to process was `null` or empty
      */
     @JvmStatic
-    @Nullable
     fun splitArrayElementsIntoProperties(
-        array: Array<String>, delimiter: String, @Nullable charsToDelete: String?
+        array: Array<String>, delimiter: String, charsToDelete: String?
     ): Properties? {
         if (ObjectUtils.isEmpty(array)) {
             return null
@@ -1093,7 +1082,7 @@ object StringUtils {
     @JvmStatic
     @JvmOverloads
     fun tokenizeToStringArray(
-        @Nullable str: String?, delimiters: String?, trimTokens: Boolean = true, ignoreEmptyTokens: Boolean = true
+        str: String?, delimiters: String?, trimTokens: Boolean = true, ignoreEmptyTokens: Boolean = true
     ): Array<String> {
         if (str == null) {
             return EMPTY_STRING_ARRAY
@@ -1143,7 +1132,7 @@ object StringUtils {
      */
     @JvmOverloads @JvmStatic
     fun delimitedListToStringArray(
-        @Nullable str: String?, @Nullable delimiter: String?, @Nullable charsToDelete: String? = null
+        str: String?, delimiter: String?, charsToDelete: String? = null
     ): Array<String> {
         if (str == null) {
             return EMPTY_STRING_ARRAY
@@ -1178,7 +1167,7 @@ object StringUtils {
      * @return an array of strings, or the empty array in case of empty input
      */
     @JvmStatic
-    fun commaDelimitedListToStringArray(@Nullable str: String?): Array<String> {
+    fun commaDelimitedListToStringArray(str: String?): Array<String> {
         return delimitedListToStringArray(str, ",")
     }
 
@@ -1191,7 +1180,7 @@ object StringUtils {
      * @return a set of `String` entries in the list
      * @see .removeDuplicateStrings
      */
-    fun commaDelimitedListToSet(@Nullable str: String?): Set<String> {
+    fun commaDelimitedListToSet(str: String?): Set<String> {
         val tokens = commaDelimitedListToStringArray(str)
         return LinkedHashSet(Arrays.asList(*tokens))
     }
@@ -1241,7 +1230,7 @@ object StringUtils {
      * @return the delimited `String`
      */
     @JvmStatic
-    fun collectionToCommaDelimitedString(@Nullable coll: Collection<*>): String {
+    fun collectionToCommaDelimitedString(coll: Collection<*>): String {
         return collectionToDelimitedString(coll, ",")
     }
 
@@ -1253,7 +1242,7 @@ object StringUtils {
      * @param delim the delimiter to use (typically a ",")
      * @return the delimited `String`
      */
-    fun arrayToDelimitedString(@Nullable arr: Array<Any>, delim: String?): String {
+    fun arrayToDelimitedString(arr: Array<Any>, delim: String?): String {
         if (ObjectUtils.isEmpty(arr)) {
             return ""
         }
@@ -1276,7 +1265,7 @@ object StringUtils {
      * @return the delimited `String`
      */
     @JvmStatic
-    fun arrayToCommaDelimitedString(@Nullable arr: Array<Any>): String {
+    fun arrayToCommaDelimitedString(arr: Array<Any>): String {
         return arrayToDelimitedString(arr, ",")
     }
 }
