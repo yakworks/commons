@@ -46,7 +46,7 @@ class JsonEngineSpec extends Specification {
         then:
         def expected = '{"num":"1","inactive":false,"amount":0.00,"localDate":"2021-02-01",' +
             '"localDateTime":"2017-10-19T11:40:00","ext":{"name":"bill"},"list":["foo","bar"],"currency":"USD",' +
-            '"thing":{"id":1,"name":"joe"}}'
+            '"thing":{"someGetter":"x","id":1,"name":"joe"}}'
         res == expected
     }
 

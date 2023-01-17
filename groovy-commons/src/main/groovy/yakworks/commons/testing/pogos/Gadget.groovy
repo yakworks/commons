@@ -9,11 +9,13 @@ import java.time.LocalDateTime
 
 import groovy.transform.CompileStatic
 
+import yakworks.commons.model.Named
+
 /**
  * A sample domain model for ktichen sink testing
  */
 @CompileStatic
-class Gadget {
+class Gadget implements Named{
     Long id
     long id2
 
@@ -46,6 +48,10 @@ class Gadget {
     static String staticProp = "foo"
 
     static enum Kind {CHILD, PARENT}
+
+    String getSomeGetter(){
+        return "x"
+    }
 
     //built in enums
     //Currency currency //FIXME creates and overflow

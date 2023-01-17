@@ -19,6 +19,7 @@ class EnhancedJsonGenerator extends DefaultJsonGenerator {
     /**
      * Overriden to filter out statics
      */
+    @Override
     protected Map<?, ?> getObjectProperties(Object object) {
         return MetaUtils.getProperties(object)
     }

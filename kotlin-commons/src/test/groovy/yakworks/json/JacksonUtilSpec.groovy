@@ -10,7 +10,9 @@ import java.time.LocalDateTime
 import groovy.transform.CompileStatic
 
 import spock.lang.Specification
+import yakworks.commons.testing.pogos.Gadget
 import yakworks.commons.testing.pogos.Thing
+import yakworks.testing.AdminUser
 
 /**
  * sanity checks for streaming to a file
@@ -18,20 +20,11 @@ import yakworks.commons.testing.pogos.Thing
 class JacksonUtilSpec extends Specification {
 
     @CompileStatic
-    static class AdminUser {
-        String name
-        String city
-        Integer age
-        String onlyAdmin = "foo"
-        Thing thing
-        List<Thing> things = [] as List<Thing>
-
-        @CompileStatic
-        static class Thing {
-            String name
-        }
-
-        static String someStatic = "some val"
+    AdminUser createAdminUser() {
+        return new AdminUser(
+            name: "Bob",
+            city: "Denver"
+        )
     }
 
     Map generateData(Long id) {
@@ -72,7 +65,7 @@ class JacksonUtilSpec extends Specification {
         then:
         def expected = '{"num":"1","inactive":false,"amount":0.00,"localDate":"2021-02-01",' +
             '"localDateTime":"2017-10-19T11:40:00","ext":{"name":"bill"},"list":["foo","bar"],"currency":"USD",' +
-            '"thing":{"id":1,"name":"joe"}}'
+            '"thing":{"id":1,"name":"joe","someGetter":"x"}}'
         res == expected
     }
 
@@ -81,7 +74,7 @@ class JacksonUtilSpec extends Specification {
         String res = JacksonUtils.toJson(new AdminUser(name: "Bob"))
 
         then:
-        def expected = '{"name":"Bob","onlyAdmin":"foo","things":[]}'
+        def expected = '{"name":"Bob","onlyAdmin":"foo","things":[],"someGetter":"x"}'
         res == expected
     }
 
@@ -132,6 +125,16 @@ class JacksonUtilSpec extends Specification {
         au2.thing.name == 'thing1'
         au2.things[0] instanceof AdminUser.Thing
         au2.things[0].name == 'thing2'
+    }
+
+    void "getBeanDescription"() {
+        when:
+        def bdesc = JacksonUtils.getBeanDescription(Gadget)
+        def props = bdesc.findProperties()
+
+        then:
+        bdesc
+        props.size() == 18
     }
 
 }

@@ -329,7 +329,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         //if not includes then build default
         if(!_includes){
             if(entityAsMap != null) {
-                _includes = entityAsMap.keySet().findAll{ key -> !isExcluded(key as String) }
+                _includes = entityAsMap.keySet().findAll{ key -> !isExcluded(key as String) } as Set<String>
             }
             else {
                 //assume its an object

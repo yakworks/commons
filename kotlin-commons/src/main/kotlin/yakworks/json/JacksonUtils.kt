@@ -19,12 +19,13 @@ object JacksonUtils {
     @JvmField
     val objectMapper: ObjectMapper = ObjectMapper()
         .findAndRegisterModules() //uses ServiceLoader to find "Modules", registered in META-INF.services
-        .registerKotlinModule()
+        //.registerKotlinModule()
         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         .setSerializationInclusion(JsonInclude.Include.NON_NULL)
         .registerModule(
-            SimpleModule().addSerializer(OffsetDateTime::class.java, OffsetDateTimeSerializer())
+            SimpleModule()
+                .addSerializer(OffsetDateTime::class.java, OffsetDateTimeSerializer())
                 .addDeserializer(OffsetDateTime::class.java, OffsetDateTimeDeserializer())
         );
 
@@ -74,6 +75,17 @@ object JacksonUtils {
     @JvmStatic
     fun <T> fromBytes(value: ByteArray?, type: Type?): T {
         return objectMapper.readValue(value, objectMapper.typeFactory.constructType(type))
+    }
+
+    @JvmStatic
+    fun <T> getBeanDescription(clazz: Class<T>): BeanDescription {
+        // Construct a Jackson JavaType for your class
+        val javaType: JavaType = objectMapper.getTypeFactory().constructType(clazz)
+
+        // Introspect the given type
+        val beanDescription: BeanDescription = objectMapper.getSerializationConfig().introspect(javaType)
+
+        return beanDescription
     }
 }
 
