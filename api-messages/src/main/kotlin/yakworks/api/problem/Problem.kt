@@ -14,7 +14,7 @@ import java.net.URI
  */
 @Suppress("UNUSED_PARAMETER")
 interface Problem : Result {
-    override val ok: Boolean? get() = false
+    override val ok: Boolean get() = false
 
     override var msg: MsgKey?
         get() = Msg.key("general.problem")

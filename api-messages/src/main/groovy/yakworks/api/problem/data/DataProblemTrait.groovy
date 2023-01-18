@@ -6,7 +6,7 @@ package yakworks.api.problem.data
 
 import groovy.transform.CompileStatic
 
-import yakworks.api.ResultUtils
+import yakworks.api.ResultSupport
 import yakworks.api.problem.ProblemTrait
 import yakworks.api.problem.ThrowableProblem
 import yakworks.api.problem.exception.NestedExceptionUtils
@@ -34,7 +34,7 @@ trait DataProblemTrait<E extends DataProblemTrait<E>> extends ProblemTrait<E> {
     E entity(Object v) {
         if(v != null) {
             this.payload = v
-            ResultUtils.addCommonArgs(args.asMap(), v)
+            ResultSupport.addCommonArgs(args.asMap(), v)
         }
         return (E)this;
     }

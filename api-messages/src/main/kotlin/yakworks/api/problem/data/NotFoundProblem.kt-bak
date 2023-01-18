@@ -1,0 +1,36 @@
+package yakworks.api.problem.data
+
+import yakworks.api.ApiStatus
+import yakworks.api.HttpStatus
+import yakworks.message.MsgKey
+
+/**
+ * generic problem
+ */
+class NotFoundProblem : AbstractDataProblem<NotFoundProblem>() {
+    override var defaultCode = "error.notFound"
+    override var status: ApiStatus = HttpStatus.NOT_FOUND
+    
+    companion object Factory : ProblemFactory<NotFoundProblem>() {
+
+        @JvmStatic
+        override fun createProblem(): NotFoundProblem = NotFoundProblem()
+
+        /**
+         * helper for legacy to throw a DataProblemException with a
+         * Title will blank so it can come from the code on render and detail will have the custom message
+         */
+        @JvmStatic
+        fun ex(detailMessage: String?): DataProblemException {
+            return NotFoundProblem().detail(detailMessage).toException() as DataProblemException
+        }
+
+        // @JvmStatic not allowed in abstract companion, so override and delgate, only needed because we need JvmStatic
+        @JvmStatic override fun of(problemCause: Throwable?) = super.of(problemCause)
+        @JvmStatic override fun of(code: String) = super.of(code)
+        @JvmStatic override fun of(code: String, args: Any?) = super.of(code, args)
+        @JvmStatic override fun of(mk: MsgKey) = super.of(mk)
+        @JvmStatic override fun ofPayload(payload: Any?) = super.ofPayload(payload)
+
+    }
+}

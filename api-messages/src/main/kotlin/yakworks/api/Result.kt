@@ -26,7 +26,7 @@ import yakworks.message.MsgKeyDecorator
 @Suppress("UNUSED_PARAMETER")
 interface Result : MsgKeyDecorator, AsMap {
     /** success or fail? if ok is true then it still may mean that there are warnings and needs to be looked into */
-    val ok: Boolean?
+    val ok: Boolean
         get() = true
 
     /**

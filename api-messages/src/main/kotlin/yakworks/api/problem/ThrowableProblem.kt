@@ -12,7 +12,7 @@ import yakworks.api.problem.exception.NestedRuntimeException
  */
 open class ThrowableProblem : NestedRuntimeException, ProblemDecorator<ThrowableProblem> {
 
-    //generics on exceptions are too restrictive in kotlin and java so we can't use the delegate
+    // generics on exceptions are too restrictive in kotlin and java so we can't use the delegate
     // features in kotlin and we manually implement whats needed.
     override lateinit var problem: GenericProblem<*>
 

@@ -18,7 +18,7 @@ import yakworks.api.problem.ThrowableProblem
  * @since 6.1
  */
 @CompileStatic
-class NotFoundProblem implements DataProblemTrait<NotFoundProblem>  {
+class NotFoundProblem extends AbstractDataProblem<NotFoundProblem>  {
 
     String defaultCode = 'error.notFound'
     ApiStatus status = HttpStatus.NOT_FOUND

@@ -4,9 +4,10 @@
 */
 package yakworks.api
 
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
+import org.codehaus.groovy.runtime.InvokerHelper
 import yakworks.message.MsgServiceRegistry
 import yakworks.message.spi.MsgService
-import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass
 
 /** package level func to fire exception */
@@ -98,5 +99,30 @@ object ResultSupport {
         val cname = r::class.simpleName
         return "${cname}(${concat})"
     }
+
+    @JvmStatic
+    fun hasProp(obj: Any, name: String): Boolean{
+        return InvokerHelper.getMetaClass(obj).hasProperty(obj, name) != null
+    }
+
+    @JvmStatic
+    fun getProp(obj: Any, name: String): Any? {
+        return InvokerHelper.getProperty(obj, name)
+    }
+
+    @JvmStatic
+    fun addCommonArgs(args: MutableMap<String, Any?>, entity: Any): Map<*, *>? {
+        args.putIfAbsent("name", entity.javaClass.getSimpleName())
+        if (hasProp(entity, "id")) {
+            val id = getProp(entity, "id")
+            if(id != null) args.putIfAbsent("id", id)
+        }
+        if (hasProp(entity, "stamp")) {
+            args.putIfAbsent( "stamp", getProp(entity, "stamp"))
+        }
+        return args
+    }
+
+
 
 }

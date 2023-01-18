@@ -18,7 +18,7 @@ import yakworks.message.MsgKey
 @CompileStatic
 trait ResultTrait<E extends GenericResult> implements GenericResult<E> {
     String defaultCode //= 'result.ok'
-    Boolean ok = true
+    boolean ok = true
     ApiStatus status = HttpStatus.OK
     /** backing field for the getMsg */
     MsgKey msgKey
@@ -34,7 +34,7 @@ trait ResultTrait<E extends GenericResult> implements GenericResult<E> {
 
     @Override
     String toString() {
-        return ResultUtils.resultToString(this)
+        return ResultSupport.resultToString(this)
     }
 
 }

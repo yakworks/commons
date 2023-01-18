@@ -14,9 +14,15 @@ import yakworks.message.MsgKey
  * The data in this case is a List of result/problem instances
  */
 @CompileStatic
-class ApiResults implements ResultTrait<ApiResults>, Serializable {
-    Boolean ok = true
+class ApiResults implements GenericResult<ApiResults>, Serializable {
+    boolean ok = true
     ApiStatus status = HttpStatus.MULTI_STATUS
+
+    String defaultCode //= 'result.ok'
+    /** backing field for the getMsg */
+    MsgKey msgKey
+    String title
+    Object payload
 
     //internal rep
     List<Result> list
@@ -42,6 +48,11 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
     ApiResults ok(boolean v){
         ok = v
         return this
+    }
+
+    /** getter for the is prefix instead of get so either can be used */
+    Boolean isOk(){
+        return this.ok
     }
 
     /**
@@ -130,7 +141,15 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
         return hmap;
     }
 
-    Boolean isOk(){
-        return this.ok
+    MsgKey getMsg() {
+        if(msgKey == null) msgKey = Msg.key(getDefaultCode())
+        return msgKey
+    }
+
+    void setMsg(MsgKey v) { msgKey = v }
+
+    @Override
+    String toString() {
+        return ResultSupport.resultToString(this)
     }
 }

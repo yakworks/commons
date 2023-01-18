@@ -27,4 +27,5 @@ class ConfigProblem implements DataProblemTrait<ConfigProblem> {
         cp.msg = Msg.key(DEFAULT_CODE)
         return (DataProblemException) cp.title(message).toException()
     }
+
 }

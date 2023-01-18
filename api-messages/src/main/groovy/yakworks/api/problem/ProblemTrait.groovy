@@ -22,7 +22,7 @@ import yakworks.message.MsgKey
 @CompileStatic
 trait ProblemTrait<E extends GenericProblem<E>> extends ResultTrait<E> implements GenericProblem<E> {
     // result overrides, always false
-    Boolean getOk(){ false } //always false
+    boolean getOk(){ false } //always false
     //status default to 400
     ApiStatus status = HttpStatus.BAD_REQUEST
 

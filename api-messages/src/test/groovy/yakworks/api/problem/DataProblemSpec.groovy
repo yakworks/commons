@@ -21,13 +21,14 @@ class DataProblemSpec extends Specification {
         e.rootCause == rte
     }
 
-    void "DataProblem entity payload"() {
-        when:
-        def someEntity = DataProblem.createProblem()
+    // void "DataProblem entity payload"() {
+    //     when:
+    //     def someEntity = DataProblem.createProblem()
+    //
+    //     then:
+    //     thrown(UnsupportedOperationException)
+    // }
 
-        then:
-        thrown(UnsupportedOperationException)
-    }
     void "DataProblem entity payload"() {
         when:
         def someEntity = new SomeEntity()

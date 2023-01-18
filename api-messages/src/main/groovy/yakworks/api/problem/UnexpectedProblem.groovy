@@ -15,7 +15,7 @@ import yakworks.api.HttpStatus
  * and deserve attention as it means code is fubarred.
  */
 @CompileStatic
-class UnexpectedProblem implements ProblemTrait<UnexpectedProblem> {
+class UnexpectedProblem extends AbstractProblem<UnexpectedProblem> {
     public static String DEFAULT_CODE = 'error.unexpected'
     String defaultCode = DEFAULT_CODE
     ApiStatus status = HttpStatus.INTERNAL_SERVER_ERROR
