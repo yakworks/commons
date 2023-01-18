@@ -127,7 +127,7 @@ class BasicMetaEntityBuilder {
 
         //only if it has rootProps
         if (metaEntity.metaProps) {
-            if(blacklist) metaEntity.addBlacklist(blacklist)
+            if(blacklist) metaEntity.addBlacklist(blacklist as Set<String>)
             if(includes) metaEntity.includes = includes as Set<String>
             //if it has nestedProps then go recursive
             if(nestedProps){

@@ -44,6 +44,7 @@ object ResultSupport {
         return hmap
     }
 
+    @JvmStatic
     fun getTitle(result: Result): String?{
         var title: String? = result.title
         if(MsgServiceRegistry.service != null){
@@ -57,8 +58,9 @@ object ResultSupport {
             Byte::class, Short::class, Long::class,
             Float::class, Double::class, Character::class, Character::class)
 
-    fun isBasicType(value: Any, acceptedTypes: List<KClass<out Comparable<*>>>):
-        Boolean = value::class in acceptedTypes
+    fun isBasicType(value: Any, acceptedTypes: List<KClass<out Comparable<*>>>): Boolean {
+        return value::class in acceptedTypes
+    }
 
     /**
      * Uses code and args to do look up for message
@@ -66,6 +68,7 @@ object ResultSupport {
      * @param result the result to use for keys
      * @return the message
      */
+    @JvmStatic
     fun getMessage( msgService: MsgService, result: Result): String?{
         var message: String? = null
         if(result.msg != null) message = msgService.get(result.msg)
@@ -75,39 +78,25 @@ object ResultSupport {
         }
         return message
     }
-    /**
-     * Uses code and args to do look up for message
-     * @param msgService the MsgService
-     * @param result the result to use for keys
-     * @return the message
-     */
-    // static String getMessage(MsgService msgService, Result result){
-    //     String message = null;
-    //     if(result.getMsg() != null) message = msgService.get(result.getMsg());
-    //
-    //     if(message != null && message != ""){
-    //         if(result.getTitle() != null) {
-    //             message = result.getTitle();
-    //         } else if(result instanceof ApiResults && ((List<?>)result).size() != 0) {
-    //             //use msg form first item
-    //             message = msgService.get(((List<?>)result)[0].msg);
-    //         }
-    //     }
-    //
-    //     return message
-    // }
-    // protected static final List BASIC_TYPES = [
-    //     String, Boolean, Byte, Short, Integer, Long, Float, Double, Character
-    // ] as List<Class>
-    //
-    // protected static final List COLLECTION_TYPES = [
-    //     Map, Collection
-    // ] as List<Class>
-    /**
-     * checks if Class is basic type (String, long/Long, boolean/Boolean, etc...)
-     */
-    // static boolean isBasicType(Class c) {
-    //     if(c == null) return false
-    //     return BASIC_TYPES.contains(c) || c.isPrimitive()
-    // }
+
+    @JvmStatic
+    fun resultToStringCommon( p: Result): String {
+        val title = if(!p.title.isNullOrEmpty()) "title=${p.title}" else null
+        val code = if(!p.code.isNullOrEmpty()) "code=${p.code}" else null
+        val payload = p.payload
+        val value = if(payload != null && isBasicType(payload, acceptedTypes) ) "payload=${p.payload}" else null
+        val status = p.status.code
+        return listOf(title, code, value, status)
+            .filter { it != null }
+            .map{ it.toString() }
+            .joinToString()
+    }
+
+    @JvmStatic
+    fun resultToString( r: Result): String {
+        val concat = "ok=${r.ok}, " + resultToStringCommon(r)
+        val cname = r::class.simpleName
+        return "${cname}(${concat})"
+    }
+
 }

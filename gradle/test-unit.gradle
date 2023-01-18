@@ -3,7 +3,7 @@
 dependencies {
   testImplementation "org.slf4j:slf4j-simple:${vSlf4j}"
 
-  testImplementation("org.spockframework:spock-core:2.0-groovy-3.0") {
+  testImplementation("org.spockframework:spock-core:${spockVersion}") {
     exclude module: "groovy-all"
   }
 

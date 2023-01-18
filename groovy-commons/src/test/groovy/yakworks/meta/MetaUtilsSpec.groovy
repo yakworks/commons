@@ -37,10 +37,12 @@ class MetaUtilsSpec extends Specification {
 
     void "test getProperties"() {
         when:
-        Map thing = MetaUtils.getProperties(Thing.of(1, "thing"))
+        def thing = Thing.of(1, "thing")
+        def props = thing.properties
+        Map thingMap = MetaUtils.getProperties(Thing.of(1, "thing"))
 
         then:
-        thing == [id:1, name: 'thing', localDate:null, someGetter: "x"]
+        thingMap == [id:1, name: 'thing', localDate:null, someGetter: "x"]
     }
 
 }

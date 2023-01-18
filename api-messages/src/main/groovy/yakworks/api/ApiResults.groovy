@@ -130,4 +130,7 @@ class ApiResults implements ResultTrait<ApiResults>, Serializable {
         return hmap;
     }
 
+    Boolean isOk(){
+        return this.ok
+    }
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+//import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import java.io.IOException
 import java.lang.reflect.Type
 import java.time.OffsetDateTime

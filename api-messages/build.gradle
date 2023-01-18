@@ -9,8 +9,8 @@ apply from: "${rootProject.projectDir}/gradle/test-unit.gradle"
 dependencies {
 
   // requires groovy to be added if using the groovy traits and classes
-  implementation "org.codehaus.groovy:groovy:$groovyVersion"
-  implementation "org.codehaus.groovy:groovy-json:$groovyVersion"
+  implementation "${groovyGroup}:groovy:$groovyVersion"
+  implementation "${groovyGroup}:groovy-json:$groovyVersion"
 
   api 'jakarta.annotation:jakarta.annotation-api:2.1.0'
   api 'jakarta.annotation:jakarta.annotation-api:2.1.0'

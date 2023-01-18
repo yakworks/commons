@@ -5,6 +5,7 @@
 package yakworks.commons.transform.ast
 
 import groovy.transform.CompileStatic
+import groovyjarjarasm.asm.Opcodes
 
 import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.AnnotatedNode
@@ -75,8 +76,8 @@ public class IdEqualsHashASTTransformation extends AbstractASTTransformation {
         if (parent instanceof ClassNode) {
             ClassNode cNode = (ClassNode) parent
             if (!checkNotInterface(cNode, MY_TYPE_NAME)) return
-            List<String> includes = getMemberList(anno, "includes");
-            List<String> hashKey = getMemberList(anno, "hashKey");
+            List<String> includes = getMemberStringList(anno, "includes");
+            List<String> hashKey = getMemberStringList(anno, "hashKey");
             createHashCode(cNode, hashKey);
             createEqualsForId(cNode, includes);
         }
@@ -121,7 +122,7 @@ public class IdEqualsHashASTTransformation extends AbstractASTTransformation {
 
         cNode.addMethod(new MethodNode(
             hasExistingHashCode ? "_hashCode" : "hashCode",
-            hasExistingHashCode ? ACC_PRIVATE : ACC_PUBLIC,
+            hasExistingHashCode ? Opcodes.ACC_PRIVATE : Opcodes.ACC_PUBLIC,
             ClassHelper.int_TYPE,
             Parameter.EMPTY_ARRAY,
             ClassNode.EMPTY_ARRAY,
@@ -167,7 +168,7 @@ public class IdEqualsHashASTTransformation extends AbstractASTTransformation {
 
         cNode.addMethod(new MethodNode(
             hasExistingEquals ? "_equals" : "equals",
-            hasExistingEquals ? ACC_PRIVATE : ACC_PUBLIC,
+            hasExistingEquals ? Opcodes.ACC_PRIVATE : Opcodes.ACC_PUBLIC,
             ClassHelper.boolean_TYPE,
             params(param(OBJECT_TYPE, other.getName())),
             ClassNode.EMPTY_ARRAY,

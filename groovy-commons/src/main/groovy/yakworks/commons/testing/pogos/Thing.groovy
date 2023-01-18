@@ -14,7 +14,7 @@ import yakworks.commons.model.Named
 class Thing implements Named {
     Long id
     // address fields
-    String name
+    // String name
 
     LocalDate localDate
 

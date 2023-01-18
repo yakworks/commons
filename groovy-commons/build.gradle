@@ -11,12 +11,12 @@ dependencies {
   api project(":kotlin-commons")
 
   //groovy
-  api "org.codehaus.groovy:groovy:$groovyVersion"
-  api "org.codehaus.groovy:groovy-templates:$groovyVersion"
-  api "org.codehaus.groovy:groovy-nio:$groovyVersion"
-  api "org.codehaus.groovy:groovy-json:$groovyVersion"
-  api "org.codehaus.groovy:groovy-dateutil:$groovyVersion"
-  api "org.codehaus.groovy:groovy-datetime:$groovyVersion"
+  api "${groovyGroup}:groovy:$groovyVersion"
+  api "${groovyGroup}:groovy-templates:$groovyVersion"
+  api "${groovyGroup}:groovy-nio:$groovyVersion"
+  api "${groovyGroup}:groovy-json:$groovyVersion"
+  api "${groovyGroup}:groovy-dateutil:$groovyVersion"
+  api "${groovyGroup}:groovy-datetime:$groovyVersion"
 
   compileOnly "org.slf4j:slf4j-api:${vSlf4j}"
 

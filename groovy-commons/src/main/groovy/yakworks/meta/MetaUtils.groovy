@@ -8,6 +8,8 @@ import java.lang.reflect.Modifier
 
 import groovy.transform.CompileStatic
 
+import org.codehaus.groovy.reflection.CachedField
+
 /**
  * A bunch of helper and lookup/finder statics for dealing with domain classes and PersistentEntity.
  * Useful methods to find the PersistentEntity and the mapping and meta fields.
@@ -30,7 +32,8 @@ class MetaUtils {
     static List<MetaProperty> getMetaProperties(Class<?> entityClass) {
         List<MetaProperty> metaProps = entityClass.metaClass.properties
         List<MetaProperty> filteredProps = metaProps.findAll { MetaProperty mp ->
-            !isExcludedProperty(mp)
+            //Groovy4 is returning the Traits CachedField as well, fileter them out too.
+            !isExcludedProperty(mp) && !(mp instanceof CachedField)
         }
         return filteredProps
     }

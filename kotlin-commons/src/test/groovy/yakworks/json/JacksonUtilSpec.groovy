@@ -74,7 +74,7 @@ class JacksonUtilSpec extends Specification {
         String res = JacksonUtils.toJson(new AdminUser(name: "Bob"))
 
         then:
-        def expected = '{"name":"Bob","onlyAdmin":"foo","things":[],"someGetter":"x"}'
+        def expected = '{"onlyAdmin":"foo","things":[],"name":"Bob","someGetter":"x"}'
         res == expected
     }
 

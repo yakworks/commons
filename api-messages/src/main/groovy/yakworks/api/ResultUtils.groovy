@@ -34,28 +34,28 @@ class ResultUtils {
     /**
      * converts to Map, helpfull for to json and can be overriden on concrete impls
      */
-    static Map<String, Object> toMap( Result res ){
-        Map<String, Object> hmap = new LinkedHashMap<>();
-        hmap.put("ok", res.getOk());
-        hmap.put("status", res.getStatus().getCode());
-        hmap.put("code", res.getCode());
-        // hmap.put("payload", res.getPayload());
-        if(getMsgService() != null){
-            hmap.put("title", getMessage(getMsgService(), res));
-        } else {
-            hmap.put("title", res.getTitle());
-        }
-        // if payload is basic or collection type (not an object) then add it.
-        // FIXME need better way to tweak this. maybe look up the "converters" and only do it then?
-        Class payloadClass = res.getPayload()?.class
-        if(payloadClass && (
-            isBasicType(payloadClass) || Map.isAssignableFrom(payloadClass) || Collection.isAssignableFrom(payloadClass)
-        ) ){
-            hmap.put("payload", res.getPayload());
-        }
-
-        return hmap;
-    }
+    // static Map<String, Object> toMap( Result res ){
+    //     Map<String, Object> hmap = new LinkedHashMap<>();
+    //     hmap.put("ok", res.getOk());
+    //     hmap.put("status", res.getStatus().getCode());
+    //     hmap.put("code", res.getCode());
+    //     // hmap.put("payload", res.getPayload());
+    //     if(getMsgService() != null){
+    //         hmap.put("title", getMessage(getMsgService(), res));
+    //     } else {
+    //         hmap.put("title", res.getTitle());
+    //     }
+    //     // if payload is basic or collection type (not an object) then add it.
+    //     // FIXME need better way to tweak this. maybe look up the "converters" and only do it then?
+    //     Class payloadClass = res.getPayload()?.class
+    //     if(payloadClass && (
+    //         isBasicType(payloadClass) || Map.isAssignableFrom(payloadClass) || Collection.isAssignableFrom(payloadClass)
+    //     ) ){
+    //         hmap.put("payload", res.getPayload());
+    //     }
+    //
+    //     return hmap;
+    // }
 
 
     /**
