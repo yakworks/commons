@@ -6,7 +6,10 @@ import java.util.Map;
  * Enum helper for codes
  */
 public enum DataProblemCodes {
-    NotFound("error.notFound"), OptimisticLocking("error.data.optimisticLocking"), ReferenceKey("error.data.reference"), UniqueConstraint("error.data.uniqueConstraintViolation");
+    NotFound("error.notFound"),
+    OptimisticLocking("error.data.optimisticLocking"),
+    ReferenceKey("error.data.reference"),
+    UniqueConstraint("error.data.uniqueConstraintViolation");
 
     DataProblemCodes(String code) {
         this.code = code;
