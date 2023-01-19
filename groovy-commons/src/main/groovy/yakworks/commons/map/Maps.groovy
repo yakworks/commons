@@ -22,13 +22,15 @@ import yakworks.commons.util.StringUtils
 class Maps {
 
     /**
-     * Return the value of a nested path. Alias to PropertyTools.getProperty.
+     * Alias to PropertyTools.getProperty
+     * Return the value of a nested path.
      *
      * Example Maps.getProperty(source, "x.y.z")
      *
      * @param source - The source object
      * @param property - the property
      * @return value of the specified property or null if any of the intermediate objects are null
+     * @see PropertyTools#getProperty
      */
     static Object value(Map source, String property) {
         PropertyTools.getProperty(source, property)
@@ -81,7 +83,8 @@ class Maps {
     }
 
     /**
-     * See clone,
+     * Alias to clone
+     * @see #clone(Map)
      */
     static Map deepCopy(Map source) {
         clone(source)

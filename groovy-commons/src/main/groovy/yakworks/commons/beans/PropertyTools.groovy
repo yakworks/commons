@@ -34,6 +34,7 @@ class PropertyTools {
 
     /**
      * just uses groovy getAt but wraps MissingPropertyException so if it doesnt exist then returns null
+     * path expressions NOT enabled here, so dont pass in x.y.z here.
      */
     static Object getOrNull(Object source, String property) {
         if (source == null) return null

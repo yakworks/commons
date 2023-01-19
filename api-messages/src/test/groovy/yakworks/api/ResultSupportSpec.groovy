@@ -38,7 +38,7 @@ class ResultSupportSpec extends Specification {
     void "resultToString"(){
         when:
         def okRes = Result.OK()
-        def prob = Problem.ofPayload("foo")
+        def prob = Problem.of().payload("foo")
 
         then:
         ResultSupport.resultToString(okRes) == "OkResult(ok=true, 200)"

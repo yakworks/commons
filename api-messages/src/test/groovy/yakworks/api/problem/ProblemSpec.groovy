@@ -16,7 +16,7 @@ class ProblemSpec extends Specification {
 
     void shouldRenderTestProblem() {
         expect:
-        Problem problem = Problem.createProblem()
+        Problem problem = Problem.of()
         problem.toString().contains("ProblemResult(400)")
         !problem.ok
     }
@@ -65,7 +65,7 @@ class ProblemSpec extends Specification {
         problem                                     | code
         Problem.of('code.args', [name: 'foo'])  | 'code.args'
         Problem.of('ofCode')                | 'ofCode'
-        Problem.of(Msg.key('withMsg'))    | 'withMsg'
+        //Problem.of(Msg.key('withMsg'))    | 'withMsg'
 
     }
 

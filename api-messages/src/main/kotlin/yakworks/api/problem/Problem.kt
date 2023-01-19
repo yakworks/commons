@@ -2,6 +2,7 @@ package yakworks.api.problem
 
 import yakworks.api.*
 import yakworks.api.ResultSupport
+import yakworks.api.problem.data.DataProblem
 import yakworks.api.problem.exception.NestedExceptionUtils
 import yakworks.message.Msg
 import yakworks.message.MsgKey
@@ -67,30 +68,17 @@ interface Problem : Result {
         get() = null
         set(v) { noImpl() }
 
-
-    companion object {
-        //STATIC HELPERS
-        //this is just to override the OK, doesnt make sense in the context of a Problem
-        @JvmStatic
-        fun OK() = noImpl()
-
-        @JvmStatic
-        fun createProblem(): ProblemResult = ProblemResult()
-
-        @JvmStatic
-        fun of(code: String) = createProblem().msg(Msg.key(code))
-
-        @JvmStatic
-        fun of(code: String, args: Any? = null) = createProblem().msg(Msg.key(code, args))
-
-        @JvmStatic
-        fun of(mk: MsgKey) = createProblem().msg(mk)
-
-        @JvmStatic
-        fun of(problemCause: Throwable): GenericProblem<ProblemResult> = createProblem().cause(problemCause).detailFromCause()
-
-        @JvmStatic
-        fun ofPayload(payload: Any?): GenericProblem<ProblemResult> = createProblem().payload(payload)
-
+    /**
+     * Default statics here use the default ProblemResult.
+     * Example usage: `Problem.of("some.error").payload(obj)` or Problem.withTitle("Some Error Desc").detail("some more info")
+     */
+    companion object Statics : ProblemCompanion<ProblemResult>() {
+        // @JvmStatic not allowed in abstract companion, so we override and then delgate, only needed to be compatible with java JvmStatic
+        @JvmStatic override fun of(): ProblemResult = ProblemResult()
+        @JvmStatic override fun of(problemCause: Throwable?) = super.of(problemCause)
+        @JvmStatic override fun of(code: String) = super.of(code)
+        @JvmStatic override fun of(code: String, args: Any?) = super.of(code, args)
+        @JvmStatic override fun withTitle(title: String) = super.withTitle(title)
     }
+
 }

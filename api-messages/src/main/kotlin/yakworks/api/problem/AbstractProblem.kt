@@ -16,16 +16,23 @@ import java.net.URI
 @Suppress("UNCHECKED_CAST", "UNUSED_PARAMETER")
 abstract class AbstractProblem<E: AbstractProblem<E>> : GenericProblem<E> {
 
-    override var ok: Boolean = false
+    override val ok: Boolean = false
     override val defaultCode: String? = null
     override var title: String? = null
     override var detail: String? = null
-    override var msg: MsgKey? = null
     override var status: ApiStatus = HttpStatus.BAD_REQUEST
     override var payload: Any? = null
     override var type: URI? = null
     override var problemCause: Throwable? = null
     override var violations: List<Violation>? = mutableListOf()
+
+    override var msg: MsgKey? = null
+        get() {
+            if(field == null) field = Msg.key(defaultCode)
+            return field
+        }
+
+    fun problemCause(v: Throwable?): E = apply { problemCause = v } as E
 
     override fun toString(): String {
         return ProblemUtils.problemToString(this)

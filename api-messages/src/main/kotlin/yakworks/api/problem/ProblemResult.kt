@@ -4,38 +4,9 @@
 */
 package yakworks.api.problem
 
-import yakworks.api.ApiStatus
-import yakworks.api.HttpStatus
-import yakworks.message.Msg
-import yakworks.message.MsgKey
-import java.net.URI
-
 /**
- * Core impl of the BaseProblem.
+ * A default concrete impl of the AbstractProblem.
  */
-open class ProblemResult : GenericProblem<ProblemResult> {
-    // impl for result
-    override val ok: Boolean = false
-    override var defaultCode: String? = null
-    override var title: String? = null
-    override var status: ApiStatus = HttpStatus.BAD_REQUEST
-    override var payload: Any? = null
-    override var msg: MsgKey? = null
-        get() {
-            if(field == null) field = Msg.key(defaultCode)
-            return field
-        }
-
-    // problem imp
-    override var type: URI? = null
-    override var detail: String? = null
-    override var violations: List<Violation>? = mutableListOf()
-    override var problemCause: Throwable? = null
-
-    fun problemCause(v: Throwable?): ProblemResult = apply { problemCause = v }
-
-    override fun toString(): String {
-        return ProblemUtils.problemToString(this)
-    }
+open class ProblemResult : AbstractProblem<ProblemResult>() {
 
 }

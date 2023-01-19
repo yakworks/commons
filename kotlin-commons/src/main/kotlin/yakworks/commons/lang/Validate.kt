@@ -23,10 +23,11 @@ object Validate {
      */
     @JvmStatic
     fun <T> notNull(obj: T?, message: String): T {
-        var message = message
-        if (obj == null) {
-            if (message.startsWith("[")) message = "$message must not be null"
-            throw IllegalArgumentException(message)
+        requireNotNull(obj) {
+            if (message.startsWith("["))
+                "$message must not be null"
+            else
+                message
         }
         return obj
     }

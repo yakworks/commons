@@ -1,10 +1,7 @@
 package yakworks.api.problem
 
-import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import yakworks.api.ApiStatus
 import yakworks.api.HttpStatus
-import yakworks.api.problem.Problem.Companion.of
-import yakworks.api.problem.ThrowableProblem
 import yakworks.message.Msg
 
 /**

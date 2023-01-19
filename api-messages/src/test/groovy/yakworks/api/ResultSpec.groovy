@@ -5,12 +5,16 @@
 package yakworks.api
 
 import spock.lang.Specification
+import yakworks.api.problem.Problem
+import yakworks.api.problem.data.DataProblem
+
 // import yakworks.commons.map.Maps
 
 class ResultSpec extends Specification {
 
     void "simple Ok"(){
         when:
+        assert DataProblem.of() instanceof DataProblem
         Result okRes = Result.OK().payload([foo:'bar'])
         okRes.payload
 

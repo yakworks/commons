@@ -21,4 +21,42 @@ class ValidateSpec extends Specification {
         !Validate.notEmpty([])
     }
 
+    void "notNull IllegalArg thrown"() {
+        setup:
+        def x = null
+        when:
+        Validate.notNull(x)
+
+        then:
+        // thrown(IllegalArgumentException)
+        def e = thrown(IllegalArgumentException)
+        e.message.contains('The validated object must not be null')
+
+        when:
+        Validate.notNull(x, "[foo]")
+
+        then:
+        e = thrown(IllegalArgumentException)
+        e.message.contains('[foo] must not be null')
+
+        when:
+        Validate.notNull(x, "custom message")
+
+        then:
+        e = thrown(IllegalArgumentException)
+        e.message.contains('custom message')
+    }
+
+    void "notEmpty IllegalArg thrown"() {
+        setup:
+        def x = null
+        when:
+        Validate.notEmpty(x)
+
+        then:
+        // thrown(IllegalArgumentException)
+        def e = thrown(IllegalArgumentException)
+        e.message.contains('The validated object must not be blank or empty')
+    }
+
 }

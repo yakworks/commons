@@ -31,12 +31,11 @@ class BeanTools {
      * Uses built in Groovy for Simple merging from a map to object, nested or not, onto the pogo.
      * Uses the InvokerHelper.setProperties(values)
      * Works well for most simple cases but does handle binding of a list of generics.
-     * Use Jackson for those cases, see the bind mehtod here which does it.
+     * Use Jackson for those cases, see the bind method here which does it.
      *
      * @see JacksonJson#bind
      */
-    static Object merge( Object pogo, Map values, Map args = [:]){
-        boolean ignoreNulls = args.containsKey('ignoreNulls') ? args['ignoreNulls'] : true
+    static Object merge( Object pogo, Map values, boolean ignoreNulls = true){
         if(ignoreNulls){
             values = Maps.prune(values)
         }
@@ -59,12 +58,17 @@ class BeanTools {
         return setProps(target, source)
     }
 
-    /** Uses JacksonUtil and binds the data to new instance of the pased in clazz */
+    /**
+     * Uses JacksonUtil to binds the data to new instance of the pased in Class clazz
+     */
     public static <T> T bind(Object data, Class<T> clazz)  {
         return JacksonUtils.bind(data, clazz)
     }
 
-    /** Uses JacksonUtil to bind to new instance of the pased in class */
+    /**
+     * Uses JacksonUtil to binds the data to new instance of the pased in Class clazz
+     * TODO what happens on an update
+     */
     public static <T> T bind(T instance, Object data) {
         return JacksonUtils.bindUpdate(instance, data)
     }
