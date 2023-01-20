@@ -60,6 +60,8 @@ dependencies {
 
   testImplementation("org.mockito:mockito-core:4.6.1")
   testImplementation("org.mockito:mockito-junit-jupiter:4.6.1")
+  testImplementation "org.springframework:spring-web:5.3.19"
+  testImplementation "org.springframework:spring-test:5.3.19"
 }
 
 processResources {

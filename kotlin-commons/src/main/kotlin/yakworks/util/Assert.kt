@@ -171,8 +171,8 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun isNull(obj: Any?, messageSupplier: Supplier<String>) {
-        require(obj == null) { nullSafeGet(messageSupplier) }
+    fun isNull(obj: Any?, lazyMessage: () -> Any) {
+        require(obj == null, lazyMessage)
     }
 
     /**

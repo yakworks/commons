@@ -722,7 +722,6 @@ object StringUtils {
         if (length == 0) {
             return source
         }
-        Assert.notNull(charset, "Charset must not be null")
         val baos = ByteArrayOutputStream(length)
         var changed = false
         var i = 0

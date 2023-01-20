@@ -94,6 +94,7 @@ object ObjectUtils {
      * either an Object array or a primitive array.
      * @param obj the object to check
      */
+    @JvmStatic
     fun isArray(obj: Any?): Boolean {
         return obj != null && obj.javaClass.isArray
     }
@@ -104,10 +105,10 @@ object ObjectUtils {
      * @param array the array to check
      * @see .isEmpty
      */
-    @JvmStatic
-    fun isEmpty(array: Array<Any?>?): Boolean {
-        return array == null || array.size == 0
-    }
+    //@JvmStatic
+    //fun isEmpty(array: Array<*>?): Boolean {
+    //    return array == null || array.size == 0
+    //}
 
     /**
      * Determine whether the given object is empty.
@@ -132,6 +133,7 @@ object ObjectUtils {
      * @see CollectionUtils.isEmpty
      * @see CollectionUtils.isEmpty
      */
+    @JvmStatic
     fun isEmpty(obj: Any?): Boolean {
         if (obj == null) {
             return true
@@ -162,7 +164,7 @@ object ObjectUtils {
      * if the `Optional` is empty, or simply the given object as-is
      * @since 5.0
      */
-    @Nullable
+    @JvmStatic
     fun unwrapOptional(obj: Any?): Any? {
         if (obj is Optional<*>) {
             val optional = obj
@@ -600,6 +602,7 @@ object ObjectUtils {
      * @return a display String representation of `obj`
      * @see .nullSafeToString
      */
+    @JvmStatic
     fun getDisplayString(obj: Any?): String {
         return if (obj == null) {
             EMPTY_STRING
@@ -613,6 +616,7 @@ object ObjectUtils {
      * @param obj the object to introspect (may be `null`)
      * @return the corresponding class name
      */
+    @JvmStatic
     fun nullSafeClassName(obj: Any?): String {
         return if (obj != null) obj.javaClass.name else NULL_STRING
     }

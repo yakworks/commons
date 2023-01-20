@@ -3,7 +3,7 @@ package yakworks.commons.io
 import java.nio.file.Files
 import java.nio.file.Path
 
-import org.springframework.util.FileCopyUtils
+import yakworks.util.FileCopyUtils
 import spock.lang.Specification
 import yakworks.commons.util.BuildSupport
 
