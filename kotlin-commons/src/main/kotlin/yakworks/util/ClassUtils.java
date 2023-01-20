@@ -38,7 +38,6 @@ import jakarta.annotation.Nullable;
  * @author Rob Harrop
  * @author Sam Brannen
  * @since 1.1
- * @see TypeUtils
  * @see ReflectionUtils
  */
 public abstract class ClassUtils {
@@ -522,7 +521,6 @@ public abstract class ClassUtils {
 	 * @param lhsType the target type
 	 * @param rhsType the value type that should be assigned to the target type
 	 * @return if the target type is assignable from the value type
-	 * @see TypeUtils#isAssignable(java.lang.reflect.Type, java.lang.reflect.Type)
 	 */
 	public static boolean isAssignable(Class<?> lhsType, Class<?> rhsType) {
 		Assert.notNull(lhsType, "Left-hand side type must not be null");
@@ -581,7 +579,7 @@ public abstract class ClassUtils {
 	 * if necessary, and concatenating the specified resource name to this.
 	 * <br/>As such, this function may be used to build a path suitable for
 	 * loading a resource file that is in the same package as a class file,
-	 * although {@link org.springframework.core.io.ClassPathResource} is usually
+	 * although org.springframework.core.io.ClassPathResource is usually
 	 * even more convenient.
 	 * @param clazz the Class whose package will be used as the base
 	 * @param resourceName the resource name to append. A leading slash is optional.
@@ -1183,9 +1181,9 @@ public abstract class ClassUtils {
 	 * if there is one. E.g. the method may be {@code IFoo.bar()} and the
 	 * target class may be {@code DefaultFoo}. In this case, the method may be
 	 * {@code DefaultFoo.bar()}. This enables attributes on that method to be found.
-	 * <p><b>NOTE:</b> In contrast to {@link org.springframework.aop.support.AopUtils#getMostSpecificMethod},
+	 * <p><b>NOTE:</b> In contrast to org.springframework.aop.support.AopUtils#getMostSpecificMethod}
 	 * this method does <i>not</i> resolve bridge methods automatically.
-	 * Call {@link org.springframework.core.BridgeMethodResolver#findBridgedMethod}
+	 * Call org.springframework.core.BridgeMethodResolver#findBridgedMethod
 	 * if bridge method resolution is desirable (e.g. for obtaining metadata from
 	 * the original method definition).
 	 * <p><b>NOTE:</b> Since Spring 3.1.1, if Java security settings disallow reflective
