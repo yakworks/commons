@@ -75,7 +75,7 @@ object ObjectUtils {
      * @return whether the given exception is compatible
      */
     @JvmStatic
-    fun isCompatibleWithThrowsClause(ex: Throwable?, @Nullable vararg declaredExceptions: Class<*>): Boolean {
+    fun isCompatibleWithThrowsClause(ex: Throwable?, vararg declaredExceptions: Class<*>): Boolean {
         if (!isCheckedException(ex)) {
             return true
         }
@@ -94,7 +94,7 @@ object ObjectUtils {
      * either an Object array or a primitive array.
      * @param obj the object to check
      */
-    fun isArray(@Nullable obj: Any?): Boolean {
+    fun isArray(obj: Any?): Boolean {
         return obj != null && obj.javaClass.isArray
     }
 
@@ -105,7 +105,7 @@ object ObjectUtils {
      * @see .isEmpty
      */
     @JvmStatic
-    fun isEmpty(@Nullable array: Array<Any?>?): Boolean {
+    fun isEmpty(array: Array<Any?>?): Boolean {
         return array == null || array.size == 0
     }
 
@@ -132,7 +132,7 @@ object ObjectUtils {
      * @see CollectionUtils.isEmpty
      * @see CollectionUtils.isEmpty
      */
-    fun isEmpty(@Nullable obj: Any?): Boolean {
+    fun isEmpty(obj: Any?): Boolean {
         if (obj == null) {
             return true
         }
@@ -163,7 +163,7 @@ object ObjectUtils {
      * @since 5.0
      */
     @Nullable
-    fun unwrapOptional(@Nullable obj: Any?): Any? {
+    fun unwrapOptional(obj: Any?): Any? {
         if (obj is Optional<*>) {
             val optional = obj
             if (!optional.isPresent) {
@@ -184,7 +184,7 @@ object ObjectUtils {
      * @return whether the element has been found in the given array
      */
     @JvmStatic
-    fun containsElement(@Nullable array: Array<Any?>?, element: Any?): Boolean {
+    fun containsElement(array: Array<Any?>?, element: Any?): Boolean {
         if (array == null) {
             return false
         }
@@ -251,7 +251,7 @@ object ObjectUtils {
      * @return the new array (of the same component type; never `null`)
      */
     @JvmStatic
-    fun <A, O : A?> addObjectToArray(@Nullable array: Array<A>?, @Nullable obj: O?): Array<A?> {
+    fun <A, O : A?> addObjectToArray(array: Array<A>?, obj: O?): Array<A?> {
         var compType: Class<*>? = Any::class.java
         if (array != null) {
             compType = array.javaClass.componentType
@@ -278,7 +278,7 @@ object ObjectUtils {
      * @throws IllegalArgumentException if the parameter is not an array
      */
     @JvmStatic
-    fun toObjectArray(@Nullable source: Any?): Array<Any?> {
+    fun toObjectArray(source: Any?): Array<Any?> {
         if (source is Array<*>) {
             return source as Array<Any?>
         }
@@ -313,7 +313,7 @@ object ObjectUtils {
      * @see java.util.Arrays.equals
      */
     @JvmStatic
-    fun nullSafeEquals(@Nullable o1: Any?, @Nullable o2: Any?): Boolean {
+    fun nullSafeEquals(o1: Any?, o2: Any?): Boolean {
         if (o1 === o2) {
             return true
         }
@@ -385,7 +385,7 @@ object ObjectUtils {
      * @see .nullSafeHashCode
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable obj: Any?): Int {
+    fun nullSafeHashCode(obj: Any?): Int {
         if (obj == null) {
             return 0
         }
@@ -426,7 +426,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: Array<Any?>?): Int {
+    fun nullSafeHashCode(array: Array<Any?>?): Int {
         if (array == null) {
             return 0
         }
@@ -442,7 +442,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: BooleanArray?): Int {
+    fun nullSafeHashCode(array: BooleanArray?): Int {
         if (array == null) {
             return 0
         }
@@ -458,7 +458,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: ByteArray?): Int {
+    fun nullSafeHashCode(array: ByteArray?): Int {
         if (array == null) {
             return 0
         }
@@ -474,7 +474,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: CharArray?): Int {
+    fun nullSafeHashCode(array: CharArray?): Int {
         if (array == null) {
             return 0
         }
@@ -490,7 +490,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: DoubleArray?): Int {
+    fun nullSafeHashCode(array: DoubleArray?): Int {
         if (array == null) {
             return 0
         }
@@ -506,7 +506,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: FloatArray?): Int {
+    fun nullSafeHashCode(array: FloatArray?): Int {
         if (array == null) {
             return 0
         }
@@ -522,7 +522,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: IntArray?): Int {
+    fun nullSafeHashCode(array: IntArray?): Int {
         if (array == null) {
             return 0
         }
@@ -538,7 +538,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: LongArray?): Int {
+    fun nullSafeHashCode(array: LongArray?): Int {
         if (array == null) {
             return 0
         }
@@ -554,7 +554,7 @@ object ObjectUtils {
      * If `array` is `null`, this method returns 0.
      */
     @JvmStatic
-    fun nullSafeHashCode(@Nullable array: ShortArray?): Int {
+    fun nullSafeHashCode(array: ShortArray?): Int {
         if (array == null) {
             return 0
         }
@@ -574,7 +574,7 @@ object ObjectUtils {
      * or an empty String if the object was `null`
      */
     @JvmStatic
-    fun identityToString(@Nullable obj: Any?): String {
+    fun identityToString(obj: Any?): String {
         return if (obj == null) {
             EMPTY_STRING
         } else obj.javaClass.name + "@" + getIdentityHexString(obj)
@@ -600,7 +600,7 @@ object ObjectUtils {
      * @return a display String representation of `obj`
      * @see .nullSafeToString
      */
-    fun getDisplayString(@Nullable obj: Any?): String {
+    fun getDisplayString(obj: Any?): String {
         return if (obj == null) {
             EMPTY_STRING
         } else nullSafeToString(obj)
@@ -613,7 +613,7 @@ object ObjectUtils {
      * @param obj the object to introspect (may be `null`)
      * @return the corresponding class name
      */
-    fun nullSafeClassName(@Nullable obj: Any?): String {
+    fun nullSafeClassName(obj: Any?): String {
         return if (obj != null) obj.javaClass.name else NULL_STRING
     }
 
@@ -626,7 +626,7 @@ object ObjectUtils {
      * @return a String representation of `obj`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable obj: Any?): String {
+    fun nullSafeToString(obj: Any?): String {
         if (obj == null) {
             return NULL_STRING
         }
@@ -675,7 +675,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: Array<Any>?): String {
+    fun nullSafeToString(array: Array<Any>?): String {
         if (array == null) {
             return NULL_STRING
         }
@@ -701,7 +701,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: BooleanArray?): String {
+    fun nullSafeToString(array: BooleanArray?): String {
         if (array == null) {
             return NULL_STRING
         }
@@ -727,7 +727,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: ByteArray?): String {
+    fun nullSafeToString(array: ByteArray?): String {
         if (array == null) {
             return NULL_STRING
         }
@@ -753,7 +753,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: CharArray?): String {
+    fun nullSafeToString(array: CharArray?): String {
         if (array == null) {
             return NULL_STRING
         }
@@ -779,7 +779,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: DoubleArray?): String {
+    fun nullSafeToString(array: DoubleArray?): String {
         if (array == null) {
             return NULL_STRING
         }
@@ -805,7 +805,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: FloatArray?): String {
+    fun nullSafeToString(array: FloatArray?): String {
         if (array == null) {
             return NULL_STRING
         }
@@ -831,7 +831,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: IntArray?): String {
+    fun nullSafeToString(array: IntArray?): String {
         if (array == null) {
             return NULL_STRING
         }
@@ -857,7 +857,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: LongArray?): String {
+    fun nullSafeToString(array: LongArray?): String {
         if (array == null) {
             return NULL_STRING
         }
@@ -883,7 +883,7 @@ object ObjectUtils {
      * @return a String representation of `array`
      */
     @JvmStatic
-    fun nullSafeToString(@Nullable array: ShortArray?): String {
+    fun nullSafeToString(array: ShortArray?): String {
         if (array == null) {
             return NULL_STRING
         }

@@ -35,7 +35,7 @@ object FileSystemUtils {
      * otherwise `false`
      */
     @JvmStatic
-    fun deleteRecursively(@Nullable root: File?): Boolean {
+    fun deleteRecursively(root: File?): Boolean {
         return if (root == null) {
             false
         } else try {
@@ -55,7 +55,7 @@ object FileSystemUtils {
      * @since 5.0
      */
     @JvmStatic @Throws(IOException::class)
-    fun deleteRecursively(@Nullable root: Path?): Boolean {
+    fun deleteRecursively(root: Path?): Boolean {
         if (root == null) {
             return false
         }

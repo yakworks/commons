@@ -16,9 +16,19 @@ class ValidateSpec extends Specification {
     void "notEmpty"() {
         expect:
         Validate.notEmpty("x")
-        !Validate.notEmpty("")
         Validate.notEmpty([1,2])
-        !Validate.notEmpty([])
+    }
+
+    void "notEmpty string array"() {
+        when:
+        Validate.notEmpty("")
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        Validate.notEmpty([])
+        then:
+        thrown(IllegalArgumentException)
     }
 
     void "notNull IllegalArg thrown"() {
@@ -56,7 +66,7 @@ class ValidateSpec extends Specification {
         then:
         // thrown(IllegalArgumentException)
         def e = thrown(IllegalArgumentException)
-        e.message.contains('The validated object must not be blank or empty')
+        e.message.contains('Required value was null')
     }
 
 }

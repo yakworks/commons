@@ -62,6 +62,7 @@ import java.util.function.Supplier
  * @since 1.1.2
  */
 object Assert {
+
     /**
      * Assert a boolean expression, throwing an `IllegalStateException`
      * if the expression evaluates to `false`.
@@ -103,7 +104,6 @@ object Assert {
      * Assert a boolean expression, throwing an `IllegalStateException`
      * if the expression evaluates to `false`.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #state(boolean, String)}")
     fun state(expression: Boolean) {
         state(expression, "[Assertion failed] - this state invariant must be true")
     }
@@ -142,7 +142,7 @@ object Assert {
      * Assert a boolean expression, throwing an `IllegalArgumentException`
      * if the expression evaluates to `false`.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #isTrue(boolean, String)}")
+    @JvmStatic
     fun isTrue(expression: Boolean) {
         isTrue(expression, "[Assertion failed] - this expression must be true")
     }
@@ -155,7 +155,7 @@ object Assert {
      * @throws IllegalArgumentException if the object is not `null`
      */
     @JvmStatic
-    fun isNull(@Nullable obj: Any?, message: String?) {
+    fun isNull(obj: Any?, message: String?) {
         require(obj == null) { message?:"" }
     }
 
@@ -171,15 +171,15 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun isNull(@Nullable obj: Any?, messageSupplier: Supplier<String>) {
+    fun isNull(obj: Any?, messageSupplier: Supplier<String>) {
         require(obj == null) { nullSafeGet(messageSupplier) }
     }
 
     /**
      * Assert that an object is `null`.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #isNull(Object, String)}")
-    fun isNull(@Nullable obj: Any?) {
+    @JvmStatic
+    fun isNull(obj: Any?) {
         isNull(obj, "[Assertion failed] - the object argument must be null")
     }
 
@@ -191,7 +191,7 @@ object Assert {
      * @throws IllegalArgumentException if the object is `null`
      */
     @JvmStatic
-    fun notNull(@Nullable obj: Any?, message: String?) {
+    fun notNull(obj: Any?, message: String?) {
         requireNotNull(obj) { message?:"" }
     }
 
@@ -208,16 +208,15 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun notNull(@Nullable obj: Any?, messageSupplier: Supplier<String>) {
+    fun notNull(obj: Any?, messageSupplier: Supplier<String>) {
         requireNotNull(obj) { nullSafeGet(messageSupplier) }
     }
 
     /**
      * Assert that an object is not `null`.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #notNull(Object, String)}")
     @JvmStatic
-    fun notNull(@Nullable obj: Any?) {
+    fun notNull(obj: Any?) {
         notNull(obj, "[Assertion failed] - this argument is required; it must not be null")
     }
 
@@ -231,7 +230,7 @@ object Assert {
      * @see StringUtils.hasLength
      */
     @JvmStatic
-    fun hasLength(@Nullable text: String?, message: String?) {
+    fun hasLength(text: String?, message: String?) {
         require(StringUtils.hasLength(text)) { message?:"" }
     }
 
@@ -250,7 +249,7 @@ object Assert {
      * @see StringUtils.hasLength
      */
     @JvmStatic
-    fun hasLength(@Nullable text: String?, messageSupplier: Supplier<String>) {
+    fun hasLength(text: String?, messageSupplier: Supplier<String>) {
         require(StringUtils.hasLength(text)) { nullSafeGet(messageSupplier) }
     }
 
@@ -258,9 +257,8 @@ object Assert {
      * Assert that the given String is not empty; that is,
      * it must not be `null` and not the empty String.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #hasLength(String, String)}")
     @JvmStatic
-    fun hasLength(@Nullable text: String?) {
+    fun hasLength(text: String?) {
         hasLength(
             text,
             "[Assertion failed] - this String argument must have length; it must not be null or empty"
@@ -277,7 +275,7 @@ object Assert {
      * @see StringUtils.hasText
      */
     @JvmStatic
-    fun hasText(@Nullable text: String?, message: String?) {
+    fun hasText(text: String?, message: String?) {
         require(StringUtils.hasText(text)) { message?:"" }
     }
 
@@ -296,17 +294,16 @@ object Assert {
      * @see StringUtils.hasText
      */
     @JvmStatic
-    fun hasText(@Nullable text: String?, messageSupplier: Supplier<String>) {
-        require(StringUtils.hasText(text)) { nullSafeGet(messageSupplier) }
+    fun hasText(text: String?, lazyMessage: () -> Any) {
+        require(StringUtils.hasText(text), lazyMessage)
     }
 
     /**
      * Assert that the given String contains valid text content; that is, it must not
      * be `null` and must contain at least one non-whitespace character.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #hasText(String, String)}")
     @JvmStatic
-    fun hasText(@Nullable text: String?) {
+    fun hasText(text: String?) {
         hasText(
             text,
             "[Assertion failed] - this String argument must have text; it must not be null, empty, or blank"
@@ -352,9 +349,8 @@ object Assert {
     /**
      * Assert that the given text does not contain the given substring.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #doesNotContain(String, String, String)}")
     @JvmStatic
-    fun doesNotContain(@Nullable textToSearch: String, substring: String) {
+    fun doesNotContain(textToSearch: String, substring: String) {
         doesNotContain(
             textToSearch, substring
         ) { "[Assertion failed] - this String argument must not contain the substring [$substring]" }
@@ -369,7 +365,7 @@ object Assert {
      * @throws IllegalArgumentException if the object array is `null` or contains no elements
      */
     @JvmStatic
-    fun notEmpty(@Nullable array: Array<Any?>?, message: String?) {
+    fun notEmpty(array: Array<*>?, message: String?) {
         require(!isEmpty(array)) { message?:"" }
     }
 
@@ -386,17 +382,16 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun notEmpty(@Nullable array: Array<Any?>?, messageSupplier: Supplier<String>) {
-        require(!isEmpty(array)) { nullSafeGet(messageSupplier) }
+    fun notEmpty(array: Array<*>?, lazyMessage: () -> Any) {
+        require(!isEmpty(array), lazyMessage)
     }
 
     /**
      * Assert that an array contains elements; that is, it must not be
      * `null` and must contain at least one element.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #notEmpty(Object[], String)}")
     @JvmStatic
-    fun notEmpty(@Nullable array: Array<Any?>?) {
+    fun notEmpty(array: Array<Any?>?) {
         notEmpty(array, "[Assertion failed] - this array must not be empty: it must contain at least 1 element")
     }
 
@@ -410,7 +405,7 @@ object Assert {
      * @throws IllegalArgumentException if the object array contains a `null` element
      */
     @JvmStatic
-    fun noNullElements(@Nullable array: Array<Any?>?, message: String?) {
+    fun noNullElements(array: Array<Any?>?, message: String?) {
         if (array != null) {
             for (element in array) {
                 requireNotNull(element) { message?:"" }
@@ -432,10 +427,10 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun noNullElements(@Nullable array: Array<Any?>?, messageSupplier: Supplier<String>) {
+    fun noNullElements(array: Array<Any?>?, lazyMessage: () -> Any) {
         if (array != null) {
             for (element in array) {
-                requireNotNull(element) { nullSafeGet(messageSupplier) }
+                requireNotNull(element, lazyMessage)
             }
         }
     }
@@ -443,9 +438,8 @@ object Assert {
     /**
      * Assert that an array contains no `null` elements.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #noNullElements(Object[], String)}")
     @JvmStatic
-    fun noNullElements(@Nullable array: Array<Any?>?) {
+    fun noNullElements(array: Array<Any?>?) {
         noNullElements(array, "[Assertion failed] - this array must not contain any null elements")
     }
 
@@ -459,7 +453,7 @@ object Assert {
      * contains no elements
      */
     @JvmStatic
-    fun notEmpty(@Nullable collection: Collection<*>?, message: String?) {
+    fun notEmpty(collection: Collection<*>?, message: String?) {
         require(!CollectionUtils.isEmpty(collection)) { message?:"" }
     }
 
@@ -477,17 +471,16 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun notEmpty(@Nullable collection: Collection<*>?, messageSupplier: Supplier<String>) {
-        require(!CollectionUtils.isEmpty(collection)) { nullSafeGet(messageSupplier) }
+    fun notEmpty(collection: Collection<*>?, lazyMessage: () -> Any) {
+        require(!CollectionUtils.isEmpty(collection), lazyMessage)
     }
 
     /**
      * Assert that a collection contains elements; that is, it must not be
      * `null` and must contain at least one element.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #notEmpty(Collection, String)}")
     @JvmStatic
-    fun notEmpty(@Nullable collection: Collection<*>?) {
+    fun notEmpty(collection: Collection<*>?) {
         notEmpty(
             collection,
             "[Assertion failed] - this collection must not be empty: it must contain at least 1 element"
@@ -505,7 +498,7 @@ object Assert {
      * @since 5.2
      */
     @JvmStatic
-    fun noNullElements(@Nullable collection: Collection<*>?, message: String?) {
+    fun noNullElements(collection: Collection<*>?, message: String?) {
         if (collection != null) {
             for (element in collection) {
                 requireNotNull(element) { message?:"" }
@@ -527,10 +520,10 @@ object Assert {
      * @since 5.2
      */
     @JvmStatic
-    fun noNullElements(@Nullable collection: Collection<*>?, messageSupplier: Supplier<String>) {
+    fun noNullElements(collection: Collection<*>?, lazyMessage: () -> Any) {
         if (collection != null) {
             for (element in collection) {
-                requireNotNull(element) { nullSafeGet(messageSupplier) }
+                requireNotNull(element, lazyMessage)
             }
         }
     }
@@ -544,7 +537,7 @@ object Assert {
      * @throws IllegalArgumentException if the map is `null` or contains no entries
      */
     @JvmStatic
-    fun notEmpty(@Nullable map: Map<*, *>?, message: String?) {
+    fun notEmpty(map: Map<*, *>?, message: String?) {
         require(!CollectionUtils.isEmpty(map)) { message?:"" }
     }
 
@@ -561,7 +554,7 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun notEmpty(@Nullable map: Map<*, *>?, messageSupplier: Supplier<String>) {
+    fun notEmpty(map: Map<*, *>?, messageSupplier: Supplier<String>) {
         require(!CollectionUtils.isEmpty(map)) { nullSafeGet(messageSupplier) }
     }
 
@@ -569,9 +562,8 @@ object Assert {
      * Assert that a Map contains entries; that is, it must not be `null`
      * and must contain at least one entry.
      */
-    @Deprecated("as of 4.3.7, in favor of {@link #notEmpty(Map, String)}")
     @JvmStatic
-    fun notEmpty(@Nullable map: Map<*, *>?) {
+    fun notEmpty(map: Map<*, *>?) {
         notEmpty(map, "[Assertion failed] - this map must not be empty; it must contain at least one entry")
     }
 
@@ -588,7 +580,7 @@ object Assert {
      * @throws IllegalArgumentException if the object is not an instance of type
      */
     @JvmStatic
-    fun isInstanceOf(type: Class<*>?, @Nullable obj: Any?, message: String?) {
+    fun isInstanceOf(type: Class<*>?, obj: Any?, message: String?) {
         notNull(type, "Type to check against must not be null")
         if (type != null && !type.isInstance(obj)) {
             instanceCheckFailed(type, obj, message)
@@ -608,7 +600,7 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun isInstanceOf(type: Class<*>?, @Nullable obj: Any?, messageSupplier: Supplier<String>) {
+    fun isInstanceOf(type: Class<*>?, obj: Any?, messageSupplier: Supplier<String>) {
         notNull(type, "Type to check against must not be null")
         if (type != null && !type.isInstance(obj)) {
             instanceCheckFailed(type, obj, nullSafeGet(messageSupplier))
@@ -623,7 +615,7 @@ object Assert {
      * @throws IllegalArgumentException if the object is not an instance of type
      */
     @JvmStatic
-    fun isInstanceOf(type: Class<*>, @Nullable obj: Any?) {
+    fun isInstanceOf(type: Class<*>, obj: Any?) {
         isInstanceOf(type, obj, "")
     }
 
@@ -640,7 +632,7 @@ object Assert {
      * @throws IllegalArgumentException if the classes are not assignable
      */
     @JvmStatic
-    fun isAssignable(superType: Class<*>?, @Nullable subType: Class<*>?, message: String?) {
+    fun isAssignable(superType: Class<*>?, subType: Class<*>?, message: String?) {
         notNull(superType, "Supertype to check against must not be null")
         if (superType != null && (subType == null || !superType.isAssignableFrom(subType))) {
             assignableCheckFailed(superType, subType, message)
@@ -660,7 +652,7 @@ object Assert {
      * @since 5.0
      */
     @JvmStatic
-    fun isAssignable(superType: Class<*>?, @Nullable subType: Class<*>?, messageSupplier: Supplier<String>) {
+    fun isAssignable(superType: Class<*>?, subType: Class<*>?, messageSupplier: Supplier<String>) {
         notNull(superType, "Supertype to check against must not be null")
         if (superType != null && (subType == null || !superType.isAssignableFrom(subType))) {
             assignableCheckFailed(superType, subType, nullSafeGet(messageSupplier))
@@ -679,7 +671,7 @@ object Assert {
         isAssignable(superType, subType, "")
     }
 
-    private fun instanceCheckFailed(type: Class<*>, @Nullable obj: Any?, @Nullable msg: String?) {
+    private fun instanceCheckFailed(type: Class<*>, obj: Any?, msg: String?) {
         val className = if (obj != null) obj.javaClass.name else "null"
         var result = ""
         var defaultMessage = true
@@ -697,7 +689,7 @@ object Assert {
         throw IllegalArgumentException(result)
     }
 
-    private fun assignableCheckFailed(superType: Class<*>, @Nullable subType: Class<*>?, @Nullable msg: String?) {
+    private fun assignableCheckFailed(superType: Class<*>, subType: Class<*>?, msg: String?) {
         var result = ""
         var defaultMessage = true
         if (StringUtils.hasLength(msg)) {
@@ -718,11 +710,10 @@ object Assert {
         return msg!!.endsWith(":") || msg.endsWith(";") || msg.endsWith(",") || msg.endsWith(".")
     }
 
-    private fun messageWithTypeName(msg: String?, @Nullable typeName: Any?): String {
+    private fun messageWithTypeName(msg: String?, typeName: Any?): String {
         return msg + (if (msg!!.endsWith(" ")) "" else ": ") + typeName
     }
 
-    @Nullable
     private fun nullSafeGet(messageSupplier: Supplier<String>): String {
         return messageSupplier.get()
     }

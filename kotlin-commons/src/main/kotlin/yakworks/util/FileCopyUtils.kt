@@ -37,10 +37,10 @@ object FileCopyUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copy(`in`: File, out: File): Int {
-        notNull(`in`, "No input File specified")
+    fun copy(ins: File, out: File): Int {
+        notNull(ins, "No input File specified")
         notNull(out, "No output File specified")
-        return copy(Files.newInputStream(`in`.toPath()), Files.newOutputStream(out.toPath()))
+        return copy(Files.newInputStream(ins.toPath()), Files.newOutputStream(out.toPath()))
     }
 
     /**
@@ -50,10 +50,10 @@ object FileCopyUtils {
      * @throws IOException in case of I/O errors
      */
     @JvmStatic @Throws(IOException::class)
-    fun copy(`in`: ByteArray?, out: File) {
-        notNull(`in`, "No input byte array specified")
+    fun copy(ins: ByteArray?, out: File) {
+        notNull(ins, "No input byte array specified")
         notNull(out, "No output File specified")
-        copy(ByteArrayInputStream(`in`), Files.newOutputStream(out.toPath()))
+        copy(ByteArrayInputStream(ins), Files.newOutputStream(out.toPath()))
     }
 
     /**
@@ -63,9 +63,9 @@ object FileCopyUtils {
      * @throws IOException in case of I/O errors
      */
     @JvmStatic @Throws(IOException::class)
-    fun copyToByteArray(`in`: File): ByteArray {
-        notNull(`in`, "No input File specified")
-        return copyToByteArray(Files.newInputStream(`in`.toPath()))
+    fun copyToByteArray(ins: File): ByteArray {
+        notNull(ins, "No input File specified")
+        return copyToByteArray(Files.newInputStream(ins.toPath()))
     }
     //---------------------------------------------------------------------
     // Copy methods for java.io.InputStream / java.io.OutputStream
@@ -79,13 +79,13 @@ object FileCopyUtils {
      * @throws IOException in case of I/O errors
      */
     @JvmStatic @Throws(IOException::class)
-    fun copy(`in`: InputStream, out: OutputStream): Int {
-        notNull(`in`, "No InputStream specified")
+    fun copy(ins: InputStream, out: OutputStream): Int {
+        notNull(ins, "No InputStream specified")
         notNull(out, "No OutputStream specified")
         return try {
-            StreamUtils.copy(`in`, out)
+            StreamUtils.copy(ins, out)
         } finally {
-            close(`in`)
+            close(ins)
             close(out)
         }
     }
@@ -98,11 +98,11 @@ object FileCopyUtils {
      * @throws IOException in case of I/O errors
      */
     @JvmStatic @Throws(IOException::class)
-    fun copy(`in`: ByteArray?, out: OutputStream) {
-        notNull(`in`, "No input byte array specified")
+    fun copy(ins: ByteArray?, out: OutputStream) {
+        notNull(ins, "No input byte array specified")
         notNull(out, "No OutputStream specified")
         try {
-            out.write(`in`)
+            out.write(ins)
         } finally {
             close(out)
         }
@@ -116,12 +116,12 @@ object FileCopyUtils {
      * @throws IOException in case of I/O errors
      */
     @JvmStatic @Throws(IOException::class)
-    fun copyToByteArray(@Nullable `in`: InputStream?): ByteArray {
-        if (`in` == null) {
+    fun copyToByteArray(ins: InputStream?): ByteArray {
+        if (ins == null) {
             return ByteArray(0)
         }
         val out = ByteArrayOutputStream(BUFFER_SIZE)
-        copy(`in`, out)
+        copy(ins, out)
         return out.toByteArray()
     }
     //---------------------------------------------------------------------
@@ -136,21 +136,21 @@ object FileCopyUtils {
      * @throws IOException in case of I/O errors
      */
     @JvmStatic @Throws(IOException::class)
-    fun copy(`in`: Reader, out: Writer): Int {
-        notNull(`in`, "No Reader specified")
+    fun copy(ins: Reader, out: Writer): Int {
+        notNull(ins, "No Reader specified")
         notNull(out, "No Writer specified")
         return try {
             var charCount = 0
             val buffer = CharArray(BUFFER_SIZE)
             var charsRead: Int
-            while (`in`.read(buffer).also { charsRead = it } != -1) {
+            while (ins.read(buffer).also { charsRead = it } != -1) {
                 out.write(buffer, 0, charsRead)
                 charCount += charsRead
             }
             out.flush()
             charCount
         } finally {
-            close(`in`)
+            close(ins)
             close(out)
         }
     }
@@ -163,11 +163,11 @@ object FileCopyUtils {
      * @throws IOException in case of I/O errors
      */
     @JvmStatic @Throws(IOException::class)
-    fun copy(`in`: String?, out: Writer) {
-        notNull(`in`, "No input String specified")
+    fun copy(ins: String?, out: Writer) {
+        notNull(ins, "No input String specified")
         notNull(out, "No Writer specified")
         try {
-            out.write(`in`)
+            out.write(ins)
         } finally {
             close(out)
         }
@@ -181,12 +181,12 @@ object FileCopyUtils {
      * @throws IOException in case of I/O errors
      */
     @JvmStatic @Throws(IOException::class)
-    fun copyToString(@Nullable `in`: Reader?): String {
-        if (`in` == null) {
+    fun copyToString(ins: Reader?): String {
+        if (ins == null) {
             return ""
         }
         val out = StringWriter(BUFFER_SIZE)
-        copy(`in`, out)
+        copy(ins, out)
         return out.toString()
     }
 

@@ -18,6 +18,7 @@ package yakworks.util
 import jakarta.annotation.Nullable
 import java.io.ByteArrayOutputStream
 import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.util.*
 
 /**
@@ -716,7 +717,7 @@ object StringUtils {
      * @since 5.0
      * @see java.net.URLDecoder.decode
      */
-    fun uriDecode(source: String, charset: Charset?): String {
+    fun uriDecode(source: String, charset: Charset = StandardCharsets.UTF_8): String {
         val length = source.length
         if (length == 0) {
             return source

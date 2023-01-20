@@ -18,6 +18,7 @@ package yakworks.util
 import jakarta.annotation.Nullable
 import java.io.*
 import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 
 /**
  * Simple utility methods for dealing with streams. The copy methods of this class are
@@ -49,12 +50,12 @@ object StreamUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copyToByteArray(@Nullable `in`: InputStream?): ByteArray {
-        if (`in` == null) {
+    fun copyToByteArray(ins: InputStream?): ByteArray {
+        if (ins == null) {
             return ByteArray(0)
         }
         val out = ByteArrayOutputStream(BUFFER_SIZE)
-        copy(`in`, out)
+        copy(ins, out)
         return out.toByteArray()
     }
 
@@ -69,12 +70,12 @@ object StreamUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copyToString(@Nullable `in`: InputStream?, charset: Charset?): String {
-        if (`in` == null) {
+    fun copyToString(ins: InputStream?, charset: Charset = StandardCharsets.UTF_8): String {
+        if (ins == null) {
             return ""
         }
         val out = StringBuilder(BUFFER_SIZE)
-        val reader = InputStreamReader(`in`, charset)
+        val reader = InputStreamReader(ins, charset)
         val buffer = CharArray(BUFFER_SIZE)
         var charsRead: Int
         while (reader.read(buffer).also { charsRead = it } != -1) {
@@ -92,12 +93,10 @@ object StreamUtils {
      * @return the String that has been copied to (possibly empty)
      * @since 5.2.6
      */
-    fun copyToString(baos: ByteArrayOutputStream, charset: Charset?): String {
-        Assert.notNull(baos, "No ByteArrayOutputStream specified")
-        Assert.notNull(charset, "No Charset specified")
+    fun copyToString(baos: ByteArrayOutputStream, charset: Charset = StandardCharsets.UTF_8): String {
         return try {
             // Can be replaced with toString(Charset) call in Java 10+
-            baos.toString(charset!!.name())
+            baos.toString(charset.name())
         } catch (ex: UnsupportedEncodingException) {
             // Should never happen
             throw IllegalArgumentException("Invalid charset name: $charset", ex)
@@ -114,10 +113,8 @@ object StreamUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copy(`in`: ByteArray?, out: OutputStream) {
-        Assert.notNull(`in`, "No input byte array specified")
-        Assert.notNull(out, "No OutputStream specified")
-        out.write(`in`)
+    fun copy(ins: ByteArray, out: OutputStream) {
+        out.write(ins)
         out.flush()
     }
 
@@ -132,12 +129,9 @@ object StreamUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copy(`in`: String?, charset: Charset?, out: OutputStream?) {
-        Assert.notNull(`in`, "No input String specified")
-        Assert.notNull(charset, "No Charset specified")
-        Assert.notNull(out, "No OutputStream specified")
+    fun copy(ins: String, charset: Charset, out: OutputStream) {
         val writer: Writer = OutputStreamWriter(out, charset)
-        writer.write(`in`)
+        writer.write(ins)
         writer.flush()
     }
 
@@ -152,13 +146,11 @@ object StreamUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copy(`in`: InputStream, out: OutputStream): Int {
-        Assert.notNull(`in`, "No InputStream specified")
-        Assert.notNull(out, "No OutputStream specified")
+    fun copy(ins: InputStream, out: OutputStream): Int {
         var byteCount = 0
         val buffer = ByteArray(BUFFER_SIZE)
         var bytesRead: Int
-        while (`in`.read(buffer).also { bytesRead = it } != -1) {
+        while (ins.read(buffer).also { bytesRead = it } != -1) {
             out.write(buffer, 0, bytesRead)
             byteCount += bytesRead
         }
@@ -183,17 +175,15 @@ object StreamUtils {
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun copyRange(`in`: InputStream, out: OutputStream, start: Long, end: Long): Long {
-        Assert.notNull(`in`, "No InputStream specified")
-        Assert.notNull(out, "No OutputStream specified")
-        val skipped = `in`.skip(start)
+    fun copyRange(ins: InputStream, out: OutputStream, start: Long, end: Long): Long {
+        val skipped = ins.skip(start)
         if (skipped < start) {
             throw IOException("Skipped only $skipped bytes out of $start required")
         }
         var bytesToCopy = end - start + 1
         val buffer = ByteArray(Math.min(BUFFER_SIZE.toLong(), bytesToCopy).toInt())
         while (bytesToCopy > 0) {
-            val bytesRead = `in`.read(buffer)
+            val bytesRead = ins.read(buffer)
             if (bytesRead == -1) {
                 break
             } else if (bytesRead <= bytesToCopy) {
@@ -217,12 +207,11 @@ object StreamUtils {
      * @since 4.3
      */
     @Throws(IOException::class)
-    fun drain(`in`: InputStream): Int {
-        Assert.notNull(`in`, "No InputStream specified")
+    fun drain(ins: InputStream): Int {
         val buffer = ByteArray(BUFFER_SIZE)
         var bytesRead = -1
         var byteCount = 0
-        while (`in`.read(buffer).also { bytesRead = it } != -1) {
+        while (ins.read(buffer).also { bytesRead = it } != -1) {
             byteCount += bytesRead
         }
         return byteCount
@@ -244,9 +233,8 @@ object StreamUtils {
      * @return a version of the InputStream that ignores calls to close
      */
     @JvmStatic
-    fun nonClosing(`in`: InputStream?): InputStream {
-        Assert.notNull(`in`, "No InputStream specified")
-        return NonClosingInputStream(`in`)
+    fun nonClosing(ins: InputStream): InputStream {
+        return NonClosingInputStream(ins)
     }
 
     /**
@@ -256,12 +244,11 @@ object StreamUtils {
      * @return a version of the OutputStream that ignores calls to close
      */
     @JvmStatic
-    fun nonClosing(out: OutputStream?): OutputStream {
-        Assert.notNull(out, "No OutputStream specified")
+    fun nonClosing(out: OutputStream): OutputStream {
         return NonClosingOutputStream(out)
     }
 
-    private class NonClosingInputStream(`in`: InputStream?) : FilterInputStream(`in`) {
+    private class NonClosingInputStream(ins: InputStream?) : FilterInputStream(ins) {
         @Throws(IOException::class)
         override fun close() {
         }

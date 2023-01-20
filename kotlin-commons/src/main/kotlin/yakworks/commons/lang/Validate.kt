@@ -1,6 +1,7 @@
 package yakworks.commons.lang
 
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
+import yakworks.util.Assert
 
 /**
  * similiar to org.apache.commons.lang3.Validate but throws IllegalArgumentException instead of
@@ -22,14 +23,13 @@ object Validate {
      * @throws IllegalArgumentException
      */
     @JvmStatic
-    fun <T> notNull(obj: T?, message: String): T {
+    fun notNull(obj: Any?, message: String?){
         requireNotNull(obj) {
-            if (message.startsWith("["))
+            if (message?.startsWith("[") == true)
                 "$message must not be null"
             else
-                message
+                message?:""
         }
-        return obj
     }
 
     /**
@@ -40,8 +40,8 @@ object Validate {
      * @throws IllegalArgumentException
      */
     @JvmStatic
-    fun <T> notNull(obj: T): T {
-        return notNull<T>(obj, "The validated object must not be null")
+    fun notNull(obj: Any?) {
+        notNull(obj, "The validated object must not be null")
     }
 
     /**
@@ -57,9 +57,8 @@ object Validate {
      * @throws IllegalArgumentException if expression is `false`
      */
     @JvmStatic
-    fun <T> notNull(obj: T?, message: String?, vararg msgArgs: Any?): T {
+    fun notNull(obj: Any?, message: String?, vararg msgArgs: Any?){
         requireNotNull(obj) { String.format(message!!, *msgArgs) }
-        return obj
     }
 
     /**
@@ -73,9 +72,13 @@ object Validate {
      * @throws IllegalArgumentException
      */
     @JvmStatic
-    fun <T> notEmpty(obj: T, objDescriptor: String): T {
-        require(DefaultGroovyMethods.asBoolean(obj)) { "The $objDescriptor must not be blank or empty" }
-        return obj
+    fun notEmpty(obj: Any?, objDescriptor: String) {
+        requireNotNull(obj)
+        val msg = { "The $objDescriptor must not be blank or empty" }
+        if(obj is String) Assert.hasText(obj, msg)
+        if(obj is Collection<*> ) Assert.notEmpty(obj, msg)
+        if(obj is Map<*, *>) Assert.notEmpty(obj, msg)
+        if(obj is Array<*>) Assert.notEmpty(obj, msg)
     }
 
     /**
@@ -88,8 +91,8 @@ object Validate {
      * @throws IllegalArgumentException
      */
     @JvmStatic
-    fun <T> notEmpty(obj: T): T {
-        return notEmpty(obj, "validated object")
+    fun notEmpty(obj: Any?) {
+        notEmpty(obj, "validated object")
     }
 
     /**
@@ -113,8 +116,8 @@ object Validate {
      * @throws IllegalArgumentException if expression is `false`
      */
     @JvmStatic
-    fun isTrue(expression: Boolean, message: String?, vararg values: Any?) {
-        require(expression) { String.format(message!!, *values) }
+    fun isTrue(expression: Boolean, message: String, vararg values: Any?) {
+        require(expression) { String.format(message, *values) }
     }
 
     /**
