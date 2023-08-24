@@ -13,7 +13,7 @@ import groovy.transform.CompileStatic
 enum DataProblemCodes {
 
     //generic data problem
-    DataProblem('error.data.problem'),
+    Generic('error.data.problem'),
     NotFound('error.notFound', 'Lookup failed'),
     OptimisticLocking('error.data.optimisticLocking', 'persist failed as version changed since last retrieval'),
     ReferenceKey('error.data.reference', 'Reference or foriegn key error and this cant be updated or deleted'),

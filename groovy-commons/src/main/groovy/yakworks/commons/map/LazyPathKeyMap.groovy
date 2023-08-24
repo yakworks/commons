@@ -22,12 +22,11 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
     /** TODO (MAKE THIS WORK) When set to false will keep the Map flat */
     boolean enabled = true
 
-    /* Holds the actual map that will be lazily created. */
-    private Map<String, Object> map;
-    /* Holds the map with the path keys */
-    private Map<String, Object> sourceMap;
-    /* The size of the map. */
-    // private int size;
+    /* Holds the actual backing map that will be lazily created. */
+    protected Map<String, Object> map;
+
+    /* Holds the source map with the path keys */
+    protected Map<String, Object> sourceMap;
 
     /**
      * Populates the PathKeyMap with supplied map.
@@ -44,12 +43,32 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
         return pkm
     }
 
+    LazyPathKeyMap pathDelimiter(String v){
+        this.pathDelimiter = v
+        return this
+    }
+
+    /** sets the backing map that backs this map, this would rarely be used, clone would be an example */
+    LazyPathKeyMap map(String v){
+        this.pathDelimiter = v
+        return this
+    }
+
     @Override
     public Object put(String key, Object value) {
         if (map == null) {
             return sourceMap.put(key, value)
         } else {
             return map.put(key, value)
+        }
+    }
+
+    /** call Maps.putByPath */
+    public void putByPath(String key, Object value) {
+        if (map == null) {
+            sourceMap.put(key, value)
+        } else {
+            Maps.putByPath(map, key, value, pathDelimiter)
         }
     }
 
@@ -167,7 +186,12 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    Object clone() throws CloneNotSupportedException {
+        cloneMap()
+    }
+
+    /** deep clones this */
+    Map<String, Object>  cloneMap() {
         if (map == null) {
             Map clonedMap = new LinkedHashMap(sourceMap)
             clonedMap?.keySet().each { k ->
@@ -185,7 +209,7 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
             }
             return LazyPathKeyMap.of(clonedMap, pathDelimiter)
         } else {
-            return Maps.clone(map)
+            return Maps.clone(map) as Map<String, Object>
         }
     }
 
