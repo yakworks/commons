@@ -9,7 +9,9 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 import yakworks.commons.beans.PropertyTools
+import yakworks.commons.lang.Validate
 import yakworks.commons.util.StringUtils
+import yakworks.util.ClassUtils
 
 /**
  * Helpful methods for dealing with maps
@@ -35,8 +37,8 @@ class Maps {
     }
 
     /**
-     * Deeply merges the contents of each Map in sources, merging from
-     * "right to left" and returning the merged Map.
+     * Deeply extends (merges) into the trget the contents of each Map in sources,
+     * Sources are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
      *
      * Mimics 'extend()' functions often seen in JavaScript libraries.
      * Any specific Map implementations (e.g. TreeMap, LinkedHashMap)
@@ -45,17 +47,16 @@ class Maps {
      * merged; primitives, objects, and other collection types will be
      * overwritten.
      *
-     * The source maps will not be modified.
+     * The source maps will not be modified, only the target is modified.
      *
-     * If only 1 map is passed in then it just returns that without making a copy or modifying
+     * If no sources passed in then it just returns target without making a copy or modifying
      *
-     * @return the new merged map
+     * @return the new merged map, will be same as the passed in target as its modified
      */
-    static Map merge(Map[] sources) {
-        if (sources.length == 0) return [:]
-        if (sources.length == 1) return sources[0]
+    static Map extend(Map target, Map... sources) {
+        if (sources.length == 0) return target
 
-        sources.inject([:]) { merged, source ->
+        sources.inject(target) { merged, source ->
             source.each { k, val ->
                 def mergedVal = merged[k]
                 if (( mergedVal == null || mergedVal instanceof Map ) && val instanceof Map) {
@@ -74,6 +75,27 @@ class Maps {
             }
             return merged
         } as Map
+    }
+
+    /**
+     * Deeply merges the contents of each Map in sources and returns a new Map with merged data,
+     * Sources are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
+     *
+     * Mimics 'extend()' functions often seen in JavaScript libraries.
+     * Any specific Map implementations (e.g. TreeMap, LinkedHashMap)
+     * are not guaranteed to be retained. The ordering of the keys in
+     * the result Map is not guaranteed. Only nested maps will be
+     * merged; primitives, objects, and other collection types will be
+     * overwritten.
+     *
+     * The source maps will not be modified.
+     *
+     * If only 1 map is passed in then it just returns that without making a copy or modifying
+     *
+     * @return the new merged map
+     */
+    static Map merge(Map[] sources) {
+        return extend([:], sources)
     }
 
     static Map merge(List<Map> sources) {
@@ -95,7 +117,7 @@ class Maps {
      */
     static Map clone(Map source) {
         if(!source) return [:]
-        merge([:], source)
+        extend([:], source)
     }
 
     /**
@@ -107,6 +129,22 @@ class Maps {
     static Collection<Map> clone(Collection<Map> listOfMaps) {
         if(!listOfMaps) return []
         listOfMaps.collect{ Maps.clone(it)}
+    }
+
+    /**
+     * Converts a string path like "x.y.z" to [x:[y:[z:value]]]
+     *
+     * @param propertyPath - The path like 'x.y.z'
+     * @param value - the value to put in lowest map
+     * @return The Map
+     */
+    static Map<String, Object> pathToMap(String propertyPath, Object value) {
+        Validate.notNull(propertyPath, '[source]')
+        Map result = propertyPath.tokenize('.').reverse().inject(value) { Object v, Object prop ->
+            [(prop):v]
+        } as Map
+
+        return result as Map<String, Object>
     }
 
     /**
@@ -132,6 +170,30 @@ class Maps {
             }
 
         } as Map<K, V>
+    }
+
+    /**
+     * puts the deepest nested Map for the path in the Map of Maps
+     * or create the path if it doesn't exit and returns the reference.
+     *
+     * example1: putIfAbsent([a: [b: [c: 'foo']]], 'a.b.c', 'foo') == 'foo'
+     */
+    static Map putByPath(Map map, String path, Object value, String pathDelimiter = '.' ) {
+        int i = path.lastIndexOf(pathDelimiter)
+        String lastKey = path.substring(i + 1, path.length())
+        if (i > -1) {
+            path = path.substring(0, i)
+            path.tokenize(pathDelimiter).each { String k ->
+                var m = map.get(k)
+                if(m == null || ClassUtils.isPrimitiveOrWrapper(m.class) || m instanceof CharSequence) {
+                    map = map[k] = [:]
+                } else{
+                    map = (Map) m
+                }
+            }
+        }
+        map[lastKey] = value
+        return map
     }
 
     /**

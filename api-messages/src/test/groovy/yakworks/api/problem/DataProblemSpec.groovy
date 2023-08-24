@@ -19,6 +19,10 @@ class DataProblemSpec extends Specification {
         then:
         e.code == 'error.data.reference'
         e.rootCause == rte
+        e.message == "Data Problem: Reference or foriegn key error and this cant be updated or deleted: code=error.data.reference"
+        e.problem.code == 'error.data.reference'
+        e.problem.title == 'Data Problem'
+        e.problem.detail == 'Reference or foriegn key error and this cant be updated or deleted'
     }
 
     void "DataProblem entity payload"() {
@@ -28,7 +32,8 @@ class DataProblemSpec extends Specification {
         then:
         thrown(UnsupportedOperationException)
     }
-    void "DataProblem entity payload"() {
+
+    void "DataProblem entity payload2"() {
         when:
         def someEntity = new SomeEntity()
         def e = DataProblem.of('foo').payload(someEntity).toException()

@@ -6,8 +6,13 @@ package yakworks.commons.beans
 
 import java.lang.reflect.Type
 
+import groovy.transform.CompileStatic
+
+import org.codehaus.groovy.runtime.InvokerHelper
+
 import spock.lang.Specification
 import yakworks.commons.beans.PropertyTools
+import yakworks.commons.lang.Validate
 import yakworks.commons.testing.pogos.Gadget
 
 class PropertyToolsSpec extends Specification{
@@ -115,6 +120,17 @@ class PropertyToolsSpec extends Specification{
         'objectList' | java.lang.Object
         'simpleList' | java.lang.Object
         'traitList'  | java.lang.String
+    }
+
+    void "set prop by path"() {
+        when:
+        def user = new BeanToolsSpec.AdminUser()
+        user.thing = new BeanToolsSpec.AdminUser.Thing()
+        PropertyTools.setProp(user, 'thing.name', "foo")
+        //PropertyTools.setFieldValue(user, 'thing.name', "foo")
+
+        then:
+        user.thing.name == "foo"
     }
 
 }

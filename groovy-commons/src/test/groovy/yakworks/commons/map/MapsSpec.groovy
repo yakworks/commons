@@ -445,4 +445,75 @@ class MapsSpec extends Specification {
             }
         }
     }
+
+    void "test path to map"() {
+        when:
+        String propertyPath = 'foo.bar'
+        String value = 'buzz'
+        Map mainMap = [:]
+
+        Map rmap = Maps.pathToMap('foo.bar', 'buzz')
+        Map rmap2 = Maps.pathToMap('foo', 'buzz2')
+
+        then:
+        rmap.size() == 1
+        rmap.foo.size() == 1
+        rmap.foo.bar == "buzz"
+        rmap2.foo == 'buzz2'
+
+    }
+
+    void "test putByPath"() {
+        when: "simple key"
+        Map map = [:]
+        Map rmap = Maps.putByPath(map, 'a', 'foo')
+
+        then:
+        map.size() == 1
+        map.a == 'foo'
+        rmap.a == 'foo'
+
+        when: "doing a new map"
+        map = [:]
+        rmap = Maps.putByPath(map, 'a.c.d', 'foo')
+
+        then:
+        map.size() == 1
+        map.a.size() == 1
+        map.a.c.size() == 1
+        map.a.c.d == 'foo'
+        rmap.d == 'foo'
+
+        when: "existing map same keys"
+        map = [a: [b: true]]
+        Maps.putByPath(map, 'a.c', 'foo')
+
+        then:
+        map.size() == 1
+        map.a.size() == 2
+        map.a.b
+        map.a.c == 'foo'
+
+        when: "same key"
+        map = [a: [c: true]]
+        Maps.putByPath(map, 'a.c', 'foo')
+
+        then:
+        map.size() == 1
+        map.a.size() == 1
+        map.a.c == 'foo'
+
+        when: "conflicting key"
+        map = [a: [c: true, b: 'foo']]
+        //puts path underneath existing will overwite it
+        Maps.putByPath(map, 'a.c.d', 'bar')
+        Maps.putByPath(map, 'a.b.d', 'buzz')
+
+        then:
+        map.size() == 1
+        map.a.size() == 2
+        map.a.c.size() == 1
+        map.a.c.d == 'bar'
+        map.a.b.d == 'buzz'
+    }
 }

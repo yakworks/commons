@@ -13,6 +13,7 @@ internal object ProblemUtils {
     @JvmStatic
     fun resultToStringCommon(p: Result): String {
         val title = if (p.title != null) "title=${p.title}" else null
+        val detail = if (p.detail != null) "detail=${p.detail}" else null
         val code = if (p.code != null) "code=${p.code}" else null
         var value: String? = null
         if(p.payload != null && ResultSupport.isBasicType(p.payload!!::class, ResultSupport.acceptedTypes)){
@@ -20,7 +21,7 @@ internal object ProblemUtils {
         }
         val status = p.status.code.toString()
 
-        return listOf(title, code, value, status)
+        return listOf(title, code, detail, value, status)
             .filter(Objects::nonNull)
             .joinToString{ it as String }
     }

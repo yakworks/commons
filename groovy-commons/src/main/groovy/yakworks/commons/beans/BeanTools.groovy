@@ -64,7 +64,7 @@ class BeanTools {
         return JacksonJson.bind(data, clazz)
     }
 
-    /** Uses JacksonUtil to bind to new instance of the pased in class */
+    /** Uses JacksonUtil to bind to existing object instance */
     public static <T> T bind(T instance, Object data) {
         return JacksonJson.bind(instance, data)
     }

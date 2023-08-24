@@ -14,6 +14,7 @@ import org.codehaus.groovy.util.HashCodeHelper
  * foo.bar.id:1, foo.amount:10 would end up as [foo: [bar: [id: 1]], amount:10]
  * Useful for CSV reading too.
  */
+@Deprecated
 @SuppressWarnings(["ExplicitCallToEqualsMethod"])
 @CompileStatic
 class PathKeyMap<K,V> implements Map<K,V>, Cloneable  {

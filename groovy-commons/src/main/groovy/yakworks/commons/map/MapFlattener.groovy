@@ -12,10 +12,10 @@ import groovy.transform.builder.SimpleStrategy
 import yakworks.commons.lang.IsoDateUtil
 
 /**
- * The primary use of this is to convert a net json tree to a flat map that
- * can be used with the old grails parser or can be used in CSV, where keys or header is expected to
+ * The primary use of this is to convert a map or json tree to a flat map that
+ * can be used in CSV or excel, where keys or header is expected to
  * look like `foo.bar: 'val` for an object like `foo:[bar: 'val']`
- * MapFlattener taken from here https://github.com/dmillett/jConfigMap
+ * Ideas taken from here https://github.com/dmillett/jConfigMap
  */
 @Builder(builderStrategy= SimpleStrategy, prefix="")
 @CompileStatic
@@ -24,6 +24,11 @@ class MapFlattener {
     Map<String, Object> target
     private final KeyVersion keyVersion = new KeyVersion()
     boolean convertEmptyStringsToNull = true
+
+    /**
+     * When true then converts everything to a string
+     * useful for CSV.
+     */
     boolean convertObjectToString = false
 
     /**
@@ -46,21 +51,22 @@ class MapFlattener {
     Map<String, Object> flatten() {
         flatten(target)
     }
+
     /**
-     * Groovy transforms JSON to either a Map or List based on the root node.
+     * Flattens either a List or Map
      */
-    Map<String, Object> flatten(Object mapToFlatten) {
+    Map<String, Object> flatten(Object objectToFlatten) {
 
         Map<String, Object> keyValues = [:]
 
-        if (mapToFlatten == null) {
+        if (objectToFlatten == null) {
             return keyValues
         }
 
-        if (mapToFlatten instanceof Map) {
-            keyValues.putAll(transformGroovyJsonMap((Map) mapToFlatten, ""))
-        } else if (mapToFlatten instanceof List) {
-            keyValues.putAll(transformJsonArray((List) mapToFlatten, ""))
+        if (objectToFlatten instanceof Map) {
+            keyValues.putAll(transformMap((Map) objectToFlatten, ""))
+        } else if (objectToFlatten instanceof List) {
+            keyValues.putAll(transformList((List) objectToFlatten, ""))
         }
 
         return keyValues
@@ -71,15 +77,15 @@ class MapFlattener {
      * therein. Otherwise, it is just a string "key" and "value".
      */
     @SuppressWarnings(['EmptyCatchBlock'])
-    Map<String, Object> transformGroovyJsonMap(Map jsonMap, String currentName) {
+    Map<String, Object> transformMap(Map dataMap, String currentName) {
 
-        if (jsonMap == null || jsonMap.isEmpty()) {
+        if (dataMap == null || dataMap.isEmpty()) {
             return [:]
         }
 
         Map<String, Object> keyValues = [:]
 
-        jsonMap.each {  Map.Entry entry ->
+        dataMap.each {  Map.Entry entry ->
 
             String key = String.valueOf(entry.key)
             if (currentName != null && !currentName.empty) {
@@ -91,10 +97,10 @@ class MapFlattener {
             } else if (entry.value == null || entry.value?.toString() == 'null') {
                 keyVersion.updateMapWithKeyValue(keyValues, key, null)
             } else if (entry.value instanceof List) {
-                Map<String, Object> jsonListKeyValues = transformJsonArray(entry.value as List, key)
+                Map<String, Object> jsonListKeyValues = transformList(entry.value as List, key)
                 keyValues.putAll(jsonListKeyValues)
             } else if (entry.value instanceof Map) {
-                Map<String, Object> jsonMapKeyValues = transformGroovyJsonMap(entry.value as Map, key)
+                Map<String, Object> jsonMapKeyValues = transformMap(entry.value as Map, key)
                 keyValues.putAll(jsonMapKeyValues)
             } else if (entry.value instanceof CharSequence) {
                 doString(keyValues, key, entry.value)
@@ -111,6 +117,13 @@ class MapFlattener {
         return keyValues
     }
 
+    /**
+     * used when convertObjectToString=true and for strings
+     * - turns objects to strings, if data then does iso JSON like date
+     * - converts empty strings to null
+     * -
+     *
+     */
     String doString(Map<String, Object> keyValues, String key, Object value){
         if(IsoDateUtil.isDate(value)){
             def sdate= IsoDateUtil.format(value)
@@ -129,7 +142,7 @@ class MapFlattener {
     /**
      * Flatten Groovy-JSON Array objects
      */
-    Map<String, Object> transformJsonArray(List jsonArray, String currentName) {
+    Map<String, Object> transformList(List jsonArray, String currentName) {
 
         if (jsonArray == null || jsonArray.empty) {
             return [:]
@@ -140,18 +153,18 @@ class MapFlattener {
 
         int index = 0
 
-        jsonArray.each { jsonElement ->
+        jsonArray.each { item ->
             String arrayName = [currentName, index++].join('.')
-            if (jsonElement == null) {
+            if (item == null) {
                 keyValues.put(arrayName, null)
-            } else if (jsonElement instanceof Map) {
-                Map<String, Object> jsonMapKeyValues = transformGroovyJsonMap(jsonElement as Map, arrayName)
+            } else if (item instanceof Map) {
+                Map<String, Object> jsonMapKeyValues = transformMap(item as Map, arrayName)
                 keyVersion.updateMapWithKeyValues(keyValues, jsonMapKeyValues)
-            } else if (jsonElement instanceof List) {
-                Map<String, Object> jsonArrayKeyValues = transformJsonArray(jsonElement as List, arrayName)
+            } else if (item instanceof List) {
+                Map<String, Object> jsonArrayKeyValues = transformList(item as List, arrayName)
                 keyVersion.updateMapWithKeyValues(keyValues, jsonArrayKeyValues)
             } else {
-                String value = String.valueOf(jsonElement)
+                String value = String.valueOf(item)
                 keyVersion.updateMapWithKeyValue(keyValues, arrayName, value)
             }
         }

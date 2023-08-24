@@ -27,7 +27,7 @@ import yakworks.util.ReflectionUtils
 class ClassUtils {
 
     protected static final List BASIC_TYPES = [
-        String, Boolean, Byte, Short, Integer, Long, Float, Double, Character
+        String, Boolean, Byte, Short, Integer, Long, Float, Double, Character, Void
     ] as List<Class>
 
     /**
@@ -159,9 +159,6 @@ class ClassUtils {
      */
     static void setFieldValue(Object instance, String fieldName, Object value){
         setFieldValue(instance.getClass(), instance, fieldName, value)
-        def field = ReflectionUtils.findField(instance.getClass(), fieldName);
-        ReflectionUtils.makeAccessible(field)
-        field.set(instance, value)
     }
 
     /**
