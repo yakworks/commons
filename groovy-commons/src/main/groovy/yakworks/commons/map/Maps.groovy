@@ -37,8 +37,11 @@ class Maps {
     }
 
     /**
-     * Deeply extends (merges) into the trget the contents of each Map in sources,
+     * DEEPLY extends (merges) into the target with the contents of each Map in sources,
      * Sources are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
+     *
+     * NOTE: the target is modified, if you want it merged into a new map then pass in a new map ([:]) to target
+     * as thats what will be returned.
      *
      * Mimics 'extend()' functions often seen in JavaScript libraries.
      * Any specific Map implementations (e.g. TreeMap, LinkedHashMap)
@@ -59,26 +62,46 @@ class Maps {
         sources.inject(target) { merged, source ->
             source.each { k, val ->
                 def mergedVal = merged[k]
+                //we do maps and collections first as most are Cloneable but they only do a shallow clone, we do a deep.
                 if (( mergedVal == null || mergedVal instanceof Map ) && val instanceof Map) {
                     if(mergedVal == null) merged[k] = [:]
-                    merged[k] = merge(merged[k] as Map, val as Map)
-                } else if ((mergedVal == null || mergedVal instanceof Collection) && val instanceof Collection) {
+                    extend(merged[k] as Map, val as Map)
+                }
+                else if(val instanceof Range){
+                    //Groovy Ranges are Lists, we dont try to clone and just set it otherwise they end up as new collection not Range
+                    merged[k] = val
+                }
+                else if ((mergedVal == null || mergedVal instanceof Collection) && val instanceof Collection) {
                     if(mergedVal == null) merged[k] = []
                     merged[k] = (Collection)merged[k] + (Collection)val
                     //The list could be list of maps, so make sure they get copied
+                    //XXX should do an add all above to merged[k], then we dont loose it?
                     merged[k] = merged[k].collect{ item ->
-                        return (item instanceof Map) ? merge([:], item) : item
+                        // ALSO we only clone the map below, it could be a Collection too, which we should clone too.
+                        return (item instanceof Map) ? extend([:], item as Map) : item
                     }
-                } else {
+                }
+                else if(val instanceof Cloneable){
+                    //If its cloneable, its doesnt merge it, it overrites it. but does try to clone it.
+                    try{
+                        merged[k] = val.clone()
+                    } catch (e){
+                        //on any error then just sets the val
+                        merged[k] = val
+                    }
+                }
+                else {
                     merged[k] = val
                 }
             }
             return merged
         } as Map
+
+        return target
     }
 
     /**
-     * Deeply merges the contents of each Map in sources and returns a new Map with merged data,
+     * DEEPLY merges the contents of each Map in sources and returns a new Map with merged data,
      * Sources are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
      *
      * Mimics 'extend()' functions often seen in JavaScript libraries.
@@ -90,16 +113,20 @@ class Maps {
      *
      * The source maps will not be modified.
      *
-     * If only 1 map is passed in then it just returns that without making a copy or modifying
+     * IMPORTANT: If only 1 map is passed in to sources, it just returns that without making a copy, cloning or modifying
      *
-     * @return the new merged map
+     * @return the new merged map, in only 1 item is passed into sources then it returns it without making a copy, cloning or modifying
+     *  if sources is empty then it returns a new empty Map.
      */
     static Map merge(Map[] sources) {
+        if (sources.length == 0) return [:]
+        if (sources.length == 1) return sources[0]
+
         return extend([:], sources)
     }
 
     static Map merge(List<Map> sources) {
-        merge(sources as Map[])
+        return merge( sources as Map[])
     }
 
     /**
@@ -117,7 +144,7 @@ class Maps {
      */
     static Map clone(Map source) {
         if(!source) return [:]
-        extend([:], source)
+        return extend([:], source)
     }
 
     /**
