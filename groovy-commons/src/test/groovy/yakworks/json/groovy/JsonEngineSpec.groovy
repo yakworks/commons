@@ -8,6 +8,8 @@ package yakworks.json.groovy
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+import groovy.json.JsonException
+
 import spock.lang.Specification
 import yakworks.commons.testing.pogos.Thing
 
@@ -58,5 +60,36 @@ class JsonEngineSpec extends Specification {
         then:
         obj == [num: '1', inactive: false, amount: 0.00, localDate: "2021-02-01"]
     }
+
+    void "parseJson invalid json format"() {
+        when: "no quotes on keys"
+        def jsonString = '{num:"1",inactive:false}'
+        Map obj = JsonEngine.parseJson(jsonString, Map)
+
+        then:
+        thrown(JsonException)
+
+        when: "use single quotes"
+        obj = JsonEngine.parseJson('{\'num\':"1","inactive":false}')
+
+        then:
+        thrown(JsonException)
+
+        when: "double commas seem fine"
+        obj = JsonEngine.parseJson('{"num":"1",,"inactive":false}')
+
+        then:
+        obj
+        //thrown(JsonException)
+
+        when: "extra spaces are fine"
+        obj = JsonEngine.parseJson('{"num": "1", "inactive": false}')
+
+        then:
+        obj.size() == 2
+        !obj.inactive
+        obj.num == "1"
+    }
+
 
 }

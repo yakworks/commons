@@ -11,7 +11,6 @@ import groovy.transform.builder.SimpleStrategy
 import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.Template
 import com.github.jknack.handlebars.cache.HighConcurrencyTemplateCache
-import com.github.jknack.handlebars.cache.TemplateCache
 import com.github.jknack.handlebars.helper.AssignHelper
 import com.github.jknack.handlebars.helper.ConditionalHelpers
 import com.github.jknack.handlebars.helper.NumberHelper
@@ -43,7 +42,7 @@ class Bars {
             instance.stringParams(true)
             //these 2 are built into core handlebars but not registered by default
             StringHelpers.register(instance)
-            handlebars.registerHelpers(ConditionalHelpers.class);
+            handlebars.registerHelpers(ConditionalHelpers);
             //register some common helpers https://github.com/jknack/handlebars.java/blob/master/handlebars-helpers/README.md
             instance.registerHelper("assign", AssignHelper.INSTANCE)
             NumberHelper.register(instance)

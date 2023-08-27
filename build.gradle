@@ -23,4 +23,6 @@ ext.codenarcRuleset= '''
   // getRule('AbcMetric').enabled = false
   getRule('FieldName').enabled = false
   getRule('SynchronizedMethod').enabled = false
+  getRule('BuilderMethodWithSideEffects').enabled = false
+  getRule('ExplicitCallToEqualsMethod').enabled = false
 '''

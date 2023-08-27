@@ -7,7 +7,6 @@ package yakworks.commons.beans
 import java.lang.reflect.Type
 
 import spock.lang.Specification
-import yakworks.commons.beans.PropertyTools
 import yakworks.commons.testing.pogos.Gadget
 
 class PropertyToolsSpec extends Specification{
@@ -115,6 +114,17 @@ class PropertyToolsSpec extends Specification{
         'objectList' | java.lang.Object
         'simpleList' | java.lang.Object
         'traitList'  | java.lang.String
+    }
+
+    void "set setValue with path"() {
+        when:
+        def user = new BeanToolsSpec.AdminUser()
+        user.thing = new BeanToolsSpec.AdminUser.Thing()
+        PropertyTools.setValue(user, 'thing.name', "foo")
+        //PropertyTools.setFieldValue(user, 'thing.name', "foo")
+
+        then:
+        user.thing.name == "foo"
     }
 
 }
