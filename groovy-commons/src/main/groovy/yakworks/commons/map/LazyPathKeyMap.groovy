@@ -26,7 +26,9 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
     protected Map<String, Object> map;
 
     /* Holds the source map with the path keys */
-    protected Map<String, Object> sourceMap;
+    private Map<String, Object> sourceMap;
+
+    private boolean initialized = false
 
     /**
      * Populates the PathKeyMap with supplied map.
@@ -54,6 +56,15 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
         return this
     }
 
+    public Map<String, Object> getSourceMap(){
+        return this.sourceMap
+    }
+
+    /** used to make tests easier and to do asserts when we only want to operate on the sourceMap */
+    boolean isInitialized(){
+        return this.initialized
+    }
+
     @Override
     public Object put(String key, Object value) {
         if (map == null) {
@@ -68,7 +79,7 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
         if (map == null) {
             sourceMap.put(key, value)
         } else {
-            Maps.putByPath(map, key, value, pathDelimiter)
+            Maps.putValue(map, key, value, pathDelimiter)
         }
     }
 
@@ -123,14 +134,15 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
                 var sval = sourceMap[key]
                 if(sval instanceof Map){
                     //stick it under the __merge__ key for now
-                    Map mres = Maps.putByPath(map, "${key}.__MERGE__", "MERGE_ME", pathDelimiter)
+                    Map mres = Maps.putValue(map, "${key}.__MERGE__", "MERGE_ME", pathDelimiter)
                     mres.remove("__MERGE__") //remove it
-                    Maps.extend(mres, sval as Map)
+                    Maps.merge(mres, sval as Map)
                 } else {
-                    Maps.putByPath(map, key, sval, pathDelimiter)
+                    Maps.putValue(map, key, sval, pathDelimiter)
                 }
             }
             sourceMap = null
+            initialized = true
         }
     }
 

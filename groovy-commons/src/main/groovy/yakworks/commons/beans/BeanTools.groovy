@@ -44,7 +44,7 @@ class BeanTools {
     }
 
     /**
-     * sets the properties in taget from the source
+     * sets the properties in target from the source
      */
     public static <T> T setProps(T target, Object source){
         Map propsToMerge = source instanceof Map ? source : source.properties

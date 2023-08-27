@@ -4,7 +4,7 @@
 */
 package yakworks.commons.io
 
-
+import java.nio.file.Files
 import java.nio.file.Path
 import java.util.zip.Deflater
 import java.util.zip.ZipEntry
@@ -24,10 +24,25 @@ import net.lingala.zip4j.ZipFile
 class ZipUtils {
 
     /**
-     * Unzip files to specified directory
+     * Like "Extract here" functionality in windows or on mac.
+     * Extracts contents into dir with same name
+     * create a new directory with same name as zip (minus the .zip) beneath the targetDir directory ( if sepcified)
+     * if targetDir not specifed then will use the dir the zip is currently in.
+     * @return the new Path with the extracted contents
      */
-    static unzip(Path zip, Path destDir) {
-        new ZipFile(zip.toFile()).extractAll(destDir.toString())
+    static Path extractHere(Path sourceZip, Path targetDir = null) {
+        targetDir ?= sourceZip.getParent()
+        Path unzipDir = targetDir.resolve(PathTools.getBaseName(sourceZip.fileName))
+        Files.createDirectories(unzipDir)
+        unzip(sourceZip, unzipDir)
+        return unzipDir
+    }
+
+    /**
+     * Unzip files to targetDir directory
+     */
+    static void unzip(Path sourceZip, Path targetDir) {
+        new ZipFile(sourceZip.toFile()).extractAll(targetDir.toAbsolutePath().toString());
     }
 
     /**

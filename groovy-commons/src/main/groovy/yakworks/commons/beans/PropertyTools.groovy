@@ -116,7 +116,7 @@ class PropertyTools {
      * @param propertyPath the field or path to set
      * @param value the val to set
      */
-    static void setProp(Object object, String propertyPath, Object value) {
+    static void setValue(Object object, String propertyPath, Object value) {
         def pathElements = propertyPath.tokenize('.')
         String objPath = pathElements[0..-2].join('.')
         Object parent = getProperty(object, objPath)
