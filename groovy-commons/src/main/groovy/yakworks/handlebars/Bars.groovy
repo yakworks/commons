@@ -39,15 +39,23 @@ class Bars {
             .with(new HighConcurrencyTemplateCache())
 
         static {
-            //setting so wrapping args in quotes is optional
-            instance.stringParams(true)
-            //these 2 are built into core handlebars but not registered by default
-            StringHelpers.register(instance)
-            handlebars.registerHelpers(ConditionalHelpers.class);
-            //register some common helpers https://github.com/jknack/handlebars.java/blob/master/handlebars-helpers/README.md
-            instance.registerHelper("assign", AssignHelper.INSTANCE)
-            NumberHelper.register(instance)
+            registerDefaultHelpers(instance)
         }
+    }
+
+    /**
+     * Registers our "opinionated" default helpers on handlebars.
+     * @param hbars the Handlebars instace to call registerHelpers on
+     */
+    static void registerDefaultHelpers(Handlebars hbars){
+        //setting so wrapping args in quotes is optional
+        hbars.stringParams(true)
+        //these 2 are built into core handlebars but not registered by default
+        StringHelpers.register(hbars)
+        hbars.registerHelpers(ConditionalHelpers.class);
+        //register some common helpers https://github.com/jknack/handlebars.java/blob/master/handlebars-helpers/README.md
+        hbars.registerHelper("assign", AssignHelper.INSTANCE)
+        NumberHelper.register(hbars)
     }
 
     static Handlebars getHandlebars() {
