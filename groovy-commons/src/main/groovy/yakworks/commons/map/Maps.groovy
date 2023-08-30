@@ -59,14 +59,16 @@ class Maps {
      */
     static Map putValue(Map map, String propPath, Object value, String pathDelimiter = '.' ) {
         int i = propPath.lastIndexOf(pathDelimiter)
+        //get the last prop key,  so for "a.b.c.d", this will get "d"
         String lastKey = propPath.substring(i + 1, propPath.length())
         if (i > -1) {
-            propPath = propPath.substring(0, i)
-            propPath.tokenize(pathDelimiter).each { String k ->
+            //sping through first part, so for a.b.c.d, this will iterate over a.b.c
+            propPath.substring(0, i).tokenize(pathDelimiter).each { String k ->
                 var m = map.get(k)
+                //if its null or its a basic type then overwrite it. so for a.b.c.d example, if map already has a.b.c=foo will overwrite
                 if(m == null || ClassUtils.isPrimitiveOrWrapper(m.class) || m instanceof CharSequence) {
                     map = map[k] = [:]
-                } else{
+                } else {
                     map = (Map) m
                 }
             }

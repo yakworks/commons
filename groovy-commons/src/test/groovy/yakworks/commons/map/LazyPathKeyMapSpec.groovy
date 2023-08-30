@@ -10,7 +10,7 @@ class LazyPathKeyMapSpec extends Specification {
         sub.put("dob", "01/01/1970")
         sub.put("address.postCode", "345435")
         sub.put("address.town", "Swindon")
-        sub.put("nested", new LazyPathKeyMap(['foo.bar': 'baz']))
+        sub.put("nested", ['foo.bar': 'baz'])
 
         List nestedList = []
         nestedList << new LazyPathKeyMap(['foo.bar': 'baz'])
@@ -142,17 +142,24 @@ class LazyPathKeyMapSpec extends Specification {
         when:
         Map sub = [
             "a.b": "abValue",
+            "a.d":[
+                "e":[
+                    f: [ "g.h": "adefValue" ]
+                ]
+            ],
             a: [
                 c: "acValue"
             ]
+
         ]
         LazyPathKeyMap theMap = LazyPathKeyMap.of(sub)
 
         then:
         theMap.keySet().size() == 1
-        theMap.a.keySet().size() == 2
-
-        theMap.a == [b: "abValue", c: "acValue"]
+        theMap.a.keySet().size() == 3
+        //[b:abValue, d:[e:[f:adefValue]], c:acValue]
+        theMap.a == [b:"abValue", d:[e:[f:[g:[h:"adefValue"]]]], c:"acValue"]
+        //theMap.a.d.e.f == "adefValue"
 
     }
 
@@ -174,11 +181,11 @@ class LazyPathKeyMapSpec extends Specification {
     }
 
     void "test with dup key"() {
-        when: "map comes first"
+        when: "map comes second"
         LazyPathKeyMap theMap2 = LazyPathKeyMap.of([
             "a.c": "acValue2",
             a: [
-                c: "acValue"
+                "c.d": "acValue"
             ]
         ])
 
@@ -186,25 +193,25 @@ class LazyPathKeyMapSpec extends Specification {
         theMap2.keySet().size() == 1
         theMap2.a.keySet().size() == 1
 
-        theMap2.a == [c: 'acValue']
+        theMap2.a == [c:[d:"acValue"]]
     }
 
     void "test with dup key, map first"() {
         when: "map comes first"
         LazyPathKeyMap m = LazyPathKeyMap.of([
             a: [
-                c: "acValue"
+                "c.d": "acValue"
             ],
             "a.c": "acValue2"
         ])
 
-        then:
+        then: "last one wins"
         m.keySet().size() == 1
         m.a.keySet().size() == 1
 
         m.a == [c: 'acValue2']
 
-        when:
+        when: "after it initialized its a normal map"
         m.a = [c:'foo']
         then:
         m.a.c == 'foo'

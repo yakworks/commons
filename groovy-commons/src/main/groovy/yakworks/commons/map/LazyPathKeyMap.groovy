@@ -132,13 +132,19 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
             var keySetCopy = sourceMap.keySet().collect{it}
             for (String key : keySetCopy) {
                 var sval = sourceMap[key]
-                if(sval instanceof Map){
-                    //stick it under the __merge__ key for now
+                if(sval instanceof LazyPathKeyMap){
+                    sval.buildIfNeeded()
+                    putByPath(key, sval)
+                }
+                else if(sval instanceof Map){
+                    // it under the __merge__ key for now
                     Map mres = Maps.putValue(map, "${key}.__MERGE__", "MERGE_ME", pathDelimiter)
                     mres.remove("__MERGE__") //remove it
-                    Maps.merge(mres, sval as Map)
+                    Maps.merge(mres, LazyPathKeyMap.of(sval as Map, pathDelimiter) )
+                    //putByPath(key, LazyPathKeyMap.of(sval, pathDelimiter))
                 } else {
-                    Maps.putValue(map, key, sval, pathDelimiter)
+                    //key will probably have a dot
+                    putByPath(key, sval)
                 }
             }
             sourceMap = null
