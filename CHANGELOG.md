@@ -1,3 +1,13 @@
+### v3.12
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.11.1...v3.12)
+- release 3.12 [link](https://github.com/yakworks/commons/commit/fc5145f58310a9ecfdac32e5dcc0ccaccb63ed98)
+- Merge pull request #15 from yakworks/dev [link](https://github.com/yakworks/commons/commit/86c78676dacfc9693e4a4af1487dd66b67d3b7b2)
+- add regex sandbox test [link](https://github.com/yakworks/commons/commit/46e9d5459d66fe536c74de9fc48fcba19e37b41e)
+- Merge branch 'release/3.11.x' into dev [link](https://github.com/yakworks/commons/commit/38a67f04e4b5b88be5a48a389302948c99fa253a)
+- tweaks for nested LazyPathKeyMap [link](https://github.com/yakworks/commons/commit/c7f890bb51fcd3268596d045d25fdfcc2b513601)
+- New DataProblem keys, LazyPathKeyMap, Map utils and setValue for path… (#14) [link](https://github.com/yakworks/commons/commit/e3976549c46e254e0406353854590316ca572a08)
+
 ### v3.11.1
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.11...v3.11.1)
