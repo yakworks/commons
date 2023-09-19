@@ -1,3 +1,10 @@
+### v3.11.1
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.11...v3.11.1)
+- release [link](https://github.com/yakworks/commons/commit/3e51b53112861f01fe25b1275b37d3d5e99da8f0)
+- fix up the Bars.java static initializer, was calling a get. move into method so can be reused if needed [link](https://github.com/yakworks/commons/commit/52e2cf6a4ca7a72691a67b5f42a38af76c910df6)
+- fix comments on the Bars class, point to docs. [link](https://github.com/yakworks/commons/commit/9f595091b00e44c8a8e669cd8a4f2f1039124731)
+
 ### v3.11
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.10...v3.11)

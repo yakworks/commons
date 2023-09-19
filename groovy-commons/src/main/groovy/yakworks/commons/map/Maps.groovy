@@ -9,7 +9,9 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 import yakworks.commons.beans.PropertyTools
+import yakworks.commons.lang.Validate
 import yakworks.commons.util.StringUtils
+import yakworks.util.ClassUtils
 
 /**
  * Helpful methods for dealing with maps
@@ -35,67 +37,126 @@ class Maps {
     }
 
     /**
-     * Deeply merges the contents of each Map in sources, merging from
-     * "right to left" and returning the merged Map.
+     * puts the deepest nested Map for the path in the Map of Maps
+     * or create the path if it doesn't exit and returns the reference.
      *
-     * Mimics 'extend()' functions often seen in JavaScript libraries.
+     * Differs from the PropertyTools.setValue in that it will create a nested Map when it encounters a property
+     * that does not exist or is a BasicType. If you want the error use PropertyTools.setValue as its strict.
+     *
+     * example1: putValue([a: [b: [c: 'bar']]], 'a.b.c', 'foo') == [a: [b: [c: 'foo']]]
+     *
+     * example2: Will overwrite basic types when it conflicts
+     *           putValue([a: [b: "blah"]], 'a.b.c', 'foo') == [a: [b: [c: 'foo']]]
+     *
+     * example3: Will overwrite basic types when it conflicts
+     *           putValue([a: [x: "stay"]], 'a.b.c', 'foo') == [a: [x: "stay"], [b: [c: 'foo'] ] ]
+     *
+     * @param map       | the target map
+     * @param propPath  | the delimited path to the key
+     * @param value     | the value to set at the propertyPath
+     * @param pathDelimiter [default: '.'] if the path is delimeted by somehting like "_' then can set it here. Useful for csv.
+     * @return
+     */
+    static Map putValue(Map map, String propPath, Object value, String pathDelimiter = '.' ) {
+        int i = propPath.lastIndexOf(pathDelimiter)
+        //get the last prop key,  so for "a.b.c.d", this will get "d"
+        String lastKey = propPath.substring(i + 1, propPath.length())
+        if (i > -1) {
+            //sping through first part, so for a.b.c.d, this will iterate over a.b.c
+            propPath.substring(0, i).tokenize(pathDelimiter).each { String k ->
+                var m = map.get(k)
+                //if its null or its a basic type then overwrite it. so for a.b.c.d example, if map already has a.b.c=foo will overwrite
+                if(m == null || ClassUtils.isPrimitiveOrWrapper(m.class) || m instanceof CharSequence) {
+                    map = map[k] = [:]
+                } else {
+                    map = (Map) m
+                }
+            }
+        }
+        map[lastKey] = value
+        return map
+    }
+
+    /**
+     * DEEPLY merges into the target by recursively copying the values of each Map in sources,
+     * Sources are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
+     * so if you call extend(a, b, c) then b overrites a's values and c overwrites b values (when they exist and are not null)
+     *
+     * NOTE: the target is modified, if you want it merged into a new map then pass in a new map ([:], map1, map2) to target
+     * as thats what will be returned.
+     *
+     * Mimics 'merge()' functions often seen in JavaScript libraries.
      * Any specific Map implementations (e.g. TreeMap, LinkedHashMap)
      * are not guaranteed to be retained. The ordering of the keys in
-     * the result Map is not guaranteed. Only nested maps will be
+     * the result Map is not guaranteed. Only nested Maps and Collections will be
      * merged; primitives, objects, and other collection types will be
      * overwritten.
      *
-     * The source maps will not be modified.
+     * The source maps will not be modified, only the target is modified.
      *
-     * If only 1 map is passed in then it just returns that without making a copy or modifying
+     * If no sources passed in then it just returns target without making a copy or modifying
      *
-     * @return the new merged map
+     * @return the new merged map, will be same as the passed in target as its modified
      */
-    static Map merge(Map[] sources) {
-        if (sources.length == 0) return [:]
-        if (sources.length == 1) return sources[0]
+    static Map merge(Map target, Map... sources) {
+        if (sources.length == 0) return target
 
-        sources.inject([:]) { merged, source ->
+        sources.inject(target) { merged, source ->
             source.each { k, val ->
                 def mergedVal = merged[k]
+                //we do maps and collections first as most are Cloneable but they only do a shallow clone, we do a deep.
                 if (( mergedVal == null || mergedVal instanceof Map ) && val instanceof Map) {
                     if(mergedVal == null) merged[k] = [:]
-                    merged[k] = merge(merged[k] as Map, val as Map)
-                } else if ((mergedVal == null || mergedVal instanceof Collection) && val instanceof Collection) {
+                    merge(merged[k] as Map, val as Map)
+                }
+                else if(val instanceof Range){
+                    //Groovy Ranges are Lists, we dont try to clone and just set it otherwise they end up as new collection not Range
+                    merged[k] = val
+                }
+                else if ((mergedVal == null || mergedVal instanceof Collection) && val instanceof Collection) {
                     if(mergedVal == null) merged[k] = []
                     merged[k] = (Collection)merged[k] + (Collection)val
                     //The list could be list of maps, so make sure they get copied
+                    //XXX should do an add all above to merged[k], then we dont loose it?
                     merged[k] = merged[k].collect{ item ->
-                        return (item instanceof Map) ? merge([:], item) : item
+                        // ALSO we only clone the map below, it could be a Collection too, which we should clone too.
+                        return (item instanceof Map) ? merge([:], item as Map) : item
                     }
-                } else {
+                }
+                // else if(val instanceof Cloneable){
+                //     //If its cloneable, its doesnt merge it, it overrites it. but does try to clone it.
+                //     try{
+                //         merged[k] = val.clone()
+                //     } catch (e){
+                //         //on any error then just sets the val
+                //         merged[k] = val
+                //     }
+                // }
+                else {
                     merged[k] = val
                 }
             }
             return merged
         } as Map
+
+        return target
     }
 
-    static Map merge(List<Map> sources) {
-        merge(sources as Map[])
-    }
-
-    /**
-     * See clone,
-     */
-    static Map deepCopy(Map source) {
-        clone(source)
+    static Map merge(Map target, List<Map> sources) {
+        return merge( target, sources as Map[])
     }
 
     /**
-     * Does a "deep" clone of the Map. If a shallow clone is desired use whats built into most al Java Map impls.
+     * Does a "deep" clone of the Map by recursively cloning values when possible.
+     * It just calls merge([:], source)
+     * If a shallow clone is desired use whats built into most al Java Map impls.
      * see merge. it uses merge to do a deep copy of the map into a new Map
      *
      * @return the cloned map
      */
     static Map clone(Map source) {
         if(!source) return [:]
-        merge([:], source)
+        return merge([:], source)
     }
 
     /**
@@ -110,10 +171,26 @@ class Maps {
     }
 
     /**
-     * Deeply remove/prune all nulls and falsey` empty maps, lists and strings as well
+     * Transforms a string path like "x.y.z" to [x:[y:[z:value]]]
+     *
+     * @param propertyPath - The path like 'x.y.z'
+     * @param value - the value to put in lowest map
+     * @return The Map
+     */
+    static Map<String, Object> pathToMap(String propertyPath, Object value) {
+        Validate.notNull(propertyPath, '[source]')
+        Map result = propertyPath.tokenize('.').reverse().inject(value) { Object v, Object prop ->
+            [(prop):v]
+        } as Map
+
+        return result as Map<String, Object>
+    }
+
+    /**
+     * Deeply remove/prune all nulls and "falsey" empty maps, lists and strings as well
      *
      * @param map the map to prune
-     * @param pruneEmpty default:true set to false to keep empty maps, lists and strings
+     * @param pruneEmpty default:true set to false to keep empty maps, lists and strings and only prune nulls
      * @return the pruned map
      */
     public static <K, V> Map<K, V> prune(Map<K, V> map, boolean pruneEmpty = true) {

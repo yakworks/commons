@@ -7,7 +7,6 @@ package yakworks.commons.beans
 import java.lang.reflect.Type
 
 import spock.lang.Specification
-import yakworks.commons.beans.PropertyTools
 import yakworks.commons.testing.pogos.Gadget
 
 class PropertyToolsSpec extends Specification{
@@ -28,6 +27,21 @@ class PropertyToolsSpec extends Specification{
         List<String> getTraitList(){
             stringList
         }
+    }
+
+    void "smoke test property parsing"() {
+        when:
+        String undscrore = "me_"
+        String otherProperty = "foo_.bar.baz"
+        int dotIdx = otherProperty.indexOf(".")
+        String rootObj = dotIdx > -1 ? otherProperty.substring(0, dotIdx) : otherProperty
+        String restOfPath = dotIdx > -1 ? otherProperty.substring(dotIdx+1) : ""
+
+        then:
+        rootObj == "foo_"
+        restOfPath == "bar.baz"
+        //remove last character
+        undscrore[0..-2] == "me"
     }
 
     void "getPropertyValue for object"() {
@@ -115,6 +129,17 @@ class PropertyToolsSpec extends Specification{
         'objectList' | java.lang.Object
         'simpleList' | java.lang.Object
         'traitList'  | java.lang.String
+    }
+
+    void "set setValue with path"() {
+        when:
+        def user = new BeanToolsSpec.AdminUser()
+        user.thing = new BeanToolsSpec.AdminUser.Thing()
+        PropertyTools.setValue(user, 'thing.name', "foo")
+        //PropertyTools.setFieldValue(user, 'thing.name', "foo")
+
+        then:
+        user.thing.name == "foo"
     }
 
 }

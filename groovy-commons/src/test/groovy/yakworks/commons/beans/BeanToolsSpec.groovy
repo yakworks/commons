@@ -6,6 +6,8 @@ package yakworks.commons.beans
 
 import groovy.transform.CompileStatic
 
+import org.codehaus.groovy.runtime.InvokerHelper
+
 import spock.lang.Specification
 
 class BeanToolsSpec extends Specification{
@@ -128,5 +130,7 @@ class BeanToolsSpec extends Specification{
         au2.things[0] instanceof AdminUser.Thing
         au2.things[0].name == 'thing2'
     }
+
+
 
 }

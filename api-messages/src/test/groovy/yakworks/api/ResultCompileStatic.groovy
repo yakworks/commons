@@ -19,6 +19,7 @@ class ResultCompileStatic {
 
     static runAll(){
         testOkResult()
+        testProblemDetail()
         return true
     }
 
@@ -26,6 +27,17 @@ class ResultCompileStatic {
         OkResult res = Result.OK().msg("foo.bar").title("ff").payload("foo").msg("ff")
         assert res instanceof OkResult
         return res
+        // prob.payload("foo").msg("ff")
+        // Result.Fluent probtrait =  (Result.Fluent) prob
+        // probtrait.payload("foo").msg()
+    }
+
+    static Problem testProblemDetail(){
+        def ex = new IllegalArgumentException("WTF")
+        Problem prob = Problem.of(ex)
+        //Problem prob = Problem.ofPayload("payload").msg("foo.bar").title("ff").detail("foo")
+        assert prob instanceof Problem
+        return prob
         // prob.payload("foo").msg("ff")
         // Result.Fluent probtrait =  (Result.Fluent) prob
         // probtrait.payload("foo").msg()

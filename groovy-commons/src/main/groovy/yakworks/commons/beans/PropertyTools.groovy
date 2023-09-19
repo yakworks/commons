@@ -48,6 +48,7 @@ class PropertyTools {
         }
         return value
     }
+
     /**
      * Return the value of the (probably nested if your using this) property of the specified name, for the specified source object
      *
@@ -107,6 +108,20 @@ class PropertyTools {
             path.split('\\.').each { String it -> bean = bean[it] }
         }
         return bean
+    }
+
+    /**
+     * sets the property based on the path. can be a simple "someField" or contain dots for nested path like "foo.bar.someField"
+     * @param object the object to navigate and set
+     * @param propertyPath the field or path to set
+     * @param value the val to set
+     */
+    static void setValue(Object object, String propertyPath, Object value) {
+        def pathElements = propertyPath.tokenize('.')
+        String objPath = pathElements[0..-2].join('.')
+        Object parent = getProperty(object, objPath)
+        if(parent == null) throw new IllegalArgumentException("Result of path to [${objPath}] is null")
+        parent[pathElements[-1]] = value
     }
 
     /**

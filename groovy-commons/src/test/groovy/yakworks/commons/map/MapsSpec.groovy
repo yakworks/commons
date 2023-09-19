@@ -33,10 +33,9 @@ class MapsSpec extends Specification {
             foo: 'bar',
             baz: 'qux'
         ]
-        def merged = Maps.merge(m0, m1)
 
-        then:
-        expected == merged
+        then: "merges m1 into m0"
+        expected == Maps.merge(m0, m1)
         // assertMapsEqual(expected, instance.merge(m0, m1))
     }
 
@@ -57,7 +56,7 @@ class MapsSpec extends Specification {
         ]
 
         def listOfMaps = [m0, m1]
-        def mergedMap = Maps.merge(listOfMaps)
+        def mergedMap = Maps.merge([:], listOfMaps)
 
         then:
         m0.size() == 1
@@ -413,13 +412,13 @@ class MapsSpec extends Specification {
         !Maps.boolean(maps, 'nothing2', false)
     }
 
-    void "test deep merge"() {
+    void "test merge with empty map target"() {
         given:
         Map m1 = [num1:1, num2:2, nested:[num1:1, num2:2], list:[1,2,3]]
         Map m2 = [num1:9, num3:3, nested:[num1:9, num3:3], list:[4]]
 
         when:
-        Map copy = Maps.merge(m1, m2)
+        Map copy = Maps.merge([:], m1, m2)
         //modify to make sure have copy
         m1.nested.num1 = 99
         m2.nested.num1 = 99
@@ -444,5 +443,76 @@ class MapsSpec extends Specification {
                 assert v == actual[k]
             }
         }
+    }
+
+    void "test path to map"() {
+        when:
+        String propertyPath = 'foo.bar'
+        String value = 'buzz'
+        Map mainMap = [:]
+
+        Map rmap = Maps.pathToMap('foo.bar', 'buzz')
+        Map rmap2 = Maps.pathToMap('foo', 'buzz2')
+
+        then:
+        rmap.size() == 1
+        rmap.foo.size() == 1
+        rmap.foo.bar == "buzz"
+        rmap2.foo == 'buzz2'
+
+    }
+
+    void "test putByPath"() {
+        when: "simple key"
+        Map map = [:]
+        Map rmap = Maps.putValue(map, 'a', 'foo')
+
+        then:
+        map.size() == 1
+        map.a == 'foo'
+        rmap.a == 'foo'
+
+        when: "doing a new map"
+        map = [:]
+        rmap = Maps.putValue(map, 'a.c.d', 'foo')
+
+        then:
+        map.size() == 1
+        map.a.size() == 1
+        map.a.c.size() == 1
+        map.a.c.d == 'foo'
+        rmap.d == 'foo'
+
+        when: "existing map same keys"
+        map = [a: [b: true]]
+        Maps.putValue(map, 'a.c', 'foo')
+
+        then:
+        map.size() == 1
+        map.a.size() == 2
+        map.a.b
+        map.a.c == 'foo'
+
+        when: "same key"
+        map = [a: [c: true]]
+        Maps.putValue(map, 'a.c', 'foo')
+
+        then:
+        map.size() == 1
+        map.a.size() == 1
+        map.a.c == 'foo'
+
+        when: "conflicting key"
+        map = [a: [c: true, b: 'foo']]
+        //puts path underneath existing will overwite it
+        Maps.putValue(map, 'a.c.d', 'bar')
+        Maps.putValue(map, 'a.b.d', 'buzz')
+
+        then:
+        map.size() == 1
+        map.a.size() == 2
+        map.a.c.size() == 1
+        map.a.c.d == 'bar'
+        map.a.b.d == 'buzz'
     }
 }
