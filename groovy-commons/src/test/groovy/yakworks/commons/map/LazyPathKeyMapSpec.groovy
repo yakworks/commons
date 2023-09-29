@@ -108,6 +108,18 @@ class LazyPathKeyMapSpec extends Specification {
         !theMap.containsKey("x.y")
     }
 
+    void "sub map"() {
+        Map sub = ["x_y": "val"]
+
+        when:
+        LazyPathKeyMap theMap = LazyPathKeyMap.of(sub, "_")
+        theMap.b = ["k":"v"]
+
+        then:
+        theMap.x.y == "val"
+        theMap.b.k == "v"
+    }
+
     //This works but seems like it should not, see trip x
     void "test key conflicts"() {
         when:
