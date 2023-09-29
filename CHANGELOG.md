@@ -1,3 +1,8 @@
+### v3.13
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.12...v3.13)
+- lazy map bug with _ delimiter and sub-map(#16) [link](https://github.com/yakworks/commons/commit/07caa9a317e0069f59c1ff978c6259e1afad5ab4)
+
 ### v3.12
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.11.1...v3.12)
