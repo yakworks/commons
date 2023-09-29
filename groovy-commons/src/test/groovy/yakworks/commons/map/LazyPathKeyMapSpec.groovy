@@ -113,6 +113,7 @@ class LazyPathKeyMapSpec extends Specification {
 
         when:
         LazyPathKeyMap theMap = LazyPathKeyMap.of(sub, "_")
+        // assert theMap.x.y == "val"
         theMap.b = ["k":"v"]
 
         then:

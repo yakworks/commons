@@ -67,6 +67,8 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
 
     @Override
     public Object put(String key, Object value) {
+        //if its a map then build it first so it can go into the normal map.put
+        if(value instanceof Map) buildIfNeeded()
         if (map == null) {
             return sourceMap.put(key, value)
         } else {

@@ -31,7 +31,7 @@ class ZipUtils {
      * @return the new Path with the extracted contents
      */
     static Path extractHere(Path sourceZip, Path targetDir = null) {
-        targetDir ?= sourceZip.getParent()
+        if(!targetDir) targetDir = sourceZip.getParent()
         Path unzipDir = targetDir.resolve(PathTools.getBaseName(sourceZip.fileName))
         Files.createDirectories(unzipDir)
         unzip(sourceZip, unzipDir)
