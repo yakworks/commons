@@ -67,6 +67,8 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
 
     @Override
     public Object put(String key, Object value) {
+        //if its a map then build it first so it can go into the normal map.put and replace otherwise it ends up getting merged
+        if(value instanceof Map) buildIfNeeded()
         if (map == null) {
             return sourceMap.put(key, value)
         } else {
@@ -74,7 +76,7 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
         }
     }
 
-    /** call Maps.putByPath */
+    /** call Maps.putValue */
     public void putByPath(String key, Object value) {
         if (map == null) {
             sourceMap.put(key, value)
@@ -138,8 +140,8 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> {
                 }
                 else if(sval instanceof Map){
                     // it under the __merge__ key for now
-                    Map mres = Maps.putValue(map, "${key}.__MERGE__", "MERGE_ME", pathDelimiter)
-                    mres.remove("__MERGE__") //remove it
+                    Map mres = Maps.putValue(map, "${key}${pathDelimiter}~~MERGE~~", "MERGE_ME", pathDelimiter)
+                    mres.remove("~~MERGE~~") //remove it
                     Maps.merge(mres, LazyPathKeyMap.of(sval as Map, pathDelimiter) )
                     //putByPath(key, LazyPathKeyMap.of(sval, pathDelimiter))
                 } else {

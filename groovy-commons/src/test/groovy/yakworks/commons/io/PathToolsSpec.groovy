@@ -2,6 +2,9 @@ package yakworks.commons.io
 
 import java.nio.file.Path
 import java.nio.file.Paths
+
+import org.apache.commons.io.file.PathUtils
+
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -70,6 +73,41 @@ class PathToolsSpec extends Specification {
     void "test changeExtension"() {
         expect:
         PathTools.changeExtension("foo.txt", 'zip') == 'foo.zip'
+    }
+
+    void "test createDirectories"() {
+        when:
+        Path dir = Path.of("build/testing/createDirectories")
+        PathTools.createDirectories(dir)
+        then:
+        dir.exists()
+
+        when: "do it again to make sure it wont fail"
+        PathTools.createDirectories(dir)
+        then:
+        dir.exists()
+
+        cleanup:
+        PathUtils.deleteDirectory(Path.of("build/testing"))
+    }
+
+    void "test createParentDirectories"() {
+        when:
+        Path dir = Path.of("build/testing/createDirectories/foo.txt")
+        PathTools.createParentDirectories(dir)
+        dir.text = "some content"
+
+        then:
+        Path.of("build/testing/createDirectories").exists()
+        dir.exists()
+
+        when: "do it again to make sure it wont fail"
+        PathTools.createParentDirectories(dir)
+        then:
+        dir.exists()
+
+        cleanup:
+        PathUtils.deleteDirectory(Path.of("build/testing"))
     }
 
 }

@@ -108,6 +108,52 @@ class LazyPathKeyMapSpec extends Specification {
         !theMap.containsKey("x.y")
     }
 
+    void "sub map with _ delimeter"() {
+        Map sub = [
+            "x_y": "val"
+        ]
+
+        when:
+        LazyPathKeyMap theMap = LazyPathKeyMap.of(sub, "_")
+        theMap.b = ["d": "val b_d"]
+
+        then:
+        theMap.x.y == "val"
+        theMap.b.d == "val b_d"
+    }
+
+    void "replace sub-map merge with _ delimeter"() {
+        Map sub = [
+            "x_y": "val",
+            "b_c": "val b_c"
+        ]
+
+        when:
+        LazyPathKeyMap theMap = LazyPathKeyMap.of(sub, "_")
+        theMap.b = ["d": "val b_d"]
+
+        then:
+        theMap.x.y == "val"
+        theMap.b == ["d": "val b_d"]
+        // theMap.b.c == "val b_c"
+        // theMap.b.d == "val b_d"
+    }
+
+    void "putByPath, merge sub-map merge with _ delimeter and putValue"() {
+        Map sub = [
+            "x_y": "val",
+            "b_c": "val b_c"
+        ]
+
+        when:
+        LazyPathKeyMap theMap = LazyPathKeyMap.of(sub, "_")
+        theMap.putByPath("b", ["d": "val b_d"])
+
+        then:
+        theMap.x.y == "val"
+        theMap.b == ["c": "val b_c", "d": "val b_d"]
+    }
+
     //This works but seems like it should not, see trip x
     void "test key conflicts"() {
         when:
