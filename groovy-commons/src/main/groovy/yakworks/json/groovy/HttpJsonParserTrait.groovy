@@ -4,11 +4,11 @@
 */
 package yakworks.json.groovy
 
-import yakworks.api.problem.Problem
-
 import javax.servlet.http.HttpServletRequest
 
 import groovy.transform.CompileStatic
+
+import yakworks.api.problem.Problem
 
 /**
  * Trait to adds parse methods for using JsonSlurper to parse HttpServletRequest body
