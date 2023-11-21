@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest
 
 import groovy.transform.CompileStatic
 
+import yakworks.api.problem.Problem
+
 /**
  * Trait to adds parse methods for using JsonSlurper to parse HttpServletRequest body
  *
@@ -39,8 +41,12 @@ trait HttpJsonParserTrait extends JsonEngineTrait{
      * if no content then returns an empty map
      */
     Object parseJson(HttpServletRequest req) {
-        boolean hasContent = req.contentLength
-        return hasContent ? getJsonSlurper().parse(req.inputStream) : Collections.emptyMap()
+        try {
+            boolean hasContent = req.contentLength
+            return hasContent ? getJsonSlurper().parse(req.inputStream) : Collections.emptyMap()
+        } catch(Exception e) {
+            throw Problem.of(e).title("Failed to parse json").detail(e.message).toException()
+        }
     }
 
 }
