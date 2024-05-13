@@ -1,3 +1,11 @@
+### v3.14
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.13...v3.14)
+- trigger [link](https://github.com/yakworks/commons/commit/d0a32417f71e3f5b7ee53f98d4e405af642b8ba1)
+- trigger release with new GPG key signing [link](https://github.com/yakworks/commons/commit/5d8c29c91e1659058e8f3904750ddd8f53484148)
+- release [link](https://github.com/yakworks/commons/commit/c21257ed94f15da576f67112d27c1df20b98efae)
+- Add helper to get private field value (#18) (#19) [link](https://github.com/yakworks/commons/commit/557f6d4ff443bdad0678b69b29f92f73f4f5a70a)
+
 ### v3.13
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.12...v3.13)
