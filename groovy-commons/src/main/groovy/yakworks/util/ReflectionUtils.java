@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.annotation.Nullable;
+import yakworks.commons.lang.Validate;
 
 /**
  * Simple utility class for working with the reflection API and handling
@@ -662,6 +663,18 @@ public abstract class ReflectionUtils {
 		}
 		throw new IllegalStateException("Should never get here");
 	}
+
+
+    /**
+     * Returns the value of private field.
+     * Makes the private field accessible and returns the value
+     */
+    public static Object getPrivateFieldValue(Class aClass, String fieldName, Object object) {
+        Field field = findField(aClass, fieldName);
+        Validate.notNull(field);
+        makeAccessible(field);
+        return getField(field, object);
+    }
 
 	/**
 	 * Invoke the given callback on all locally declared fields in the given class.
