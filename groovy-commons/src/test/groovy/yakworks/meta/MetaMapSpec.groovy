@@ -4,7 +4,12 @@
 */
 package yakworks.meta
 
+import spock.lang.IgnoreRest
 import spock.lang.Specification
+import yakworks.commons.testing.pogos.Gadget
+import yakworks.commons.testing.pogos.Thing
+
+import java.time.LocalDate
 
 class MetaMapSpec extends Specification {
 
@@ -139,7 +144,28 @@ class MetaMapSpec extends Specification {
         for(entry in map.entrySet()) {
             map.getIncludes().contains(entry.key)
         }
+    }
 
+    @IgnoreRest
+    void "test serialize"() {
+        setup:
+        def includes = ['id', 'name', 'localDate', 'thing.name', ]
+        MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, includes)
+
+        Gadget gadget = new Gadget(id:1, name:"test", localDate: LocalDate.now(), thing:new Thing(name:"test"))
+        def metamap = new MetaMap(gadget, ment)
+
+        when:
+        ByteArrayOutputStream bout = new ByteArrayOutputStream()
+        ObjectOutputStream out = new ObjectOutputStream(bout)
+        out.writeObject(metamap)
+        out.flush()
+
+        ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(bout.toByteArray()))
+        MetaMap serialized = input.readObject()
+
+        then:
+        noExceptionThrown()
     }
 
 }

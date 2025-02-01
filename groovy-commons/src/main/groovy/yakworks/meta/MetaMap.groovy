@@ -26,7 +26,7 @@ import yakworks.commons.model.IdEnum
  */
 @SuppressWarnings(["CompileStatic", "FieldName", "ExplicitCallToEqualsMethod"])
 @CompileStatic
-class MetaMap extends AbstractMap<String, Object> implements Cloneable {
+class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializable {
 
     private MetaClass entityMetaClass;
     private Object entity
