@@ -106,8 +106,8 @@ class MetaEntitySpec extends Specification {
         setup:
         def includes = ['id', 'thing.name' ]
         MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, ['id', 'thing.name' ])
+        def expectedIncludes = includes
 
-        when:
         when:
         ByteArrayOutputStream bout = new ByteArrayOutputStream()
         ObjectOutputStream out = new ObjectOutputStream(bout)
@@ -119,6 +119,10 @@ class MetaEntitySpec extends Specification {
 
         then:
         noExceptionThrown()
+        serialized
+
+        and:
+        ment.flattenProps() == (includes as Set)
     }
 
 

@@ -146,7 +146,6 @@ class MetaMapSpec extends Specification {
         }
     }
 
-    @IgnoreRest
     void "test serialize"() {
         setup:
         def includes = ['id', 'name', 'localDate', 'thing.name', ]
