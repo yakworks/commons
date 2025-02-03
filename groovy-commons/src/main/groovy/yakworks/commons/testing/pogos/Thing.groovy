@@ -9,7 +9,7 @@ import java.time.LocalDate
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class Thing {
+class Thing implements Serializable {
     Long id
     // address fields
     String name

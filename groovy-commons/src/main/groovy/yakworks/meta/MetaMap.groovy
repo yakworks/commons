@@ -55,7 +55,9 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     MetaMap(Object entity) {
         Validate.notNull(entity)
         this.entity = entity
-        entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
+
+        //FIXME MetaClass is not serializable
+        //entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
         if(Map.isAssignableFrom(entity.class)) {
             entityAsMap = (Map)entity
         }
@@ -75,7 +77,10 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     private void initialise(MetaEntity metaEntity) {
         if(metaEntity){
             this.metaEntity = metaEntity
-            _includes = metaEntity.metaProps.keySet()
+
+            //FIXME @SUD TEMP disable, because LinkedHashMap.keySet which is LinkedKeySet is not serializable
+            //FIXME Also the behavior of "includes" is different here compared to getIncludes() which uses metaEntity.getProperties()
+            //_includes = metaEntity.metaProps.keySet()
             // _includeProps = includeMap.propsMap
             this.converters = MetaEntity.CONVERTERS
         }
@@ -333,9 +338,18 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
             }
             else {
                 //assume its an object
-                for (MetaProperty mp : entityMetaClass.getProperties()) {
-                    if (isExcluded(mp.name)) continue
-                    _includes.add(mp.name)
+
+                if(metaEntity) {
+                    _includes = metaEntity.metaProps.keySet()
+                }
+
+                if (!_includes) {
+                    //FIXME TEMP, look it up here, so that it doesnt need to be serialized
+                    MetaClass eMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
+                    for (MetaProperty mp : eMetaClass.getProperties()) {
+                        if (isExcluded(mp.name)) continue
+                        _includes.add(mp.name)
+                    }
                 }
             }
         }

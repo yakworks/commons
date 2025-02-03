@@ -4,8 +4,8 @@
 */
 package yakworks.meta
 
-import spock.lang.IgnoreRest
 import spock.lang.Specification
+import yakworks.commons.beans.PropertyTools
 import yakworks.commons.testing.pogos.Gadget
 import yakworks.commons.testing.pogos.Thing
 
@@ -29,6 +29,21 @@ class MetaMapSpec extends Specification {
         4 == map.size()
         4 == includes.size()
         ['name', 'age', 'other', 'info'].containsAll(includes)
+    }
+
+    void "test includes for object type"() {
+        setup:
+        def includes = ['id', 'name', 'localDate', 'thing.name', ]
+        MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, includes)
+
+        Gadget gadget = new Gadget(id:1, name:"test", localDate: LocalDate.now(), thing:new Thing(name:"test"))
+        def metamap = new MetaMap(gadget, ment)
+
+        when:
+        Set<String> incl = metamap.getIncludes()
+
+        then:
+        incl == ["id", "name", "localDate", "thing"] as Set<String>
     }
 
     void testSelectSubMap() {
@@ -86,6 +101,8 @@ class MetaMapSpec extends Specification {
         45 == map.get("age")
         45 == map.age
         45 == map['age']
+
+        PropertyTools.getProperty(map, "info.phone") == "1234"
 
         map.foo == null
         map['foo'] == null
@@ -148,7 +165,7 @@ class MetaMapSpec extends Specification {
 
     void "test serialize"() {
         setup:
-        def includes = ['id', 'name', 'localDate', 'thing.name', ]
+        def includes = ['id', 'name', 'localDate', 'thing.name']
         MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, includes)
 
         Gadget gadget = new Gadget(id:1, name:"test", localDate: LocalDate.now(), thing:new Thing(name:"test"))

@@ -4,6 +4,7 @@
 */
 package yakworks.meta
 
+import spock.lang.IgnoreRest
 import spock.lang.Specification
 import yakworks.commons.testing.pogos.Gadget
 
@@ -20,6 +21,20 @@ class MetaEntitySpec extends Specification {
 
         then:
         ment1 == ment2
+    }
+
+    void "test getMetaEntityProps"() {
+        setup:
+        def includes = ['id', 'name', 'localDate', 'thing.name', ]
+        MetaEntity ment = BasicMetaEntityBuilder.build(Gadget, includes)
+
+        when:
+        Map mprops = ment.metaEntityProps
+
+        then:
+        mprops.size() == 1
+        mprops.containsKey('thing')
+        mprops['thing'] instanceof MetaEntity
     }
 
     void "test toBasicMap"(){
@@ -124,7 +139,4 @@ class MetaEntitySpec extends Specification {
         and:
         ment.flattenProps() == (includes as Set)
     }
-
-
-
 }
