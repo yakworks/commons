@@ -515,4 +515,22 @@ class MapsSpec extends Specification {
         map.a.c.d == 'bar'
         map.a.b.d == 'buzz'
     }
+
+    void "test remove"() {
+        given:
+        Map map = [a:[b:[one:"one", two:"two"]], d:"test"]
+
+        when:
+        def val = Maps.remove(map, "a.b.one")
+
+        then:
+        val == "one"
+        map == [a:[b:[two:"two"]], d:"test"]
+
+        when:
+        Maps.remove(map, "d") == "test"
+
+       then:
+       map == [a:[b:[two:"two"]]]
+    }
 }

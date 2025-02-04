@@ -23,6 +23,7 @@ import yakworks.util.ClassUtils
 @CompileStatic
 class Maps {
 
+
     /**
      * Return the value of a nested path. Alias to PropertyTools.getProperty.
      *
@@ -75,6 +76,25 @@ class Maps {
         }
         map[lastKey] = value
         return map
+    }
+
+    /**
+     * Removes the deeply nested key if its map
+     *
+     * example1: remove([a: [b: [c: 'bar', foo:baz]]], 'a.b.c') == [a: [b: [foo:baz]]]
+     */
+    static Object remove(Map map, String key) {
+        if(!key.contains('.')) return map.remove(key)
+        else {
+            List<String> keyTokens = key.tokenize('.')
+            String keyToRemove = keyTokens.remove(keyTokens.size() - 1)//last key after dot
+            String parentKey = keyTokens.join('.')
+            Object parent = value(map, parentKey)
+            if(parent && parent instanceof Map) {
+                return parent.remove(keyToRemove)
+            }
+            return null
+        }
     }
 
     /**
