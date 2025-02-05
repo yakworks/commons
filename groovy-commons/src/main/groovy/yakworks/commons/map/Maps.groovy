@@ -79,7 +79,7 @@ class Maps {
     }
 
     /**
-     * Removes the deeply nested key if its map
+     * Removes the deeply nested key from map
      *
      * example1: remove([a: [b: [c: 'bar', foo:baz]]], 'a.b.c') == [a: [b: [foo:baz]]]
      */
