@@ -535,7 +535,7 @@ class MapsSpec extends Specification {
        map == [a:[b:[two:"two"]]]
     }
 
-    void "test contains keu"() {
+    void "test containsKey"() {
         given:
         Map map = [a:[b:[one:"one", two:"two"]], d:"test"]
 
