@@ -5,6 +5,7 @@
 package yakworks.commons.map
 
 import spock.lang.Specification
+import static yakworks.commons.map.Maps.containsKey
 
 class MapsSpec extends Specification {
 
@@ -532,5 +533,19 @@ class MapsSpec extends Specification {
 
        then:
        map == [a:[b:[two:"two"]]]
+    }
+
+    void "test contains keu"() {
+        given:
+        Map map = [a:[b:[one:"one", two:"two"]], d:"test"]
+
+        expect:
+        containsKey(map, "a")
+        containsKey(map, "a.b")
+        containsKey(map, "a.b.one")
+        containsKey(map, "a.b.two")
+        containsKey(map, "d")
+        !containsKey(map, "a.b.c")
+        !containsKey(map, "x")
     }
 }

@@ -98,6 +98,21 @@ class Maps {
     }
 
     /**
+     * Checks if the map contains the key. Supports deeply nested key
+     * example1: containsKey([a: [b: [c: 'bar']]], 'a.b.c') == true
+     */
+    static boolean containsKey(Map map, String key) {
+        if(!key.contains('.')) return map.containsKey(key)
+        else {
+            List<String> keyTokens = key.tokenize('.')
+            String lastKey = keyTokens.remove(keyTokens.size() - 1)//last key after dot
+            String parentKey = keyTokens.join('.')
+            Object parent = value(map, parentKey)
+            return parent && (parent instanceof Map) && parent.containsKey(lastKey)
+        }
+    }
+
+    /**
      * DEEPLY merges into the target by recursively copying the values of each Map in sources,
      * Sources are applied from left to right. Subsequent sources overwrite property assignments of previous sources.
      * so if you call extend(a, b, c) then b overrites a's values and c overwrites b values (when they exist and are not null)
