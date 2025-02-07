@@ -20,10 +20,14 @@ class MetaProp implements Serializable {
     private static final long serialVersionUID = 1L
     /** property name */
     String name
+
     /** title label, will use LabelUtils.getNaturalTitle(name) if not populated.  */
     String title
+
     /** java type for prop, either this or className should be populated */
+    //XXX Likely unsafe for serialisation
     Class classType
+
     /** java type for prop, the getter will return String classType.name */
     String className
 

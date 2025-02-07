@@ -13,7 +13,7 @@ import groovy.transform.CompileStatic
  * A sample domain model for ktichen sink testing
  */
 @CompileStatic
-class Gadget {
+class Gadget implements Serializable {
     Long id
     long id2
 
