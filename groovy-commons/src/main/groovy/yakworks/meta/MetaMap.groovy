@@ -62,10 +62,10 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
     }
 
     /**
-     * Constructs a new {@code EntityMap} that operates on the specified bean. The given entity
+     * Constructs a new {@code MetaMap} that operates on the specified bean. The given entity
      * cant be null
      * @param entity The object to inspect
-     * @param entity The object to inspect
+     * @param metaEntity The info about the entity
      */
     MetaMap(Object entity, MetaEntity metaEntity) {
         this(entity)
