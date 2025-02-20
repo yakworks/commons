@@ -56,7 +56,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         Validate.notNull(entity)
         this.entity = entity
 
-        //FIXME MetaClass is not serializable
+        //FIXME we need to keep string and reinit this on deserialize
         entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
         if(Map.isAssignableFrom(entity.class)) {
             entityAsMap = (Map)entity
@@ -77,9 +77,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     private void initialise(MetaEntity metaEntity) {
         if(metaEntity){
             this.metaEntity = metaEntity
-
-            //FIXME Also the behavior of "includes" is different here compared to getIncludes() which uses metaEntity.getProperties()
-            //LinkedKeySet is not serializable so make a HashSet
+            //Groovy default of LinkedKeySet is not serializable so make a HashSet
             _includes = new HashSet<String>(metaEntity.metaProps.keySet())
             // _includeProps = includeMap.propsMap
             this.converters = MetaEntity.CONVERTERS

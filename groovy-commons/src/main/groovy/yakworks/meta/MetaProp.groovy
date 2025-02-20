@@ -25,7 +25,7 @@ class MetaProp implements Serializable {
     String title
 
     /** java type for prop, either this or className should be populated */
-    //XXX Likely unsafe for serialisation
+    //XXX Likely unsafe for serialisation, @SUD whats this mean?
     Class classType
 
     /** java type for prop, the getter will return String classType.name */
