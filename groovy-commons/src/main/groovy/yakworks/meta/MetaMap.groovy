@@ -28,7 +28,7 @@ import yakworks.commons.model.IdEnum
 @CompileStatic
 class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializable {
 
-    private MetaClass entityMetaClass;
+    private transient MetaClass entityMetaClass;
     private Object entity
     // if the wrapped entity is a map then this will be the cast intance
     private Map entityAsMap
@@ -57,7 +57,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         this.entity = entity
 
         //FIXME MetaClass is not serializable
-        //entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
+        entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
         if(Map.isAssignableFrom(entity.class)) {
             entityAsMap = (Map)entity
         }
@@ -78,9 +78,9 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         if(metaEntity){
             this.metaEntity = metaEntity
 
-            //FIXME @SUD TEMP disable, because LinkedHashMap.keySet which is LinkedKeySet is not serializable
             //FIXME Also the behavior of "includes" is different here compared to getIncludes() which uses metaEntity.getProperties()
-            //_includes = metaEntity.metaProps.keySet()
+            //LinkedKeySet is not serializable so make a HashSet
+            _includes = new HashSet<String>(metaEntity.metaProps.keySet())
             // _includeProps = includeMap.propsMap
             this.converters = MetaEntity.CONVERTERS
         }
@@ -149,8 +149,8 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
 
         String p = name as String
 
-        // check to see if the shadow override map has on and return it as is
-        if(shadowMap.get(p)) return shadowMap.get(p)
+        // check to see if the shadow override map has key and return it as is
+        if(shadowMap.containsKey(p)) return shadowMap.get(p)
 
         if (!getIncludes().contains(p)) {
             return null
@@ -337,20 +337,23 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
                 _includes = entityAsMap.keySet().findAll{ key -> !isExcluded(key as String) }
             }
             else {
-                //assume its an object
-
-                if(metaEntity) {
-                    _includes = metaEntity.metaProps.keySet()
+                for (MetaProperty mp : entityMetaClass.getProperties()) {
+                    if (isExcluded(mp.name)) continue
+                    _includes.add(mp.name)
                 }
 
-                if (!_includes) {
-                    //FIXME TEMP, look it up here, so that it doesnt need to be serialized
-                    MetaClass eMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
-                    for (MetaProperty mp : eMetaClass.getProperties()) {
-                        if (isExcluded(mp.name)) continue
-                        _includes.add(mp.name)
-                    }
-                }
+                // if(metaEntity) {
+                //     _includes = metaEntity.metaProps.keySet()
+                // }
+                //
+                // if (!_includes) {
+                //     //FIXME TEMP, look it up here, so that it doesnt need to be serialized
+                //     MetaClass eMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
+                //     for (MetaProperty mp : eMetaClass.getProperties()) {
+                //         if (isExcluded(mp.name)) continue
+                //         _includes.add(mp.name)
+                //     }
+                // }
             }
         }
         return _includes

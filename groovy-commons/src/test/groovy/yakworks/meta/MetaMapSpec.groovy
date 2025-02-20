@@ -4,6 +4,8 @@
 */
 package yakworks.meta
 
+import org.springframework.util.SerializationUtils
+
 import spock.lang.Specification
 import yakworks.commons.beans.PropertyTools
 import yakworks.commons.testing.pogos.Gadget
@@ -163,6 +165,20 @@ class MetaMapSpec extends Specification {
         }
     }
 
+    void "test serialize Gadget"() {
+        setup:
+        Gadget gadget = new Gadget(id:1, name:"test", localDate: LocalDate.now(), thing:new Thing(name:"test"))
+
+        when:
+        def serialGadget = SerializationUtils.serialize(gadget)
+        assert serialGadget
+        def deserialGadget = SerializationUtils.deserialize(serialGadget)
+        assert deserialGadget
+
+        then:
+        deserialGadget.id == gadget.id
+    }
+
     void "test serialize"() {
         setup:
         def includes = ['id', 'name', 'localDate', 'thing.name']
@@ -172,16 +188,15 @@ class MetaMapSpec extends Specification {
         def metamap = new MetaMap(gadget, ment)
 
         when:
-        ByteArrayOutputStream bout = new ByteArrayOutputStream()
-        ObjectOutputStream out = new ObjectOutputStream(bout)
-        out.writeObject(metamap)
-        out.flush()
-
-        ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(bout.toByteArray()))
-        MetaMap serialized = input.readObject()
+        def serialMetamap = SerializationUtils.serialize(metamap)
+        assert serialMetamap
+        def deserialMetamap = SerializationUtils.deserialize(serialMetamap)
+        assert deserialMetamap
 
         then:
         noExceptionThrown()
+        deserialMetamap == metamap
+
     }
 
 }
