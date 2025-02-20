@@ -84,4 +84,10 @@ class MetaMapList extends AbstractList<MetaMap> implements TotalCount  {
     Object clone() {
         return Maps.clone(this as Collection<Map>)
     }
+
+    void hydrate() {
+        this.each { val ->
+            val.hydrate()
+        }
+    }
 }

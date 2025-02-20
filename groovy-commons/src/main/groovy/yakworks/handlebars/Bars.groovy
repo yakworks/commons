@@ -11,7 +11,6 @@ import groovy.transform.builder.SimpleStrategy
 import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.Template
 import com.github.jknack.handlebars.cache.HighConcurrencyTemplateCache
-import com.github.jknack.handlebars.cache.TemplateCache
 import com.github.jknack.handlebars.helper.AssignHelper
 import com.github.jknack.handlebars.helper.ConditionalHelpers
 import com.github.jknack.handlebars.helper.NumberHelper

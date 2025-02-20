@@ -6,6 +6,8 @@ package yakworks.meta
 
 import groovy.transform.CompileStatic
 
+import org.codehaus.groovy.util.HashCodeHelper
+
 import yakworks.commons.lang.Validate
 import yakworks.commons.map.Maps
 import yakworks.commons.model.IdEnum
@@ -30,7 +32,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     //MAKE SURE to bump this if making incompatible serilization changes
     private static final long serialVersionUID = 1L
 
-    private Object entity
+    private transient Object entity
     private Class entityClass
     // if the wrapped entity is a map then this will be the cast intance
     private Map entityAsMap
@@ -47,7 +49,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
 
     private Map<String, Object> shadowMap = [:]
 
-    Set<Converter> converters = [] as Set<Converter>
+    //Set<Converter> converters = [] as Set<Converter>
 
     /**
      * Constructs a new {@code EntityMap} that operates on the specified bean. The given entity
@@ -88,8 +90,12 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         }
     }
 
-    Object getEntity() {
-        return entity
+    // Object getEntity() {
+    //     return entity
+    // }
+
+    Object getEntityOrMap() {
+        return entity?:entityAsMap
     }
 
     Class getEntityClass() {
@@ -167,7 +173,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         }
 
         //return val
-        return convertValue(entity, p)
+        return convertValue( entity?:entityAsMap , p)
     }
 
     /**
@@ -235,6 +241,34 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         return null
     }
 
+    /**
+     * turns the entity in the entityAsMap.
+     * Use right before serialization.
+     */
+    void hydrate() {
+        //make sure includes is initialized
+        getIncludes()
+        if (entityAsMap) return //already done or its already a map and not entity object
+
+        Map hydrated = [:]
+        this.each { k, val ->
+            //def mergedVal = merged[k]
+            //we do maps and collections first
+            if (val instanceof MetaMap) {
+                val.hydrate()
+                hydrated[k] = val
+            }
+            else if (val instanceof MetaMapList) {
+                val.hydrate()
+                hydrated[k] = val
+            }
+            else {
+                hydrated[k] = val
+            }
+        }
+        entityAsMap = hydrated
+        entity = null
+    }
 
     /**
      * put will not set keys on the wrapped object but allows to add extra props and overrides
@@ -246,7 +280,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         shadowMap.put(name, value)
         //make sure its in the includes now too
         _includes.add(name)
-        return entity[name]
+        return getEntityOrMap()[name]
     }
 
     /**
@@ -274,7 +308,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     Collection<Object> values() {
         Collection<Object> values = []
         for (String p : getIncludes()) {
-            values.add(entity[p])
+            values.add(getEntityOrMap()[p])
         }
         return values
     }
@@ -284,16 +318,32 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         return Maps.clone(this)
     }
 
+    Object getId(){
+        getEntityOrMap()['id']
+    }
+
+    // @Override
+    // int hashCode() {
+    //     return entity.hashCode()
+    // }
+
     @Override
     int hashCode() {
-        return entity.hashCode()
+        int hashCode = HashCodeHelper.initHash()
+        def entId = getId()
+        if (entId) { hashCode = HashCodeHelper.updateHash(hashCode, entId) }
+        if (entityClass) { hashCode = HashCodeHelper.updateHash(hashCode, entityClass) }
+        if (metaEntity) { hashCode = HashCodeHelper.updateHash(hashCode, metaEntity) }
+        if (shadowMap) { hashCode = HashCodeHelper.updateHash(hashCode, shadowMap) }
+        if (_includes) { hashCode = HashCodeHelper.updateHash(hashCode, _includes) }
+        hashCode
     }
 
     @Override
     boolean equals(Object o) {
         if (o instanceof MetaMap) {
             MetaMap other = (MetaMap)o
-            return entity.equals(other.entity)
+            return getEntityOrMap().equals(other.getEntityOrMap())
         }
         return false
     }

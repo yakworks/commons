@@ -87,8 +87,11 @@ ifdef IS_SNAPSHOT
 	./gradlew publishJavaLibraryPublicationToMavenRepository
 endif
 
+## Build snapshot and publishes to your local maven.
 snapshot:
-	./gradlew snapshot
+	# snapshot task comes from the yakworks shipkit plugin.
+	$(gradlew) snapshot
+	$(logr.done) "- libs with version $(VERSION)$(VERSION_SUFFIX) published to local ~/.m2 maven"
 
 ## shows dependencies
 gradle.dependencies:
