@@ -4,6 +4,8 @@
 */
 package yakworks.meta
 
+import org.springframework.util.SerializationUtils
+
 import spock.lang.IgnoreRest
 import spock.lang.Specification
 import yakworks.commons.testing.pogos.Gadget
@@ -124,17 +126,17 @@ class MetaEntitySpec extends Specification {
         def expectedIncludes = includes
 
         when:
-        ByteArrayOutputStream bout = new ByteArrayOutputStream()
-        ObjectOutputStream out = new ObjectOutputStream(bout)
-        out.writeObject(ment)
-        out.flush()
+        def serialMent = SerializationUtils.serialize(ment)
+        assert serialMent
+        def deserialMent = SerializationUtils.deserialize(serialMent)
+        assert deserialMent
 
-        ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(bout.toByteArray()))
-        MetaEntity serialized = input.readObject()
 
         then:
         noExceptionThrown()
-        serialized
+        ment == deserialMent
+        //XXX @SUD we need to test the schema
+        ment.schema == deserialMent.schema
 
         and:
         ment.flattenProps() == (includes as Set)

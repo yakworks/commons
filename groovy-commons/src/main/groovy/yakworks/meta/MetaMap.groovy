@@ -80,6 +80,8 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
             //Groovy default of LinkedKeySet is not serializable so make a HashSet
             _includes = new HashSet<String>(metaEntity.metaProps.keySet())
             // _includeProps = includeMap.propsMap
+            //XXX @SUD need to look at why we do this. it complicates things because the converters need to be serialized
+            // MetaEntity.CONVERTERS does not since its static so can't we just use that instead of local reference?
             this.converters = MetaEntity.CONVERTERS
         }
     }
