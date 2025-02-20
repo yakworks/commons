@@ -27,9 +27,11 @@ import yakworks.commons.model.IdEnum
 @SuppressWarnings(["CompileStatic", "FieldName", "ExplicitCallToEqualsMethod"])
 @CompileStatic
 class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializable {
+    //MAKE SURE to bump this if making incompatible serilization changes
+    private static final long serialVersionUID = 1L
 
-    private transient MetaClass entityMetaClass;
     private Object entity
+    private Class entityClass
     // if the wrapped entity is a map then this will be the cast intance
     private Map entityAsMap
 
@@ -38,7 +40,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         'class', 'constraints', 'hasMany', 'mapping', 'properties',
         'domainClass', 'dirty', 'errors', 'dirtyPropertyNames']
 
-    private Set<String> _includes = []
+    private Set<String> _includes = [] as HashSet<String>
     // private Map _includeProps = [:] as Map<String, MetaEntity>
 
     MetaEntity metaEntity
@@ -55,10 +57,8 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     MetaMap(Object entity) {
         Validate.notNull(entity)
         this.entity = entity
-
-        //FIXME we need to keep string and reinit this on deserialize
-        entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
-        if(Map.isAssignableFrom(entity.class)) {
+        this.entityClass = entity.getClass()
+        if(Map.isAssignableFrom(entityClass)) {
             entityAsMap = (Map)entity
         }
     }
@@ -78,12 +78,22 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         if(metaEntity){
             this.metaEntity = metaEntity
             //Groovy default of LinkedKeySet is not serializable so make a HashSet
-            _includes = new HashSet<String>(metaEntity.metaProps.keySet())
+            //XXX not seeing any errors in tests and why we need to do this
+            //_includes = new HashSet<String>(metaEntity.metaProps.keySet())
+            _includes = metaEntity.metaProps.keySet() as HashSet
             // _includeProps = includeMap.propsMap
             //XXX @SUD need to look at why we do this. it complicates things because the converters need to be serialized
             // MetaEntity.CONVERTERS does not since its static so can't we just use that instead of local reference?
-            this.converters = MetaEntity.CONVERTERS
+            //this.converters = MetaEntity.CONVERTERS
         }
+    }
+
+    Object getEntity() {
+        return entity
+    }
+
+    Class getEntityClass() {
+        return entityClass
     }
 
     /**
@@ -196,7 +206,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
             val = new MetaMap(val)
         }
         // if it has converters then use them. if its already a MetaMap or MetaMapList then it does not need converting.
-        else if(converters && !(val instanceof MetaMap) && !(val instanceof MetaMapList)){
+        else if(MetaEntity.CONVERTERS && !(val instanceof MetaMap) && !(val instanceof MetaMapList)){
             Converter converter = findConverter(val)
             if (converter != null) {
                 val = converter.convert(val, prop)
@@ -217,7 +227,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
      *         if no compatible converters are found for the given type.
      */
     protected Converter findConverter(Object val) {
-        for (Converter c : converters) {
+        for (Converter c : MetaEntity.CONVERTERS) {
             if (c.handles(val)) {
                 return c
             }
@@ -334,9 +344,12 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         //if not includes then build default
         if(!_includes){
             if(entityAsMap != null) {
-                _includes = entityAsMap.keySet().findAll{ key -> !isExcluded(key as String) }
+                def incs = entityAsMap.keySet().findAll{ key -> !isExcluded(key as String) }
+                //keySet() is LinkedSet which is not serializable. make it hashSet
+                _includes = incs as HashSet<String>
             }
             else {
+                MetaClass entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entityClass)
                 for (MetaProperty mp : entityMetaClass.getProperties()) {
                     if (isExcluded(mp.name)) continue
                     _includes.add(mp.name)
@@ -394,10 +407,18 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
 
             @Override
             void remove() {
-                throw new UnsupportedOperationException("remove() not supported for BeanMap")
+                throw new UnsupportedOperationException("remove() not supported for MetaMap")
             }
         };
     }
+
+    // this method is executed when deserialized
+    // private void readObject(ObjectInputStream ois) throws Exception {
+    //     // performing default deserialization of Account object
+    //     ois.defaultReadObject();
+    //     //init the MetaClass from entityClass
+    //     entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entityClass)
+    // }
 
     /**
      * Map entry used by {@link MetaMap}.

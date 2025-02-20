@@ -190,13 +190,44 @@ class MetaMapSpec extends Specification {
         when:
         def serialMetamap = SerializationUtils.serialize(metamap)
         assert serialMetamap
-        def deserialMetamap = SerializationUtils.deserialize(serialMetamap)
+        MetaMap deserialMetamap = SerializationUtils.deserialize(serialMetamap) as MetaMap
         assert deserialMetamap
 
         then:
         noExceptionThrown()
         deserialMetamap == metamap
+        metamap.getEntityClass() == deserialMetamap.getEntityClass()
+        //this will fail as the Gadget is not same instance and equals is not implemented
+        metamap.getEntity() == deserialMetamap.getEntity()
 
+    }
+
+    void "test serialize when Map entity"() {
+        when:
+        Map tobj = testMap()
+        def metamap = new MetaMap(tobj)
+
+        def includes = metamap.getIncludes()
+
+        then:
+        4 == metamap.size()
+        4 == includes.size()
+        ['name', 'age', 'other', 'info'].containsAll(includes)
+
+        when:
+        def serialMetamap = SerializationUtils.serialize(metamap)
+        assert serialMetamap
+        MetaMap deserialMetamap = SerializationUtils.deserialize(serialMetamap) as MetaMap
+        assert deserialMetamap
+
+        then:
+        noExceptionThrown()
+        deserialMetamap == metamap
+        metamap.getEntityClass() == deserialMetamap.getEntityClass()
+        //this will fail as the Gadget is not same instance and equals is not implemented
+        metamap.getEntity() == deserialMetamap.getEntity()
+        def includes2 = deserialMetamap.getIncludes()
+        includes2 == includes
     }
 
 }

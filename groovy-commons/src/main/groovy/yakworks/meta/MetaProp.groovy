@@ -40,7 +40,7 @@ class MetaProp implements Serializable {
      * OpenAPI schema is added if using the schema plugin and the proper oapi.yml is on path.
      * will be an instance of io.swagger.v3.oas.models.media.Schema or one of its types (such as StringSchema, etc)
      */
-    //XXX Need to init this again on deserialization
+    //FIXME this is currently not used really.
     transient Object schema
 
     /** set to true if should be hidden and not shown on reports or exports */

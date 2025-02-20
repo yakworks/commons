@@ -7,7 +7,9 @@ package yakworks.commons.testing.pogos
 import java.time.LocalDate
 
 import groovy.transform.CompileStatic
+import groovy.transform.EqualsAndHashCode
 
+@EqualsAndHashCode
 @CompileStatic
 class Thing implements Serializable {
     Long id
