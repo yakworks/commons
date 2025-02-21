@@ -20,7 +20,7 @@ class MetaMapHydrateSerializeSpec extends Specification {
     }
     //serailzes and then deserializes the metaMap
     MetaMap serializePipe(MetaMap metamap){
-        metamap.hydrate()
+        //metamap.hydrate()
         def serialMetamap = SerializationUtils.serialize(metamap)
         assert serialMetamap
         MetaMap deserialMetamap = SerializationUtils.deserialize(serialMetamap) as MetaMap

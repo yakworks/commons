@@ -20,6 +20,7 @@ import yakworks.util.ClassUtils
  */
 @Slf4j
 @CompileStatic
+@SuppressWarnings('UnusedPrivateMethod')
 class Maps {
 
     /**
@@ -323,6 +324,7 @@ class Maps {
         return getBoolean(map, key, defaultValue)
     }
 
+    @SuppressWarnings('EmptyCatchBlock')
     static List getList(Map<?, ?> map, Object key, List defaultValue = []) {
         if (map?.containsKey(key)) {
             Object o = map.get(key)

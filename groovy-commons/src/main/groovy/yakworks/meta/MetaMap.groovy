@@ -42,7 +42,8 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         'class', 'constraints', 'hasMany', 'mapping', 'properties',
         'domainClass', 'dirty', 'errors', 'dirtyPropertyNames']
 
-    private Set<String> _includes = [] as HashSet<String>
+    //LinkedHashSet so it retains the order
+    private Set<String> _includes = [] as LinkedHashSet<String>
     // private Map _includeProps = [:] as Map<String, MetaEntity>
 
     MetaEntity metaEntity
@@ -52,7 +53,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     //Set<Converter> converters = [] as Set<Converter>
 
     /**
-     * Constructs a new {@code EntityMap} that operates on the specified bean. The given entity
+     * Constructs a new {@code MetaMap} that operates on the specified bean. The given entity
      * cant be null
      * @param entity The object to inspect
      */
@@ -66,7 +67,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     }
 
     /**
-     * Constructs a new {@code EntityMap} that operates on the specified bean. The given entity
+     * Constructs a new {@code MetaMap} that operates on the specified bean. The given entity
      * cant be null
      * @param entity The object to inspect
      * @param entity The object to inspect
@@ -82,7 +83,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
             //Groovy default of LinkedKeySet is not serializable so make a HashSet
             //XXX not seeing any errors in tests and why we need to do this
             //_includes = new HashSet<String>(metaEntity.metaProps.keySet())
-            _includes = metaEntity.metaProps.keySet() as HashSet
+            _includes = metaEntity.metaProps.keySet() as LinkedHashSet
             // _includeProps = includeMap.propsMap
             //XXX @SUD need to look at why we do this. it complicates things because the converters need to be serialized
             // MetaEntity.CONVERTERS does not since its static so can't we just use that instead of local reference?
@@ -245,10 +246,10 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
      * turns the entity in the entityAsMap.
      * Use right before serialization.
      */
-    void hydrate() {
+    MetaMap hydrate() {
         //make sure includes is initialized
         getIncludes()
-        if (entityAsMap) return //already done or its already a map and not entity object
+        if (entityAsMap) return this //already done or its already a map and not entity object
 
         Map hydrated = [:]
         this.each { k, val ->
@@ -268,6 +269,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         }
         entityAsMap = hydrated
         entity = null
+        return this
     }
 
     /**
@@ -396,7 +398,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
             if(entityAsMap != null) {
                 def incs = entityAsMap.keySet().findAll{ key -> !isExcluded(key as String) }
                 //keySet() is LinkedSet which is not serializable. make it hashSet
-                _includes = incs as HashSet<String>
+                _includes = incs as LinkedHashSet<String>
             }
             else {
                 MetaClass entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entityClass)
@@ -470,6 +472,16 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
     //     entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entityClass)
     // }
 
+    /*
+     * Method called on serialize.
+     * We call hydrate to move from entity to the MetaMap
+     */
+    private void writeObject(ObjectOutputStream oos) throws Exception {
+        hydrate()
+        // to perform default serialization of Account object.
+        oos.defaultWriteObject();
+    }
+
     /**
      * Map entry used by {@link MetaMap}.
      */
@@ -481,7 +493,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         /**
          * Constructs a new {@code Entry}.
          *
-         * @param owner the EntityMap this entry belongs to
+         * @param owner the MetaMap this entry belongs to
          * @param key the key for this entry
          * @param value the value for this entry
          */

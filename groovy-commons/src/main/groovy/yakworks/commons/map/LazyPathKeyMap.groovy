@@ -8,10 +8,10 @@ package yakworks.commons.map
 import groovy.transform.CompileStatic
 
 /**
- * based on org.apache.groovy.json.internal.LazyMap
+ * Loosely based on concepts from org.apache.groovy.json.internal.LazyMap
  */
 @CompileStatic
-public class LazyPathKeyMap extends AbstractMap<String, Object> {
+public class LazyPathKeyMap extends AbstractMap<String, Object> implements Serializable {
 
     /** the delimiter, defaults to '.' can be changed to somthing like _ so would break apart fields like foo_bar*/
     String pathDelimiter = '.'
