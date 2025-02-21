@@ -51,7 +51,7 @@ class Bars {
         hbars.stringParams(true)
         //these 2 are built into core handlebars but not registered by default
         StringHelpers.register(hbars)
-        hbars.registerHelpers(ConditionalHelpers.class);
+        hbars.registerHelpers(ConditionalHelpers)
         //register some common helpers https://github.com/jknack/handlebars.java/blob/master/handlebars-helpers/README.md
         hbars.registerHelper("assign", AssignHelper.INSTANCE)
         NumberHelper.register(hbars)

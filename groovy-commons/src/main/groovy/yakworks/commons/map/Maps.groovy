@@ -23,6 +23,7 @@ import yakworks.util.ClassUtils
 @SuppressWarnings('UnusedPrivateMethod')
 class Maps {
 
+
     /**
      * Return the value of a nested path. Alias to PropertyTools.getProperty.
      *
@@ -75,6 +76,44 @@ class Maps {
         }
         map[lastKey] = value
         return map
+    }
+
+    /**
+     * Removes the deeply nested key from map
+     *
+     * example1: remove([a: [b: [c: 'bar', foo:baz]]], 'a.b.c') == [a: [b: [foo:baz]]]
+     */
+    static Object remove(Map map, String key) {
+        if(key.contains('.')) {
+            List<String> keyTokens = key.tokenize('.')
+            String keyToRemove = keyTokens.remove(keyTokens.size() - 1)//last key after dot
+            String parentKey = keyTokens.join('.')
+            Object parent = value(map, parentKey)
+            if(parent && parent instanceof Map) {
+                return parent.remove(keyToRemove)
+            }
+            return null
+        }
+        else {
+            return map.remove(key)
+        }
+    }
+
+    /**
+     * Checks if the map contains the key. Supports deeply nested key
+     * example1: containsKey([a: [b: [c: 'bar']]], 'a.b.c') == true
+     */
+    static boolean containsKey(Map map, String key) {
+        if(key.contains('.')) {
+            List<String> keyTokens = key.tokenize('.')
+            String lastKey = keyTokens.remove(keyTokens.size() - 1)//last key after dot
+            String parentKey = keyTokens.join('.')
+            Object parent = value(map, parentKey)
+            return parent && (parent instanceof Map) && parent.containsKey(lastKey)
+        }
+        else {
+            return map.containsKey(key)
+        }
     }
 
     /**
@@ -338,6 +377,7 @@ class Maps {
             try {
                 return StringUtils.split(o.toString())
             }
+
             catch (Exception e) {
                 /* swallow exception and will return default */
             }
