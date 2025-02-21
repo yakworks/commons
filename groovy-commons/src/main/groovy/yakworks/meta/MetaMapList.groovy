@@ -12,16 +12,18 @@ import yakworks.commons.model.TotalCount
 import yakworks.util.ClassUtils
 
 /**
- * A list wrapper that will wrap object in EntityMap on a get()
+ * A list wrapper that will wrap object in MetaMap on a get()
  *
  * @author Joshua Burnett (@basejump)
  * @since 6.1.12
  */
-@SuppressWarnings(["CompileStatic", "ExplicitCallToEqualsMethod"])
+@SuppressWarnings(["CompileStatic", "ExplicitCallToEqualsMethod", "UnusedPrivateMethod"])
 @CompileStatic
-class MetaMapList extends AbstractList<MetaMap> implements TotalCount  {
+class MetaMapList extends AbstractList<MetaMap> implements TotalCount, Serializable  {
 
-    protected List resultList
+    protected transient List resultList
+    protected List<MetaMap> metaMapList = []
+    protected int totalCount = Integer.MIN_VALUE;
 
     MetaEntity metaEntity
 
@@ -37,51 +39,78 @@ class MetaMapList extends AbstractList<MetaMap> implements TotalCount  {
     @Override
     @CompileDynamic //not a performance hit
     int getTotalCount() {
-        boolean hasGormPagedResultList = ClassUtils.isPresent('grails.gorm.PagedResultList', MetaMapList.classLoader)
-        if(hasGormPagedResultList || resultList instanceof TotalCount) {
-            return resultList.totalCount
+        if (totalCount == Integer.MIN_VALUE) {
+            boolean hasGormPagedResultList = ClassUtils.isPresent('grails.gorm.PagedResultList', MetaMapList.classLoader)
+            if(hasGormPagedResultList || resultList instanceof TotalCount) {
+                totalCount = resultList.totalCount
+            }
+            else {
+                totalCount = resultList.size()
+            }
         }
-        else {
-            return resultList.size()
-        }
+        return totalCount;
     }
 
     /**
-     * wraps the item in a
+     * wraps the item in a MetaMap before returning it
      */
     @Override
     MetaMap get(int i) {
-        def origObj = resultList.get(i)
-        def eb = new MetaMap(origObj, metaEntity)
-        return eb
+        if(resultList) {
+            def origObj = resultList.get(i)
+            def eb = new MetaMap(origObj, metaEntity)
+            return eb
+        } else {
+            return metaMapList.get(i)
+        }
     }
 
     @Override
     int size() {
-        return resultList.size()
+        return getListToUse().size()
     }
 
     @Override
     boolean equals(Object o) {
-        return resultList.equals(o)
+        return getListToUse().equals(o)
     }
 
     @Override
     int hashCode() {
-        return resultList.hashCode()
+        return getListToUse().hashCode()
     }
-
-    // private void writeObject(ObjectOutputStream out) throws IOException {
-    //
-    //     // find the total count if it hasn't been done yet so when this is deserialized
-    //     // the null GrailsHibernateTemplate won't be an issue
-    //     getTotalCount();
-    //
-    //     out.defaultWriteObject();
-    // }
 
     @Override
     Object clone() {
         return Maps.clone(this as Collection<Map>)
+    }
+
+    List getListToUse(){
+        return resultList ?: metaMapList
+    }
+
+    void hydrate() {
+        this.each { val ->
+            metaMapList.add(val.hydrate())
+        }
+        resultList = null
+    }
+
+
+    /*
+     * Method called on serialize.
+     * We call hydrate on everything in the list to move from entity to the MetaMap
+     */
+    // private void writeObject(ObjectOutputStream oos) throws Exception {
+    //     hydrate()
+    //     // to perform default serialization of Account object.
+    //     oos.defaultWriteObject();
+    // }
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        // find the total count if it hasn't been done yet so there when this is deserialized
+        getTotalCount();
+        hydrate()
+
+        out.defaultWriteObject();
     }
 }

@@ -6,6 +6,8 @@ package yakworks.meta
 
 import groovy.transform.CompileStatic
 
+import org.codehaus.groovy.util.HashCodeHelper
+
 import yakworks.commons.lang.Validate
 import yakworks.commons.map.Maps
 import yakworks.commons.model.IdEnum
@@ -26,10 +28,12 @@ import yakworks.commons.model.IdEnum
  */
 @SuppressWarnings(["CompileStatic", "FieldName", "ExplicitCallToEqualsMethod"])
 @CompileStatic
-class MetaMap extends AbstractMap<String, Object> implements Cloneable {
+class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializable {
+    //MAKE SURE to bump this if making incompatible serilization changes
+    private static final long serialVersionUID = 1L
 
-    private MetaClass entityMetaClass;
-    private Object entity
+    private transient Object entity
+    private Class entityClass
     // if the wrapped entity is a map then this will be the cast intance
     private Map entityAsMap
 
@@ -38,25 +42,26 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         'class', 'constraints', 'hasMany', 'mapping', 'properties',
         'domainClass', 'dirty', 'errors', 'dirtyPropertyNames']
 
-    private Set<String> _includes = []
+    //LinkedHashSet so it retains the order
+    private Set<String> _includes = [] as LinkedHashSet<String>
     // private Map _includeProps = [:] as Map<String, MetaEntity>
 
     MetaEntity metaEntity
 
     private Map<String, Object> shadowMap = [:]
 
-    Set<Converter> converters = [] as Set<Converter>
+    //Set<Converter> converters = [] as Set<Converter>
 
     /**
-     * Constructs a new {@code EntityMap} that operates on the specified bean. The given entity
+     * Constructs a new {@code MetaMap} that operates on the specified bean. The given entity
      * cant be null
      * @param entity The object to inspect
      */
     MetaMap(Object entity) {
         Validate.notNull(entity)
         this.entity = entity
-        entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
-        if(Map.isAssignableFrom(entity.class)) {
+        this.entityClass = entity.getClass()
+        if(Map.isAssignableFrom(entityClass)) {
             entityAsMap = (Map)entity
         }
     }
@@ -75,10 +80,27 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
     private void initialise(MetaEntity metaEntity) {
         if(metaEntity){
             this.metaEntity = metaEntity
-            _includes = metaEntity.metaProps.keySet()
+            //Groovy default of LinkedKeySet is not serializable so make a HashSet
+            //XXX not seeing any errors in tests and why we need to do this
+            //_includes = new HashSet<String>(metaEntity.metaProps.keySet())
+            _includes = metaEntity.metaProps.keySet() as LinkedHashSet
             // _includeProps = includeMap.propsMap
-            this.converters = MetaEntity.CONVERTERS
+            //XXX @SUD need to look at why we do this. it complicates things because the converters need to be serialized
+            // MetaEntity.CONVERTERS does not since its static so can't we just use that instead of local reference?
+            //this.converters = MetaEntity.CONVERTERS
         }
+    }
+
+    // Object getEntity() {
+    //     return entity
+    // }
+
+    Object getEntityOrMap() {
+        return entity?:entityAsMap
+    }
+
+    Class getEntityClass() {
+        return entityClass
     }
 
     /**
@@ -144,15 +166,15 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
 
         String p = name as String
 
-        // check to see if the shadow override map has on and return it as is
-        if(shadowMap.get(p)) return shadowMap.get(p)
+        // check to see if the shadow override map has key and return it as is
+        if(shadowMap.containsKey(p)) return shadowMap.get(p)
 
         if (!getIncludes().contains(p)) {
             return null
         }
 
         //return val
-        return convertValue(entity, p)
+        return convertValue( entity?:entityAsMap , p)
     }
 
     /**
@@ -191,7 +213,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
             val = new MetaMap(val)
         }
         // if it has converters then use them. if its already a MetaMap or MetaMapList then it does not need converting.
-        else if(converters && !(val instanceof MetaMap) && !(val instanceof MetaMapList)){
+        else if(MetaEntity.CONVERTERS && !(val instanceof MetaMap) && !(val instanceof MetaMapList)){
             Converter converter = findConverter(val)
             if (converter != null) {
                 val = converter.convert(val, prop)
@@ -212,7 +234,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
      *         if no compatible converters are found for the given type.
      */
     protected Converter findConverter(Object val) {
-        for (Converter c : converters) {
+        for (Converter c : MetaEntity.CONVERTERS) {
             if (c.handles(val)) {
                 return c
             }
@@ -220,6 +242,35 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         return null
     }
 
+    /**
+     * turns the entity in the entityAsMap.
+     * Use right before serialization.
+     */
+    MetaMap hydrate() {
+        //make sure includes is initialized
+        getIncludes()
+        if (entityAsMap) return this //already done or its already a map and not entity object
+
+        Map hydrated = [:]
+        this.each { k, val ->
+            //def mergedVal = merged[k]
+            //we do maps and collections first
+            if (val instanceof MetaMap) {
+                val.hydrate()
+                hydrated[k] = val
+            }
+            else if (val instanceof MetaMapList) {
+                val.hydrate()
+                hydrated[k] = val
+            }
+            else {
+                hydrated[k] = val
+            }
+        }
+        entityAsMap = hydrated
+        entity = null
+        return this
+    }
 
     /**
      * put will not set keys on the wrapped object but allows to add extra props and overrides
@@ -231,7 +282,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         shadowMap.put(name, value)
         //make sure its in the includes now too
         _includes.add(name)
-        return entity[name]
+        return getEntityOrMap()[name]
     }
 
     /**
@@ -259,7 +310,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
     Collection<Object> values() {
         Collection<Object> values = []
         for (String p : getIncludes()) {
-            values.add(entity[p])
+            values.add(getEntityOrMap()[p])
         }
         return values
     }
@@ -269,16 +320,32 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         return Maps.clone(this)
     }
 
+    Object getId(){
+        getEntityOrMap()['id']
+    }
+
+    // @Override
+    // int hashCode() {
+    //     return entity.hashCode()
+    // }
+
     @Override
     int hashCode() {
-        return entity.hashCode()
+        int hashCode = HashCodeHelper.initHash()
+        def entId = getId()
+        if (entId) { hashCode = HashCodeHelper.updateHash(hashCode, entId) }
+        if (entityClass) { hashCode = HashCodeHelper.updateHash(hashCode, entityClass) }
+        if (metaEntity) { hashCode = HashCodeHelper.updateHash(hashCode, metaEntity) }
+        if (shadowMap) { hashCode = HashCodeHelper.updateHash(hashCode, shadowMap) }
+        if (_includes) { hashCode = HashCodeHelper.updateHash(hashCode, _includes) }
+        hashCode
     }
 
     @Override
     boolean equals(Object o) {
         if (o instanceof MetaMap) {
             MetaMap other = (MetaMap)o
-            return entity.equals(other.entity)
+            return getEntityOrMap().equals(other.getEntityOrMap())
         }
         return false
     }
@@ -329,14 +396,29 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         //if not includes then build default
         if(!_includes){
             if(entityAsMap != null) {
-                _includes = entityAsMap.keySet().findAll{ key -> !isExcluded(key as String) }
+                def incs = entityAsMap.keySet().findAll{ key -> !isExcluded(key as String) }
+                //keySet() is LinkedSet which is not serializable. make it hashSet
+                _includes = incs as LinkedHashSet<String>
             }
             else {
-                //assume its an object
+                MetaClass entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entityClass)
                 for (MetaProperty mp : entityMetaClass.getProperties()) {
                     if (isExcluded(mp.name)) continue
                     _includes.add(mp.name)
                 }
+
+                // if(metaEntity) {
+                //     _includes = metaEntity.metaProps.keySet()
+                // }
+                //
+                // if (!_includes) {
+                //     //FIXME TEMP, look it up here, so that it doesnt need to be serialized
+                //     MetaClass eMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entity.getClass())
+                //     for (MetaProperty mp : eMetaClass.getProperties()) {
+                //         if (isExcluded(mp.name)) continue
+                //         _includes.add(mp.name)
+                //     }
+                // }
             }
         }
         return _includes
@@ -377,9 +459,27 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
 
             @Override
             void remove() {
-                throw new UnsupportedOperationException("remove() not supported for BeanMap")
+                throw new UnsupportedOperationException("remove() not supported for MetaMap")
             }
         };
+    }
+
+    // this method is executed when deserialized
+    // private void readObject(ObjectInputStream ois) throws Exception {
+    //     // performing default deserialization of Account object
+    //     ois.defaultReadObject();
+    //     //init the MetaClass from entityClass
+    //     entityMetaClass = GroovySystem.getMetaClassRegistry().getMetaClass(entityClass)
+    // }
+
+    /*
+     * Method called on serialize.
+     * We call hydrate to move from entity to the MetaMap
+     */
+    private void writeObject(ObjectOutputStream oos) throws Exception {
+        hydrate()
+        // to perform default serialization of Account object.
+        oos.defaultWriteObject();
     }
 
     /**
@@ -393,7 +493,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable {
         /**
          * Constructs a new {@code Entry}.
          *
-         * @param owner the EntityMap this entry belongs to
+         * @param owner the MetaMap this entry belongs to
          * @param key the key for this entry
          * @param value the value for this entry
          */

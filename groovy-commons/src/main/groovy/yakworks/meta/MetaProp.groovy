@@ -20,10 +20,14 @@ class MetaProp implements Serializable {
     private static final long serialVersionUID = 1L
     /** property name */
     String name
+
     /** title label, will use LabelUtils.getNaturalTitle(name) if not populated.  */
     String title
+
     /** java type for prop, either this or className should be populated */
+    //XXX Likely unsafe for serialisation, @SUD whats this mean?
     Class classType
+
     /** java type for prop, the getter will return String classType.name */
     String className
 
@@ -36,7 +40,8 @@ class MetaProp implements Serializable {
      * OpenAPI schema is added if using the schema plugin and the proper oapi.yml is on path.
      * will be an instance of io.swagger.v3.oas.models.media.Schema or one of its types (such as StringSchema, etc)
      */
-    Object schema
+    //FIXME this is currently not used really.
+    transient Object schema
 
     /** set to true if should be hidden and not shown on reports or exports */
     Boolean hidden
