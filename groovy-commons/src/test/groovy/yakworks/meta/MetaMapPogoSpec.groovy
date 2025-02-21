@@ -151,14 +151,15 @@ class MetaMapPogoSpec extends Specification {
 
 }
 
-class PogoBean {
+class PogoBean implements Serializable {
     String name
     Integer age
     String other
     Map info
+    //for POGO's, This will not get wrapped in a MetaMap unless specifically speced in the includes
     NestedBean nested
 }
 
-class NestedBean {
+class NestedBean implements Serializable {
     String prop1
 }

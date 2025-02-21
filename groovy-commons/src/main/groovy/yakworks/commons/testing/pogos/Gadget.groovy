@@ -8,12 +8,14 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 import groovy.transform.CompileStatic
+import groovy.transform.EqualsAndHashCode
 
 /**
  * A sample domain model for ktichen sink testing
  */
+@EqualsAndHashCode
 @CompileStatic
-class Gadget {
+class Gadget implements Serializable {
     Long id
     long id2
 

@@ -4,7 +4,6 @@
 */
 package yakworks.commons.map
 
-
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -21,6 +20,7 @@ import yakworks.util.ClassUtils
  */
 @Slf4j
 @CompileStatic
+@SuppressWarnings('UnusedPrivateMethod')
 class Maps {
 
 
@@ -56,7 +56,7 @@ class Maps {
      * @param propPath  | the delimited path to the key
      * @param value     | the value to set at the propertyPath
      * @param pathDelimiter [default: '.'] if the path is delimeted by somehting like "_' then can set it here. Useful for csv.
-     * @return Map
+     * @return the map
      */
     static Map putValue(Map map, String propPath, Object value, String pathDelimiter = '.' ) {
         int i = propPath.lastIndexOf(pathDelimiter)
@@ -188,7 +188,7 @@ class Maps {
     /**
      * Does a "deep" clone of the Map by recursively cloning values when possible.
      * It just calls merge([:], source)
-     * If a shallow clone is desired use whats built into most al Java Map impls.
+     * If a shallow clone is desired use whats built into most all Java Map impls.
      * see merge. it uses merge to do a deep copy of the map into a new Map
      *
      * @return the cloned map
@@ -232,22 +232,30 @@ class Maps {
      * @param pruneEmpty default:true set to false to keep empty maps, lists and strings and only prune nulls
      * @return the pruned map
      */
+    //@CompileDynamic
     public static <K, V> Map<K, V> prune(Map<K, V> map, boolean pruneEmpty = true) {
         if(!map) return map
-        map.collectEntries { k, v ->
+        Map entrs = map.collectEntries { k, v ->
             [k, v instanceof Map ? prune(v as Map, pruneEmpty) : v]
-        }.findAll { k, v ->
+        }
+
+        Map answer = [:]
+
+        for (Map.Entry entry : entrs.entrySet()) {
+            def v = entry.value
+            def key = entry.key
             if(pruneEmpty){
                 if (v instanceof List || v instanceof Map || v instanceof String) {
-                    return v
-                } else {
-                    return v != null
+                    if(v) answer[key] = v
+                } else if(v != null) {
+                    answer[key] = v
                 }
-            } else {
-                return v != null
+            } else if(v != null) {
+                answer[key] = v
             }
+        }
 
-        } as Map<K, V>
+        return answer as Map<K, V>
     }
 
     /**
@@ -355,7 +363,7 @@ class Maps {
         return getBoolean(map, key, defaultValue)
     }
 
-    @SuppressWarnings(['EmptyCatchBlock'])
+    @SuppressWarnings('EmptyCatchBlock')
     static List getList(Map<?, ?> map, Object key, List defaultValue = []) {
         if (map?.containsKey(key)) {
             Object o = map.get(key)

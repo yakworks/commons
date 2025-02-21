@@ -29,6 +29,8 @@ import yakworks.openapi.OapiUtils
 @Slf4j
 @CompileStatic
 class MetaEntity extends MetaProp implements Serializable {
+    //MAKE SURE to bump this if making incompatible serilization changes
+    private static final long serialVersionUID = 1L
 
     //either a simple MetaProp or a ref to another MetaEntityProps
     Map<String, MetaProp> metaProps = [:] as Map<String, MetaProp>
