@@ -5,6 +5,7 @@
 package yakworks.meta
 
 import spock.lang.Specification
+import yakworks.commons.testing.pogos.Gadget
 
 class MetaMapPogoSpec extends Specification {
 
@@ -38,6 +39,19 @@ class MetaMapPogoSpec extends Specification {
             info: [ phone: "1234", email: "jo@jo.com" ],
             nested: new NestedBean( prop1: 'foo')
         )
+    }
+
+    void "test equals"() {
+        when:
+        MetaEntity ment = BasicMetaEntityBuilder.build(PogoBean, ['name', 'age', 'nested.prop1'])
+        var bean = pogoBean()
+        def map = new MetaMap(bean, ment)
+
+        then:
+        map == [
+            name:'Bart', age:45,
+            nested:[prop1:'foo']
+        ]
     }
 
     void 'test default get includes'() {
@@ -151,14 +165,15 @@ class MetaMapPogoSpec extends Specification {
 
 }
 
-class PogoBean {
+class PogoBean implements Serializable {
     String name
     Integer age
     String other
     Map info
+    //for POGO's, This will not get wrapped in a MetaMap unless specifically speced in the includes
     NestedBean nested
 }
 
-class NestedBean {
+class NestedBean implements Serializable {
     String prop1
 }

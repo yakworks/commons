@@ -5,6 +5,7 @@
 package yakworks.commons.map
 
 import spock.lang.Specification
+import static yakworks.commons.map.Maps.containsKey
 
 class MapsSpec extends Specification {
 
@@ -514,5 +515,37 @@ class MapsSpec extends Specification {
         map.a.c.size() == 1
         map.a.c.d == 'bar'
         map.a.b.d == 'buzz'
+    }
+
+    void "test remove"() {
+        given:
+        Map map = [a:[b:[one:"one", two:"two"]], d:"test"]
+
+        when:
+        def val = Maps.remove(map, "a.b.one")
+
+        then:
+        val == "one"
+        map == [a:[b:[two:"two"]], d:"test"]
+
+        when:
+        Maps.remove(map, "d") == "test"
+
+       then:
+       map == [a:[b:[two:"two"]]]
+    }
+
+    void "test containsKey"() {
+        given:
+        Map map = [a:[b:[one:"one", two:"two"]], d:"test"]
+
+        expect:
+        containsKey(map, "a")
+        containsKey(map, "a.b")
+        containsKey(map, "a.b.one")
+        containsKey(map, "a.b.two")
+        containsKey(map, "d")
+        !containsKey(map, "a.b.c")
+        !containsKey(map, "x")
     }
 }
