@@ -1,3 +1,16 @@
+### v3.15
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.14...v3.15)
+- release 3.15 [link](https://github.com/yakworks/commons/commit/a240626fc716a0075f522429ea251c2523e0f6a0)
+- Merge pull request #24 from yakworks/dev [link](https://github.com/yakworks/commons/commit/cd2e0efcfe2727fee05d9970a879744f5892915c)
+- remove the circular hydrate reference [link](https://github.com/yakworks/commons/commit/9c48b85f931e97738658324dd29892bcfc8e99dd)
+- fix for the different grails PagedResultList classes [link](https://github.com/yakworks/commons/commit/d79951bbaa20c963ad17921ece34ff51bbd6f243)
+- change handlebarsInstance to double locked (#23) [link](https://github.com/yakworks/commons/commit/4fd6d8cb5596c5d197f4a60ac1e5b7ff189d2148)
+- MetaMap serialize josh (#22) [link](https://github.com/yakworks/commons/commit/3d7e75945930a2afaafa626a6d5283d97e5cd2a8)
+- Add Maps.remove helper (#21) [link](https://github.com/yakworks/commons/commit/8e03df37d114b5eaf138e438ce89329b115063ec)
+- Merge branch 'master' into dev [link](https://github.com/yakworks/commons/commit/724507f5c3fc81bfd65304d5d0c710035e873fe3)
+- Add helper to get private field value (#18) [link](https://github.com/yakworks/commons/commit/47992dfe3aea270c8cfa8478ed510dbea9bf9bf1)
+
 ### v3.14
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.13...v3.14)
