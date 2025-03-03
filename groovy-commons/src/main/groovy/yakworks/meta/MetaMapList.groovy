@@ -97,11 +97,15 @@ class MetaMapList extends AbstractList<MetaMap> implements TotalCount, Serializa
         return resultList ?: metaMapList
     }
 
-    void hydrate() {
-        this.each { val ->
+    MetaMapList hydrate() {
+        if (metaMapList) return this //already done
+
+        for(MetaMap val : this){
             metaMapList.add(val.hydrate())
         }
         resultList = null
+
+        return this
     }
 
 

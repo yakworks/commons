@@ -252,7 +252,10 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         if (entityAsMap) return this //already done or its already a map and not entity object
 
         Map hydrated = [:]
-        this.each { k, val ->
+        for (Map.Entry<String, Object> entry : this.entrySet()) {
+            String k = entry.key
+            Object val = entry.value
+
             //def mergedVal = merged[k]
             //we do maps and collections first
             if (val instanceof MetaMap) {
