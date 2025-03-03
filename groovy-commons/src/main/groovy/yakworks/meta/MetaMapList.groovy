@@ -41,11 +41,19 @@ class MetaMapList extends AbstractList<MetaMap> implements TotalCount, Serializa
     int getTotalCount() {
         if (totalCount == Integer.MIN_VALUE) {
             boolean hasGormPagedResultList = ClassUtils.isPresent('grails.gorm.PagedResultList', MetaMapList.classLoader)
-            if(hasGormPagedResultList || resultList instanceof TotalCount) {
-                totalCount = resultList.totalCount
+            var resListToUse = getListToUse()
+            if(hasGormPagedResultList && (
+                resListToUse.class.name == 'grails.gorm.PagedResultList' ||
+                resListToUse.class.name == 'org.grails.orm.hibernate.query.PagedResultList' ||
+                resListToUse.class.name == 'grails.orm.PagedResultList'
+            )) {
+                totalCount = resListToUse.totalCount
+            }
+            else if(resListToUse instanceof TotalCount) {
+                totalCount = resListToUse.totalCount
             }
             else {
-                totalCount = resultList.size()
+                totalCount = resListToUse.size()
             }
         }
         return totalCount;
