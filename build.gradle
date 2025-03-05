@@ -25,4 +25,5 @@ ext.codenarcRuleset= '''
   getRule('SynchronizedMethod').enabled = false
   getRule('BuilderMethodWithSideEffects').enabled = false
   getRule('ExplicitCallToEqualsMethod').enabled = false
+  getRule('UnnecessaryDotClass').enabled = false
 '''

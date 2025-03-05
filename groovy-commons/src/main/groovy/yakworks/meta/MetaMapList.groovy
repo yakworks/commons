@@ -8,6 +8,7 @@ import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 
 import yakworks.commons.map.Maps
+import yakworks.commons.model.Hydratable
 import yakworks.commons.model.TotalCount
 import yakworks.util.ClassUtils
 
@@ -17,9 +18,9 @@ import yakworks.util.ClassUtils
  * @author Joshua Burnett (@basejump)
  * @since 6.1.12
  */
-@SuppressWarnings(["CompileStatic", "ExplicitCallToEqualsMethod", "UnusedPrivateMethod"])
+@SuppressWarnings(["ExplicitCallToEqualsMethod", "UnusedPrivateMethod"])
 @CompileStatic
-class MetaMapList extends AbstractList<MetaMap> implements TotalCount, Serializable  {
+class MetaMapList extends AbstractList<MetaMap> implements TotalCount, Serializable, Hydratable {
 
     protected transient List resultList
     protected List<MetaMap> metaMapList = []
@@ -97,6 +98,7 @@ class MetaMapList extends AbstractList<MetaMap> implements TotalCount, Serializa
         return resultList ?: metaMapList
     }
 
+    @Override
     MetaMapList hydrate() {
         if (metaMapList) return this //already done
 

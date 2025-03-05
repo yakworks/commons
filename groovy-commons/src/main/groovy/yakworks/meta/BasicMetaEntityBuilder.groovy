@@ -110,10 +110,15 @@ class BasicMetaEntityBuilder {
 
                 //set it up if it has not been yet
                 if (!nestedProps[nestedPropName]) {
-                    MetaBeanProperty mprop = PropertyTools.getMetaBeanProp(clazz, nestedPropName)
-                    String nestedClass = mprop.type.name
-                    Map<String, Object> initMap = ['className': nestedClass, 'props': [] as Set]
-                    nestedProps[nestedPropName] = initMap
+                    if(Map.isAssignableFrom(clazz) || clazz == Object){
+                        nestedProps[nestedPropName] = ['className': 'java.lang.Object', 'props': [] as Set] as Map<String, Object>
+                    } else {
+                        MetaBeanProperty mprop = PropertyTools.getMetaBeanProp(clazz, nestedPropName)
+                        String nestedClass = mprop.type.name
+                        Map<String, Object> initMap = ['className': nestedClass, 'props': [] as Set]
+                        nestedProps[nestedPropName] = initMap
+                    }
+
                 }
                 //if prop is foo.bar.baz then this get the bar.baz part
                 String propPath = field.substring(nestedIndex + 1)
@@ -141,13 +146,18 @@ class BasicMetaEntityBuilder {
 
     /** PropMeta from propName depending on whether its a persistentEntity or normal bean */
     MetaProp getMetaProp(String propName){
-        def mprop = PropertyTools.getMetaBeanProp(clazz, propName)
-        if(mprop) return new MetaProp(mprop)
-
+        if(Map.isAssignableFrom(clazz) || clazz == Object){
+            return MetaProp.of(propName, Object)
+        } else {
+            def mprop = PropertyTools.getMetaBeanProp(clazz, propName)
+            if(mprop) return new MetaProp(mprop)
+        }
         return null
     }
 
     boolean propertyExists(String propName){
+        //if its a Map then alway return true
+        if(Map.isAssignableFrom(clazz) || clazz == Object) return true
         def prop = PropertyTools.getMetaBeanProp(clazz, propName)
         return prop
     }

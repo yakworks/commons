@@ -396,7 +396,6 @@ class LazyPathKeyMapSpec extends Specification {
         theMap.size() == theClone.size()
         theClone["address"]["postCode"] == "345435"
         theClone.tags == [1,2,3]
-
     }
 
 

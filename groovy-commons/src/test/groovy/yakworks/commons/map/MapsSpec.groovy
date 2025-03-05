@@ -471,7 +471,7 @@ class MapsSpec extends Specification {
         then:
         map.size() == 1
         map.a == 'foo'
-        rmap.a == 'foo'
+        rmap == [a: 'foo']
 
         when: "doing a new map"
         map = [:]
@@ -482,17 +482,18 @@ class MapsSpec extends Specification {
         map.a.size() == 1
         map.a.c.size() == 1
         map.a.c.d == 'foo'
-        rmap.d == 'foo'
+        rmap == [ d: 'foo' ]
 
         when: "existing map same keys"
         map = [a: [b: true]]
-        Maps.putValue(map, 'a.c', 'foo')
+        rmap = Maps.putValue(map, 'a.c', 'foo')
 
         then:
         map.size() == 1
         map.a.size() == 2
         map.a.b
         map.a.c == 'foo'
+        rmap == [ b: true, c: 'foo' ]
 
         when: "same key"
         map = [a: [c: true]]
@@ -506,8 +507,12 @@ class MapsSpec extends Specification {
         when: "conflicting key"
         map = [a: [c: true, b: 'foo']]
         //puts path underneath existing will overwite it
-        Maps.putValue(map, 'a.c.d', 'bar')
-        Maps.putValue(map, 'a.b.d', 'buzz')
+        rmap = Maps.putValue(map, 'a.c.d', 'bar')
+        assert rmap == [ d: 'bar' ]
+        rmap = Maps.putValue(map, 'a.b.d', 'buzz')
+        assert rmap == [ d: 'buzz' ]
+        rmap = Maps.putValue(map, 'a.b.x', 'go')
+        assert rmap == [ d: 'buzz', x: 'go' ]
 
         then:
         map.size() == 1

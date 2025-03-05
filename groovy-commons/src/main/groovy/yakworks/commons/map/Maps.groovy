@@ -39,24 +39,25 @@ class Maps {
 
     /**
      * puts the deepest nested Map for the path in the Map of Maps
-     * or create the path if it doesn't exit and returns the reference.
+     * or create the path if it doesn't exit and returns the reference.<br><br>
      *
      * Differs from the PropertyTools.setValue in that it will create a nested Map when it encounters a property
-     * that does not exist or is a BasicType. If you want the error use PropertyTools.setValue as its strict.
+     * that does not exist or is a BasicType. If you want the error use PropertyTools.setValue as its strict. <br><br>
      *
      * example1: putValue([a: [b: [c: 'bar']]], 'a.b.c', 'foo') == [a: [b: [c: 'foo']]]
+     *          will return [c: 'foo']  <br><br>
      *
      * example2: Will overwrite basic types when it conflicts
-     *           putValue([a: [b: "blah"]], 'a.b.c', 'foo') == [a: [b: [c: 'foo']]]
+     *           putValue([a: [b: "blah"]], 'a.b.c', 'foo') == [a: [b: [c: 'foo']]]  <br><br>
      *
      * example3: Will overwrite basic types when it conflicts
-     *           putValue([a: [x: "stay"]], 'a.b.c', 'foo') == [a: [x: "stay"], [b: [c: 'foo'] ] ]
+     *           putValue([a: [x: "stay"]], 'a.b.c', 'foo') == [a: [x: "stay"], [b: [c: 'foo'] ] ]    <br><br>
      *
      * @param map       | the target map
      * @param propPath  | the delimited path to the key
      * @param value     | the value to set at the propertyPath
      * @param pathDelimiter [default: '.'] if the path is delimeted by somehting like "_' then can set it here. Useful for csv.
-     * @return the map
+     * @return the lowest level map where the value was put
      */
     static Map putValue(Map map, String propPath, Object value, String pathDelimiter = '.' ) {
         int i = propPath.lastIndexOf(pathDelimiter)
@@ -158,7 +159,8 @@ class Maps {
                     //The list could be list of maps, so make sure they get copied
                     //XXX should do an add all above to merged[k], then we dont loose it?
                     merged[k] = merged[k].collect{ item ->
-                        // ALSO we only clone the map below, it could be a Collection too, which we should clone too.
+                        // ALSO we only clone the map below, it could be a Collection (List of Lists) too,
+                        // which we should clone too.
                         return (item instanceof Map) ? merge([:], item as Map) : item
                     }
                 }

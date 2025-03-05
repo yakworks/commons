@@ -26,7 +26,6 @@ import yakworks.json.groovy.converters.ZonedDateTimeJsonConverter
  *
  * @author Joshua Burnett (@basejump)
  */
-@SuppressWarnings('FieldName')
 @Builder(builderStrategy= SimpleStrategy, prefix="")
 @CompileStatic
 class JsonEngine {

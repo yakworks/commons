@@ -9,6 +9,9 @@ import groovy.transform.CompileStatic
 
 /**
  * Loosely based on concepts from org.apache.groovy.json.internal.LazyMap
+ * Allows a flattened map of path keys such that
+ * foo.bar.id:1, foo.amount:10 would end up as [foo: [bar: [id: 1]], amount:10]
+ * Useful for CSV reading too.
  */
 @CompileStatic
 public class LazyPathKeyMap extends AbstractMap<String, Object> implements Serializable {
@@ -17,10 +20,10 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> implements Seria
     String pathDelimiter = '.'
 
     /** defaults to false, whether to remove the orginal path key after its been nested into maps */
-    boolean removePathKeys = true
+    //boolean removePathKeys = true
 
     /** TODO (MAKE THIS WORK) When set to false will keep the Map flat */
-    boolean enabled = true
+    //boolean enabled = true
 
     /* Holds the actual backing map that will be lazily created. */
     protected Map<String, Object> map;
@@ -46,12 +49,6 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> implements Seria
     }
 
     LazyPathKeyMap pathDelimiter(String v){
-        this.pathDelimiter = v
-        return this
-    }
-
-    /** sets the backing map that backs this map, this would rarely be used, clone would be an example */
-    LazyPathKeyMap map(String v){
         this.pathDelimiter = v
         return this
     }
@@ -131,7 +128,7 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> implements Seria
         if (map == null) {
             map = new LinkedHashMap<String, Object>(sourceMap.size(), 0.01f);
             //create keySet copy so we can modify as we iterate and dont get concurent modifcation exception
-            var keySetCopy = sourceMap.keySet().collect{it}
+            var keySetCopy = sourceMap.keySet().collect() //copy
             for (String key : keySetCopy) {
                 var sval = sourceMap[key]
                 if(sval instanceof LazyPathKeyMap){
@@ -139,11 +136,12 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> implements Seria
                     putByPath(key, sval)
                 }
                 else if(sval instanceof Map){
-                    // it under the __merge__ key for now
+                    // put a dummy ~~MERGE~~ key in to intialize the nested maps.
                     Map mres = Maps.putValue(map, "${key}${pathDelimiter}~~MERGE~~", "MERGE_ME", pathDelimiter)
-                    mres.remove("~~MERGE~~") //remove it
+                    //now remove it
+                    mres.remove("~~MERGE~~")
+                    //merge in the map now
                     Maps.merge(mres, LazyPathKeyMap.of(sval as Map, pathDelimiter) )
-                    //putByPath(key, LazyPathKeyMap.of(sval, pathDelimiter))
                 } else {
                     //key will probably have a dot
                     putByPath(key, sval)
@@ -216,13 +214,13 @@ public class LazyPathKeyMap extends AbstractMap<String, Object> implements Seria
             Map clonedMap = new LinkedHashMap(sourceMap)
             clonedMap?.keySet().each { k ->
                 def val = clonedMap[k]
-                //clone the nested values that are pathKeyMaps
+                //clone the nested values that are LazyPathKeyMaps
                 if (val instanceof LazyPathKeyMap) {
                     clonedMap[k] = (val as LazyPathKeyMap).clone()
                 }
                 // if its a list of PathKeyMaps then iterate over and clone those too
                 else if(val && val instanceof Collection && ((Collection)val)[0] instanceof LazyPathKeyMap) {
-                    clonedMap[k] = val.collect{
+                    clonedMap[k] = val.collect {
                         (it as LazyPathKeyMap).clone()
                     } as Collection<LazyPathKeyMap>
                 }
