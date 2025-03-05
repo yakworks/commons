@@ -62,6 +62,24 @@ class ClassUtils {
     }
 
     /**
+     * DELEGATES TO SPRING ClassUtils
+     * Replacement for {@code Class.forName()} that also returns Class instances
+     * for primitives (e.g. "int") and array class names (e.g. "String[]").
+     * Furthermore, it is also capable of resolving nested class names in Java source
+     * style (e.g. "java.lang.Thread.State" instead of "java.lang.Thread$State").
+     * @param name the name of the Class
+     * @param classLoader the class loader to use
+     * (may be {@code null}, which indicates the default class loader)
+     * @return a class instance for the supplied name
+     * @throws ClassNotFoundException if the class was not found
+     * @throws LinkageError if the class file could not be loaded
+     * @see Class#forName(String, boolean, ClassLoader)
+     */
+    public static Class<?> forName(String name, @Nullable ClassLoader classLoader)
+        throws ClassNotFoundException, LinkageError {
+        return yakworks.util.ClassUtils.forName(name, classLoader)
+    }
+    /**
      * gets the static properties from implemented traits on a class
      * @param mainClass the class to look for traits on.
      * @param name the name of the property
@@ -189,6 +207,37 @@ class ClassUtils {
      */
     public static boolean isPresent(String className, @Nullable ClassLoader classLoader) {
         yakworks.util.ClassUtils.isPresent(className, classLoader)
+    }
+
+    /**
+     * Doesnt require proxyHandler and just looks at the name.
+     * - If the name has `_$$_` its java assist
+     * - if it matches $HibernateProxy$ then its ByteBuddy
+     * method then removes the suffixes then returns just the name.
+     * if no match then it just returns the name
+     */
+    public static String unwrapIfProxy(String name) {
+        final int proxyIndicatorJavaAssist = name.indexOf('_$$_')
+        final int proxyIndicatorByteBuddy = name.indexOf('$HibernateProxy$')
+        if (proxyIndicatorJavaAssist > -1) {
+            name = name.substring(0, proxyIndicatorJavaAssist)
+        } else if(proxyIndicatorByteBuddy > -1){
+            name = name.substring(0, proxyIndicatorByteBuddy)
+        }
+        return name
+    }
+
+    /**
+     * Doesnt require proxyHandler and just looks at the name.
+     * - If the name has `_$$_` its java assist
+     * - if it matches $HibernateProxy$ then its ByteBuddy
+     * method then removes the suffixes then returns just the name.
+     * if no match then it just returns the name
+     */
+    public static boolean isProxy(String name) {
+        final int proxyIndicatorJavaAssist = name.indexOf('_$$_')
+        final int proxyIndicatorByteBuddy = name.indexOf('$HibernateProxy$')
+        return (proxyIndicatorJavaAssist > -1 || proxyIndicatorByteBuddy > -1)
     }
 
 }

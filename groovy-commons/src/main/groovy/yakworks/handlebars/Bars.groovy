@@ -23,7 +23,6 @@ import com.github.jknack.handlebars.helper.StringHelpers
  *
  * @author Joshua Burnett (@basejump)
  */
-@SuppressWarnings('FieldName')
 @Builder(builderStrategy= SimpleStrategy, prefix="")
 @CompileStatic
 class Bars {

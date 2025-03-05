@@ -17,6 +17,8 @@ import org.codehaus.groovy.util.HashCodeHelper
  * when removePathKeys=true then would be [foo: [bar: [id: 1]], amount:10]
 
  * Useful for CSV reading too.
+ *
+ * @deprecated use LazyPathKeyMap
  */
 // !!!!!!! PROOF OF CONCEPT, USE LazyPathKeyMap INSTEAD UNLESS PERF SUCKS
 @Deprecated

@@ -13,6 +13,7 @@ import org.codehaus.groovy.util.HashCodeHelper
  * Allows a flattened map of path keys such that
  * foo.bar.id:1, foo.amount:10 would end up as [foo: [bar: [id: 1]], amount:10]
  * Useful for CSV reading too.
+ * @deprecated use LazyPathKeyMap
  */
 @Deprecated
 @SuppressWarnings(["ExplicitCallToEqualsMethod"])

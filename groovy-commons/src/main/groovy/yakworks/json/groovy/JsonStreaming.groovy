@@ -19,7 +19,6 @@ import org.codehaus.groovy.runtime.DefaultGroovyMethodsSupport
  * @author Joshua Burnett (@basejump)
  * @since 7.0.8
  */
-@SuppressWarnings('FieldName')
 @Builder(builderStrategy= SimpleStrategy, prefix="")
 @CompileStatic
 class JsonStreaming {

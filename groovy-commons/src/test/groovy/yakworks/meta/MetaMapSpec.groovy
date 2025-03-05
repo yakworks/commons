@@ -16,11 +16,27 @@ import java.time.LocalDate
 class MetaMapSpec extends Specification {
 
     Map testMap(){
-        return [name:"Bart", age:45, other:"stuff", info: [ phone: "1234", email: "jo@jo.com" ]]
+        return [
+            name:"Bart",
+            age:45,
+            other:"stuff",
+            info: [
+                phone: "1234", email: "jo@jo.com",
+                nested: [x:'x', y:'y'],
+                infoTags:[[id:1, code: "tag1"], [id:2, code: "tag2"]]
+            ],
+            things:[
+                [id:1, name: "thing1", tags:[[id:1, code: "tag1"], [id:2, code: "tag2"]]],
+                [id:2, name: "thing2", tags:[[id:2, code: "tag2"], [id:3, code: "tag3"]]],
+                [id:3, name: "thing3", tags:[]]
+            ],
+            'class': 'wtf',
+            'errors': [1, 2, 3]
+
+        ]
     }
 
     void 'test default get includes'() {
-
         when:
         Map tobj = testMap()
         def map = new MetaMap(tobj)
@@ -28,9 +44,30 @@ class MetaMapSpec extends Specification {
         def includes = map.getIncludes()
 
         then:
-        4 == map.size()
-        4 == includes.size()
-        ['name', 'age', 'other', 'info'].containsAll(includes)
+        7 == map.size()
+        7 == includes.size()
+        ['name', 'age', 'other', 'info', 'things', 'errors', 'class'].sort() == includes.sort() as List
+    }
+
+    void 'test with MetaEntity'() {
+        when:
+        Map tobj = testMap()
+        def incs = ["name", "info.phone", "errors"]
+        MetaEntity ment = BasicMetaEntityBuilder.build(Object, incs)
+        //MetaEntity ment = MetaEntity.of(["name", "info.phone"])
+        def map = new MetaMap(tobj, ment)
+
+        def includes = map.getIncludes()
+
+        then:
+        ['name', 'errors', 'info'] == includes as List
+        map == [
+            name:"Bart",
+            info: [
+                phone: "1234"
+            ],
+            errors:[1, 2, 3]
+        ]
     }
 
     void "test includes for object type"() {
@@ -138,7 +175,7 @@ class MetaMapSpec extends Specification {
         def keys = map.keySet()
 
         then:
-        keys.size() == 4
+        keys.size() == 7
         keys.contains("name")
         keys.contains("age")
     }
@@ -159,9 +196,9 @@ class MetaMapSpec extends Specification {
         def entset = map.entrySet()
 
         then:
-        entset.size() == 4
+        entset.size() == 7
         for(entry in map.entrySet()) {
-            map.getIncludes().contains(entry.key)
+            assert map.getIncludes().contains(entry.key)
         }
     }
 
