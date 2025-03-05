@@ -288,7 +288,7 @@ class MetaMap extends AbstractMap<String, Object> implements Cloneable, Serializ
         return values
     }
 
-    //XXX clone should be cloneMetaMap.
+    //XXX clone should be cloneMetaMap to follow contract properly.
     // refactor where clone is used to verify if it should be cloneMap or cloneMetaMap
     @Override
     Object clone() {

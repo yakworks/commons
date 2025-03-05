@@ -159,7 +159,8 @@ class Maps {
                     //The list could be list of maps, so make sure they get copied
                     //XXX should do an add all above to merged[k], then we dont loose it?
                     merged[k] = merged[k].collect{ item ->
-                        // ALSO we only clone the map below, it could be a Collection too, which we should clone too.
+                        // ALSO we only clone the map below, it could be a Collection (List of Lists) too,
+                        // which we should clone too.
                         return (item instanceof Map) ? merge([:], item as Map) : item
                     }
                 }
