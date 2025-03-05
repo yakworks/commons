@@ -1,3 +1,9 @@
+### v3.16
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.15...v3.16)
+- release [link](https://github.com/yakworks/commons/commit/ee7120b2292d6715a61a38ed68e618d5b660e158)
+- remove class from MetaMap, make sure we dont use proxies. (#25) [link](https://github.com/yakworks/commons/commit/0c111d41c4eb9faa45194929a532b45e4332ddd5)
+
 ### v3.15
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.14...v3.15)
