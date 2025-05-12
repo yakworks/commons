@@ -1,3 +1,11 @@
+### v3.17
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.16...v3.17)
+- Merge branch 'master' of https://github.com/yakworks/commons [link](https://github.com/yakworks/commons/commit/b2a395236dc8ad7a8d4bee08d0cad3b7229f7436)
+- release [link](https://github.com/yakworks/commons/commit/6755f2a7233dd95d11d932f2658ae0bf2095ff05)
+- Merge pull request #27 from yakworks/dev [link](https://github.com/yakworks/commons/commit/2d0f47250f2cec9a960447c65e575d8148118e37)
+- move nowAppZone extension here. Allow to set a default application timeZone different than the system timezone that would normally be Zulu on server. (#26) [link](https://github.com/yakworks/commons/commit/8d0d6a2c52a2cff9345b514cf475bac1a7e5b7c7)
+
 ### v3.16
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.15...v3.16)
