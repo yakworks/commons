@@ -112,4 +112,28 @@ class JacksonJsonSpec extends Specification {
         au2.things[0].name == 'thing2'
     }
 
+    void "using jackson to bind to list of objects"(){
+        when:
+        // Create ObjectMapper instance
+        // Converting POJO to Map
+        // Map<String, Object> map = mapper.convertValue(foo, new TypeReference<Map<String, Object>>() {});
+        // Convert Map to POJO
+        def map = [
+            name: 'Galts',
+            city: 'Gulch',
+            age: 22,
+            thing: [name: 'thing1'],
+            things: [[name: 'thing2'], [name: 'thing3']]
+        ]
+        List<AdminUser> aus = JacksonJson.bind([map,map], List<AdminUser>);
+
+        then:
+        aus.size() == 2
+        AdminUser au = aus[0]
+        au.name == 'Galts'
+        au.city == 'Gulch'
+
+    }
+
+
 }
