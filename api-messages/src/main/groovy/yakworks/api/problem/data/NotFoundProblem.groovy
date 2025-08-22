@@ -55,7 +55,8 @@ class NotFoundProblem implements DataProblemTrait<NotFoundProblem>  {
     static class Exception extends DataProblemException {
 
         //Override it for performance improvement, because filling in the stack trace is quit expensive
-        @Override
-        synchronized Throwable fillInStackTrace() { return this }
+        //Disabled temporary to see the fullstack trace
+        //@Override
+        //synchronized Throwable fillInStackTrace() { return this }
     }
 }
