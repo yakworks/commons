@@ -1,3 +1,12 @@
+### v3.18
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.17...v3.18)
+- fix nexusPublishing [link](https://github.com/yakworks/commons/commit/fe85d2c65526415829200f5aeeb203e6ade9961a)
+- release [link](https://github.com/yakworks/commons/commit/dca8c8fd40a5464a2a50c3ef99b7e31e587ecee2)
+- Merge pull request #29 from yakworks/dev [link](https://github.com/yakworks/commons/commit/83e15b079f4bba675efc1444b7720e301a2deaeb)
+- add call to MsgServiceRegistry.service?.get(msg) when generating the Violation AsMap [link](https://github.com/yakworks/commons/commit/37dfb0e6fe09c0778a04e6eed7abc2eef6bad377)
+- add the toMap method [link](https://github.com/yakworks/commons/commit/4fb490fded986a4abeb2130b5c32da68ef69f0c2)
+
 ### v3.17
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.16...v3.17)
