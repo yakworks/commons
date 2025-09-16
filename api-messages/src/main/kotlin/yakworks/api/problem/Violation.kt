@@ -1,7 +1,9 @@
 package yakworks.api.problem
 
 import yakworks.api.AsMap
+import yakworks.api.problem.exception.NestedRuntimeException
 import yakworks.message.MsgKey
+import yakworks.message.MsgServiceRegistry
 
 /**
  * @author Joshua Burnett (@basejump)
@@ -21,6 +23,10 @@ interface Violation : AsMap {
         hmap["code"] = this.code
         hmap["field"] = field
         hmap["message"] = message
+
+        if ( msg != null && message == null) {
+            hmap["message"] = MsgServiceRegistry.service?.get(msg)
+        }
         return hmap
     }
 }

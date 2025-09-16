@@ -10,6 +10,7 @@ import groovy.util.logging.Slf4j
 import yakworks.commons.beans.PropertyTools
 import yakworks.commons.lang.Validate
 import yakworks.commons.util.StringUtils
+import yakworks.meta.MetaUtils
 import yakworks.util.ClassUtils
 
 /**
@@ -209,6 +210,14 @@ class Maps {
     static Collection<Map> clone(Collection<Map> listOfMaps) {
         if(!listOfMaps) return []
         listOfMaps.collect{ Maps.clone(it)}
+    }
+
+    /**
+     * the default Groovy getProperties returns statics.
+     * This only returns the instance values
+     */
+    static Map<String, Object> toMap(Object instance) {
+        MetaUtils.getProperties(instance)
     }
 
     /**
