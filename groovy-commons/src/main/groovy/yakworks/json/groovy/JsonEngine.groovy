@@ -60,7 +60,8 @@ class JsonEngine {
         }
         options.dateFormat(dateFormat, loc)
         options.timezone(timeZone)
-        options.excludeNulls()
+
+        //options.excludeNulls() @Joshua, this causes the null values to be removes and hence inability to null out fields during bulk
 
         getConverters().each {
             options.addConverter(it)

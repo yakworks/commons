@@ -91,5 +91,15 @@ class JsonEngineSpec extends Specification {
         obj.num == "1"
     }
 
+    void "map to json with null key values"() {
+        given:
+        Map payload = [id:1, flex: [text1: null, text2: "test"]]
 
+        when:
+        String jsonStr = JsonEngine.toJson(payload)
+
+        then:
+        jsonStr
+        jsonStr.contains("text1")
+    }
 }
