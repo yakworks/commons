@@ -61,6 +61,16 @@ class JsonEngineSpec extends Specification {
         obj == [num: '1', inactive: false, amount: 0.00, localDate: "2021-02-01"]
     }
 
+
+    void "parseJson with null key values"() {
+        when:
+        def jsonString = '{"num":"1","num2":null}'
+        Map obj = JsonEngine.parseJson(jsonString, Map)
+
+        then: "should include keys with null values too"
+        obj == [num: '1', num2: null] //required for nulling out values during update etc
+    }
+
     void "parseJson invalid json format"() {
         when: "no quotes on keys"
         def jsonString = '{num:"1",inactive:false}'
