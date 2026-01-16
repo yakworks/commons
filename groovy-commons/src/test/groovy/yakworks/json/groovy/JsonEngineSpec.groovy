@@ -71,7 +71,7 @@ class JsonEngineSpec extends Specification {
         String jsonStr = JsonEngine.toJson(obj, false)
 
         then:
-        jsonStr == ' {"id":1,"name":"test","num":null,"flex":{"text1":null}}'
+        jsonStr == '{"id":1,"name":"test","num":null,"flex":{"text1":null}}'
 
         when:
         Map obj2 = JsonEngine.parseJson(jsonStr)
