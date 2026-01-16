@@ -121,7 +121,7 @@ class JsonEngineSpec extends Specification {
         Map payload = [id:1, flex: [text1: null, text2: "test"]]
 
         when:
-        String jsonStr = JsonEngine.toJson(payload)
+        String jsonStr = JsonEngine.toJson(payload, false)
 
         then:
         jsonStr
