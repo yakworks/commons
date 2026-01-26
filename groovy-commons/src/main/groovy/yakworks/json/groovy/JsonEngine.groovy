@@ -37,6 +37,7 @@ class JsonEngine {
     String locale = "en/US"
 
     Boolean escapeUnicode = false
+    Boolean excludeNulls = true
 
     JsonGenerator jsonGenerator
     JsonSlurper jsonSlurper
@@ -60,7 +61,10 @@ class JsonEngine {
         }
         options.dateFormat(dateFormat, loc)
         options.timezone(timeZone)
-        options.excludeNulls()
+
+        if(excludeNulls) {
+            options.excludeNulls()
+        }
 
         getConverters().each {
             options.addConverter(it)
@@ -107,22 +111,34 @@ class JsonEngine {
         return converters
     }
 
-    static String toJson(Object object){
-        stringify(object)
+    static String toJson(Object object, boolean excludeNulls = true){
+        stringify(object, excludeNulls)
     }
 
-    static String stringify(Object object, Map arguments = [:]){
-        getGenerator().toJson(object)
+    static String stringify(Object object, boolean excludeNulls = true){
+        if(excludeNulls) {
+            getGenerator().toJson(object)
+        } else {
+            getInstanceIncludeNulls().jsonGenerator.toJson(object)
+        }
     }
 
     // see good explanation of thread safe static instance stratgey https://stackoverflow.com/a/16106598/6500859
     @SuppressWarnings('UnusedPrivateField')
     private static class Holder {
-        private static final JsonEngine INSTANCE = new JsonEngine().build();
+        private static final JsonEngine INSTANCE = new JsonEngine().build()
+        private static final JsonEngine INSTANCE_INCLUDE_NULLS = new JsonEngine().excludeNulls(false).build()
     }
 
     static JsonEngine getInstance() {
         return Holder.INSTANCE
+    }
+
+    /**
+     * JsonEngine instance with excludeNulls=false, will not exclude null keys
+     */
+    static JsonEngine getInstanceIncludeNulls() {
+        Holder.INSTANCE_INCLUDE_NULLS
     }
 
     static JsonGenerator getGenerator(){

@@ -61,6 +61,31 @@ class JsonEngineSpec extends Specification {
         obj == [num: '1', inactive: false, amount: 0.00, localDate: "2021-02-01"]
     }
 
+
+    //required for nulling out values during bulk update etc
+    void "json with null key values"() {
+        given:
+        Map obj = [id:1, name:"test", num:null, flex:[text1:null]]
+
+        when:
+        String jsonStr = JsonEngine.toJson(obj, false)
+
+        then:
+        jsonStr == '{"id":1,"name":"test","num":null,"flex":{"text1":null}}'
+
+        when:
+        Map obj2 = JsonEngine.parseJson(jsonStr)
+
+        then:
+        obj2.id == 1
+        obj2.name == "test"
+        obj2.containsKey('num')
+        obj2.num == null
+        obj2.flex
+        obj2.flex.containsKey("text1")
+        obj2.flex.text1 == null
+    }
+
     void "parseJson invalid json format"() {
         when: "no quotes on keys"
         def jsonString = '{num:"1",inactive:false}'
@@ -91,5 +116,15 @@ class JsonEngineSpec extends Specification {
         obj.num == "1"
     }
 
+    void "map to json with null key values"() {
+        given:
+        Map payload = [id:1, flex: [text1: null, text2: "test"]]
 
+        when:
+        String jsonStr = JsonEngine.toJson(payload, false)
+
+        then:
+        jsonStr
+        jsonStr.contains("text1")
+    }
 }
