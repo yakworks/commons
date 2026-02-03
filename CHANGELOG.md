@@ -1,3 +1,16 @@
+### v3.19
+
+[Full Changelog](https://github.com/yakworks/commons/compare/v3.18...v3.19)
+- Update version.properties [link](https://github.com/yakworks/commons/commit/84470f7e0affa9f8a74b6b006de6fde0579306e0)
+- Merge pull request #30 from yakworks/886-json-null-values [link](https://github.com/yakworks/commons/commit/0a01328282d00bff75e7311eb63e0bd88fa883fe)
+- assert [link](https://github.com/yakworks/commons/commit/447bc0d35357b5e736e9c7d01214154be26d9084)
+- typo [link](https://github.com/yakworks/commons/commit/48dce13a2ddf4dd20cee81670a20bac9694bab6f)
+- test [link](https://github.com/yakworks/commons/commit/86a2e4d3868bc076ca07662bae2cca4ba70049b8)
+- test [link](https://github.com/yakworks/commons/commit/810d3c1368e12166627d7bbe10f8a83c9c54e660)
+- test [link](https://github.com/yakworks/commons/commit/fd6210fec8631ce584a485d658ed5aba3e63065e)
+- add test [link](https://github.com/yakworks/commons/commit/22d0326b462617032f9ed14f19e1dedf9ec7ade6)
+- Add test for payload to json with null values 9ci/cust-rndc-ext#886 [link](https://github.com/yakworks/commons/commit/ed707860ab7faf102732425f63d231637e389b5d)
+
 ### v3.18
 
 [Full Changelog](https://github.com/yakworks/commons/compare/v3.17...v3.18)
